@@ -3,14 +3,13 @@ import {
 	Drawer,
 	DrawerClose,
 	DrawerContent,
-	DrawerDescription,
 	DrawerFooter,
 	DrawerHeader,
 	DrawerOverlay,
 	DrawerPortal,
-	DrawerTitle,
 	DrawerTrigger,
 } from "@/ui/drawer/drawer";
+import { MobileSidebarHeader } from "../mobile-sidebar/mobile-sidebar";
 
 export const MobileNavigation = () => {
 	return (
@@ -29,8 +28,7 @@ export const MobileNavigation = () => {
 				<DrawerOverlay className="fixed inset-0" />
 				<DrawerContent className="bg-white flex flex-col h-full w-[300px] mt-24 fixed bottom-0 right-0">
 					<DrawerHeader>
-						<DrawerTitle>Are you absolutely sure?</DrawerTitle>
-						<DrawerDescription>This action cannot be undone.</DrawerDescription>
+						<MobileSidebarHeader />
 					</DrawerHeader>
 					<DrawerFooter>
 						<button>Submit</button>
