@@ -1,13 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import { startMocking } from './integrations/mockServer';
 
-const rootEl = document.getElementById('root');
-if (rootEl) {
-  const root = ReactDOM.createRoot(rootEl);
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>,
-  );
-}
+startMocking().then(() => {
+  const rootEl = document.getElementById('root');
+  if (rootEl) {
+    const root = ReactDOM.createRoot(rootEl);
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>,
+    );
+  }
+});
