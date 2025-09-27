@@ -1,16 +1,16 @@
-# OS
-
+# Local
 .DS_Store
+*.local
+*.log*
 
-# Node
+# Dist
 node_modules
+dist/
 
-# Playwright
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
+# Profile
+.rspack-profile-*/
 
-# Envs
-
-.env.local
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea
