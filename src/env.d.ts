@@ -9,3 +9,11 @@ declare module '*.svg?react' {
   const ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   export default ReactComponent;
 }
+
+/**
+ * Allows importing JSON translation files.
+ */
+declare module '*.json' {
+  const value: Record<string, string>;
+  export default value;
+}
