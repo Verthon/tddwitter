@@ -17,6 +17,11 @@ To move fast we skip the API instead we will use mocks with msw
 - use the named exports for everything that doesn't need to be lazy loaded
 - don't use the React.FC for components
 
+### Testing
+
+- for integration tests use always pattern `**/**.spec.browser.ts|tsx`
+- for unit test use always the pattern `**/**.spec.unit.ts`
+
 ### Tailwind
 
 For any Tailwind related task please refer to the https://github.com/rgfx/tailwind-llms/blob/main/tailwind-llms.txt as we use the latest v4 version that you may not be aware of

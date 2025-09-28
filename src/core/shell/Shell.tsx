@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { ShellNav } from './ShellNav';
+import { ShellNav } from './shell-nav/ShellNav';
 
 interface ShellProps {
   children: ReactNode;
