@@ -16,6 +16,7 @@ To move fast we skip the API instead we will use mocks with msw
 - use arrow functions for everything
 - use the named exports for everything that doesn't need to be lazy loaded
 - don't use the React.FC for components
+- don't add comments
 
 ### Testing
 

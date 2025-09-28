@@ -1,15 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import { BrowserRouter } from 'react-router';
+import { App } from './App';
 import { startMocking } from './integrations/mockServer';
 
 startMocking().then(() => {
   const rootEl = document.getElementById('root');
   if (rootEl) {
     const root = ReactDOM.createRoot(rootEl);
-    root.render(
+root.render(
       <React.StrictMode>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </React.StrictMode>,
     );
   }

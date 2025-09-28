@@ -1,10 +1,7 @@
-import './App.css';
-import { Timeline } from './timeline/Timeline';
+import { AppRoutes } from "./routes";
 
-const App = () => {
-  return (
-    <Timeline />
-  );
+import "./App.css";
+
+export const App = () => {
+  return <AppRoutes />;
 };
-
-export default App;

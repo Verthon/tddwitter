@@ -1,9 +1,11 @@
 import { Shell } from "../core/shell/Shell";
 
-export const Timeline = () => {
+const Timeline = () => {
   return (
     <Shell>
       <p>test</p>
     </Shell>
   );
 };
+
+export default Timeline;
