@@ -1,16 +1,22 @@
-import type { RequestHandler } from 'msw';
-import { setupWorker } from 'msw/browser';
+import { isCommonAssetRequest, type RequestHandler } from "msw";
+import { setupWorker } from "msw/browser";
 
 const handlers: RequestHandler[] = [];
 
 export const worker = setupWorker(...handlers);
 
 export const startMocking = async (): Promise<void> => {
-  if (import.meta.env.PUBLIC_MOCK === 'true') {
+  if (import.meta.env.PUBLIC_MOCK === "true") {
     await worker.start({
-      onUnhandledRequest: 'warn',
+      onUnhandledRequest: (request, print) => {
+        if (isCommonAssetRequest(request)) {
+          return;
+        }
+
+        print.warning()
+      },
       serviceWorker: {
-        url: '/mockServiceWorker.js',
+        url: "/mockServiceWorker.js",
       },
     });
   }
