@@ -17,6 +17,8 @@ To move fast we skip the API instead we will use mocks with msw
 - use the named exports for everything that doesn't need to be lazy loaded
 - don't use the React.FC for components
 - don't add comments
+- for now we support just English language
+- add any text as translation to corresponding module, e.g if you adding the translation to core add it to core module translations only
 
 ### Testing
 

@@ -1,11 +1,11 @@
 import { IntlProvider } from 'react-intl';
-import React, { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { LocaleProvider, useLocale } from './LocaleProvider';
+import { LocaleProvider, useLocaleContext } from './LocaleProvider';
 
-import enCore from './messages/core/en.json';
-import enComposer from './messages/composer/en.json';
-import enTimeline from './messages/timeline/en.json';
+import enCore from '../core/i18n/en.json';
+import enComposer from '../composer/i18n/en.json';
+import enTimeline from '../timeline/i18n/en.json';
 
 const messagesByLocale = {
   en: { ...enCore, ...enComposer, ...enTimeline },
@@ -18,7 +18,7 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => (
 );
 
 const InnerIntlProvider = ({ children }: { children: ReactNode }) => {
-  const { locale } = useLocale();
+  const { locale } = useLocaleContext();
   const messages = messagesByLocale[locale] ?? messagesByLocale.en;
 
   return (

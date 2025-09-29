@@ -21,6 +21,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
 
+    /* path mapping */
+    "baseUrl": ".",
+    "paths": {
+      "src/*": ["./src/*"]
+    },
+
     "types": ["@vitest/browser/providers/playwright"]
   },
   "include": ["src"]

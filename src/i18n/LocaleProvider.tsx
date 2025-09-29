@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useState, type ReactNode, useContext } from 'react';
 
 export type Locale = 'en';
 
@@ -22,4 +22,5 @@ export const LocaleProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useLocale = () => useContext(LocaleContext);
+
+export const useLocaleContext = () => useContext(LocaleContext);
