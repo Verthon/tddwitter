@@ -1,7 +1,10 @@
-import { isCommonAssetRequest, type RequestHandler } from "msw";
+import { isCommonAssetRequest } from "msw";
 import { setupWorker } from "msw/browser";
+import { createTimelineHandler } from "src/timeline/mocks/timelineHandlers";
 
-const handlers: RequestHandler[] = [];
+const timelineApiBase = import.meta.env.PUBLIC_TIMELINE_API ?? '';
+
+const handlers = [createTimelineHandler(timelineApiBase)]
 
 export const worker = setupWorker(...handlers);
 

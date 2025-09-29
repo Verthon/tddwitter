@@ -1,9 +1,10 @@
 import { Shell } from '../core/shell/Shell';
+import { TimelineList } from './timeline-list/TimeLineList';
 
 const Timeline = () => {
   return (
     <Shell>
-      <p>test</p>
+      <TimelineList />
     </Shell>
   );
 };
