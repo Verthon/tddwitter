@@ -1,3 +1,3 @@
 export const routesConfig = {
-  home: '/'
-} as const
+  home: '/',
+} as const;

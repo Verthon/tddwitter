@@ -1,7 +1,7 @@
 {
   "core.title": "TDDwitter",
   "core.toggleMenu": "toggle menu",
-"core.welcome": "Welcome to <strong>TDDwitter</strong>",
+  "core.welcome": "Welcome to <strong>TDDwitter</strong>",
   "core.greeting": "Hello {name}, you have {count} new messages",
   "core.nav.home": "Home"
 }

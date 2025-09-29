@@ -19,6 +19,7 @@ To move fast we skip the API instead we will use mocks with msw
 - don't add comments
 - for now we support just English language
 - add any text as translation to corresponding module, e.g if you adding the translation to core add it to core module translations only
+- do not add the import React from 'react' to the component. Import only what is needed, for instance `import React,` is not needed here: `import React, { type ReactNode } from 'react';`
 
 ### Testing
 

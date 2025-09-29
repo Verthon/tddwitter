@@ -1,19 +1,22 @@
 import { useIntl } from 'react-intl';
-
-import enCore from '../core/i18n/en.json';
-import enComposer from '../composer/i18n/en.json';
-import enTimeline from '../timeline/i18n/en.json';
+import type enComposer from '../composer/i18n/en.json';
+import type enCore from '../core/i18n/en.json';
+import type enTimeline from '../timeline/i18n/en.json';
 import { useLocaleContext } from './LocaleProvider';
 
 export type CoreMessageKey = keyof typeof enCore;
 export type ComposerMessageKey = keyof typeof enComposer;
 export type TimelineMessageKey = keyof typeof enTimeline;
 
-export type MessageKey = CoreMessageKey | ComposerMessageKey | TimelineMessageKey;
+export type MessageKey =
+  | CoreMessageKey
+  | ComposerMessageKey
+  | TimelineMessageKey;
 
-interface TranslateFn {
-  <K extends MessageKey>(key: K, values?: Record<string, string>): string;
-}
+type TranslateFn = <K extends MessageKey>(
+  key: K,
+  values?: Record<string, string>,
+) => string;
 
 interface UseLocaleReturn {
   locale: ReturnType<typeof useLocaleContext>['locale'];
@@ -25,7 +28,8 @@ export const useLocale = (): UseLocaleReturn => {
   const { locale, setLocale } = useLocaleContext();
   const intl = useIntl();
 
-  const t: TranslateFn = (key, values) => intl.formatMessage({ id: key }, values);
+  const t: TranslateFn = (key, values) =>
+    intl.formatMessage({ id: key }, values);
 
   return { locale, setLocale, t };
 };

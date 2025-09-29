@@ -1,14 +1,14 @@
-import { lazy, Suspense, type JSX } from "react";
-import { Routes, Route, Outlet } from "react-router";
+import { type JSX, lazy, Suspense } from 'react';
+import { Outlet, Route, Routes } from 'react-router';
 
-import { PageLoader } from "../ui/PageLoader/PageLoader";
+import { PageLoader } from '../ui/PageLoader/PageLoader';
 
-import { routesConfig } from "./routesConfig";
+import { routesConfig } from './routesConfig';
 
 type LazyComponent = React.LazyExoticComponent<() => JSX.Element>;
 
 const TimelinePage: LazyComponent = lazy(
-  () => import(/* webpackChunkName: "timeline-page" */ "../timeline/Timeline")
+  () => import(/* webpackChunkName: "timeline-page" */ '../timeline/Timeline'),
 );
 
 const RootLayout = () => (

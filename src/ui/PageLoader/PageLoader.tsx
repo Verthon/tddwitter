@@ -4,7 +4,10 @@ import { memo } from 'react';
  * Full-viewport loading indicator
  */
 export const PageLoader = memo(() => (
-  <div className="flex h-dvh w-full items-center justify-center bg-white" role="status">
+  <div
+    className="flex h-dvh w-full items-center justify-center bg-white"
+    role="status"
+  >
     <svg
       aria-hidden="true"
       className="size-12 animate-spin text-gray-200 fill-sky-500"

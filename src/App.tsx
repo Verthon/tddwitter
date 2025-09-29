@@ -1,6 +1,6 @@
-import { AppRoutes } from "./routing/Routes";
+import { AppRoutes } from './routing/Routes';
 
-import "./App.css";
+import './App.css';
 
 export const App = () => {
   return <AppRoutes />;

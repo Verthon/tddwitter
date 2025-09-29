@@ -1,11 +1,10 @@
+import type { ReactNode } from 'react';
 import { IntlProvider } from 'react-intl';
-import { type ReactNode } from 'react';
-
-import { LocaleProvider, useLocaleContext } from './LocaleProvider';
+import enComposer from '../composer/i18n/en.json';
 
 import enCore from '../core/i18n/en.json';
-import enComposer from '../composer/i18n/en.json';
 import enTimeline from '../timeline/i18n/en.json';
+import { LocaleProvider, useLocaleContext } from './LocaleProvider';
 
 const messagesByLocale = {
   en: { ...enCore, ...enComposer, ...enTimeline },

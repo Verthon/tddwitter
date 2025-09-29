@@ -1,17 +1,46 @@
-import React from 'react';
+import { Avatar as BaseAvatar } from '@base-ui-components/react/avatar';
 
-interface AvatarProps {
-  src: string;
+type AvatarProps = {
+  src?: string;
   alt: string;
-  size?: number; // pixel size, defaults to 32
-}
+  size?: number;
+  className?: string;
+  fallback?: string;
+};
 
-export const Avatar = ({ src, alt, size = 32 }: AvatarProps) => (
-  <img
-    src={src}
-    alt={alt}
-    width={size}
-    height={size}
-    className="rounded-full object-cover"
-  />
-);
+export const Avatar = ({
+  src,
+  alt,
+  size = 32,
+  className,
+  fallback,
+}: AvatarProps) => {
+  const initials = (fallback ?? alt)
+    .split(' ')
+    .map((p) => p[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+
+  return (
+    <BaseAvatar.Root
+      className={`inline-flex items-center justify-center rounded-full bg-neutral-200 text-neutral-700 ${
+        className ?? ''
+      }`}
+      style={{ width: size, height: size }}
+    >
+      {src ? (
+        <BaseAvatar.Image
+          src={src}
+          alt={alt}
+          width={size}
+          height={size}
+          className="w-full h-full rounded-full object-cover"
+        />
+      ) : null}
+      <BaseAvatar.Fallback className="select-none text-sm font-medium">
+        {initials}
+      </BaseAvatar.Fallback>
+    </BaseAvatar.Root>
+  );
+};

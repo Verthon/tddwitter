@@ -1,11 +1,10 @@
-import { useIntl, FormattedMessage } from 'react-intl';
-import { ReactElement } from 'react';
-
-import enCore from '../core/i18n/en.json';
+import { createElement, type ReactElement } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import enComposer from '../composer/i18n/en.json';
+import enCore from '../core/i18n/en.json';
 import enTimeline from '../timeline/i18n/en.json';
 import { useLocaleContext } from './LocaleProvider';
-import { MessageValues } from './types';
+import type { MessageValues } from './types';
 
 const allMessages = {
   ...enCore,
@@ -14,32 +13,35 @@ const allMessages = {
 } as const;
 
 export type MessageKey = keyof typeof allMessages;
-type MessageContent<K extends MessageKey> = typeof allMessages[K];
+type MessageContent<K extends MessageKey> = (typeof allMessages)[K];
 
 // Helper type to check if values are required
-type ValuesRequired<K extends MessageKey> = 
-  MessageValues<MessageContent<K>> extends Record<string, never> ? false : true;
+type ValuesRequired<K extends MessageKey> = MessageValues<
+  MessageContent<K>
+> extends Record<string, never>
+  ? false
+  : true;
 
 // Overloaded function signatures for better DX
 interface TranslateFn {
   <K extends MessageKey>(
-    key: ValuesRequired<K> extends true ? never : K
+    key: ValuesRequired<K> extends true ? never : K,
   ): string;
-  
+
   <K extends MessageKey>(
     key: K,
-    values: MessageValues<MessageContent<K>>
+    values: MessageValues<MessageContent<K>>,
   ): string;
 }
 
 interface FormatMessageFn {
   <K extends MessageKey>(
-    key: ValuesRequired<K> extends true ? never : K
+    key: ValuesRequired<K> extends true ? never : K,
   ): ReactElement;
-  
+
   <K extends MessageKey>(
     key: K,
-    values: MessageValues<MessageContent<K>>
+    values: MessageValues<MessageContent<K>>,
   ): ReactElement;
 }
 
@@ -59,7 +61,7 @@ export const useTranslation = (): UseTranslationReturn => {
   };
 
   const formatMessage: FormatMessageFn = (key: any, values?: any) => {
-    return <FormattedMessage id={key} values={values} />;
+    return createElement(FormattedMessage, { id: key, values });
   };
 
   return { locale, setLocale, t, formatMessage };

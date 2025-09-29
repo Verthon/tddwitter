@@ -1,12 +1,11 @@
-import { Button as BaseButton } from '@base-ui-components/react/button';
-import * as React from 'react';
+import { forwardRef, type MouseEvent, type ReactNode } from 'react';
 
 interface ButtonProps {
-  children: React.ReactNode;
+  children: ReactNode;
   isDisabled?: boolean;
   variant?: 'primary' | 'secondary' | 'outline';
   size?: 'sm' | 'md' | 'lg';
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   type?: 'button' | 'submit' | 'reset';
   className?: string;
 }
@@ -27,7 +26,7 @@ const sizeClasses = {
   lg: 'h-12 px-6 text-lg',
 } as const;
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       children,
@@ -49,7 +48,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${className}`.trim();
 
     return (
-      <BaseButton
+      <button
         ref={ref}
         disabled={isDisabled}
         onClick={onClick}
@@ -58,7 +57,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {children}
-      </BaseButton>
+      </button>
     );
   },
 );

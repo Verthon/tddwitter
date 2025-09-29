@@ -1,9 +1,8 @@
-import React from 'react';
 import { NavLink } from 'react-router';
 
-import { useTranslation } from '../../../i18n/useTranslation';
-import { Avatar } from '../../../ui/avatar/Avatar';
-import { Text } from '../../../ui/text/Text';
+import { useTranslation } from 'src/i18n/useTranslation';
+import { Avatar } from 'src/ui/avatar/Avatar';
+import { Text } from 'src/ui/text/Text';
 
 export const ShellSidebar = () => {
   const { t } = useTranslation();
@@ -18,7 +17,11 @@ export const ShellSidebar = () => {
         <Avatar src="https://via.placeholder.com/32" alt="John Doe avatar" />
         <Text weight="bold">John Doe</Text>
       </header>
-      <nav role="navigation" aria-label="Primary" className="flex flex-col gap-2">
+      <nav
+        role="navigation"
+        aria-label="Primary"
+        className="flex flex-col gap-2"
+      >
         <NavLink
           to="/"
           end

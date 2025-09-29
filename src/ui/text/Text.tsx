@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import type { ElementType, ReactNode } from 'react';
 
 const weightClassMap = {
   bold: 'font-bold',
@@ -11,7 +11,7 @@ export type TextWeight = keyof typeof weightClassMap;
 interface TextProps {
   children: ReactNode;
   weight?: TextWeight;
-  as?: keyof JSX.IntrinsicElements;
+  as?: ElementType;
   className?: string;
 }
 
@@ -22,5 +22,7 @@ export const Text = ({
   className = '',
 }: TextProps) => {
   const weightClass = weightClassMap[weight];
-  return <Component className={`${weightClass} ${className}`}>{children}</Component>;
+  return (
+    <Component className={`${weightClass} ${className}`}>{children}</Component>
+  );
 };
