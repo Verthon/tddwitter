@@ -162,9 +162,9 @@ http.post(`${baseUrl}/auth/register`, async ({ request }) => {
 ## Dependencies
 ```json
 {
-  "react-hook-form": "^7.x",
-  "zod": "^3.x",
-  "@hookform/resolvers": "^3.x"
+  "react-hook-form": "7.x",
+  "zod": "3.x",
+  "@hookform/resolvers": "3.x"
 }
 ```
 

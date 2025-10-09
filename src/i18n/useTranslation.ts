@@ -1,8 +1,10 @@
 import { createElement, type ReactElement } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+
 import enComposer from '../composer/i18n/en.json';
 import enCore from '../core/i18n/en.json';
 import enTimeline from '../timeline/i18n/en.json';
+
 import { useLocaleContext } from './LocaleProvider';
 import type { MessageValues } from './types';
 
