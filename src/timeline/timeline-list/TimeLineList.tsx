@@ -16,7 +16,6 @@ export const TimelineList = () => {
 
   const observerRef = useRef<HTMLDivElement>(null);
 
-  // Intersection Observer for automatic infinite scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -37,7 +36,7 @@ export const TimelineList = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-8">
+      <div role="status" aria-live="polite" className="flex items-center justify-center py-8">
         <div className="text-sm text-gray-500">Loading timeline...</div>
       </div>
     );
@@ -45,7 +44,7 @@ export const TimelineList = () => {
 
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center py-8 gap-3">
+      <div role="alert" className="flex flex-col items-center justify-center py-8 gap-3">
         <div className="text-sm text-red-600">
           {error?.message || 'Failed to load timeline'}
         </div>
@@ -71,8 +70,13 @@ export const TimelineList = () => {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
-      <div className="bg-white border-l border-r min-h-screen">
+    <div className="w-full max-w-2xl mx-auto pb-16 md:pb-0">
+      <div
+        className="bg-white border-l border-r min-h-screen"
+        role="feed"
+        aria-label="Timeline feed"
+        aria-busy={isFetchingNextPage}
+      >
         {allItems.map((item) => (
           <TimelineItem
             key={item.id}
@@ -81,14 +85,14 @@ export const TimelineList = () => {
             content={item.content}
           />
         ))}
-        
+
         {/* Loading more indicator */}
         {isFetchingNextPage && (
-          <div className="flex items-center justify-center py-4">
+          <div role="status" aria-live="polite" className="flex items-center justify-center py-4">
             <div className="text-sm text-gray-500">Loading more...</div>
           </div>
         )}
-        
+
         {/* Manual load more button (fallback) */}
         {hasNextPage && !isFetchingNextPage && (
           <div className="flex items-center justify-center py-4">
@@ -101,13 +105,13 @@ export const TimelineList = () => {
             </Button>
           </div>
         )}
-        
+
         {/* Intersection observer target */}
-        <div ref={observerRef} className="h-px" />
-        
+        <div ref={observerRef} className="h-px" aria-hidden="true" />
+
         {/* End of timeline indicator */}
         {!hasNextPage && allItems.length > 0 && (
-          <div className="flex items-center justify-center py-8">
+          <div role="status" className="flex items-center justify-center py-8">
             <div className="text-sm text-gray-500">You've reached the end</div>
           </div>
         )}

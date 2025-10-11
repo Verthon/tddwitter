@@ -15,7 +15,7 @@ export const timelineQueries = {
           limit: pageSize,
         }),
       initialPageParam: null as string | null,
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
+      getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.nextCursor : undefined,
       staleTime: 1000 * 60, // 1 minute
       gcTime: 1000 * 60 * 5, // 5 minutes
     }),

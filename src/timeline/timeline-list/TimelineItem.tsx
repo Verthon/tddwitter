@@ -8,12 +8,18 @@ interface TimelineItemProps {
 }
 
 export const TimelineItem = ({ avatar, username, content }: TimelineItemProps) => {
+  const headingId = `timeline-item-${username}-${Date.now()}`;
+
   return (
-    <article className="flex gap-3 py-4 px-3 border-b last:border-b-0">
-      <Avatar src={avatar} alt={username} size={40} />
+    <article
+      className="flex gap-3 py-4 px-3 border-b last:border-b-0"
+      aria-labelledby={headingId}
+      data-testid="timeline-item"
+    >
+      <Avatar src={avatar} alt={`${username}'s avatar`} size={40} />
 
       <div className="flex flex-col gap-1 flex-1 min-w-0">
-        <Text weight="bold" className="truncate">
+        <Text weight="bold" className="truncate" id={headingId}>
           {username}
         </Text>
         <p className="whitespace-pre-wrap break-words text-sm text-gray-900">

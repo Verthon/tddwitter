@@ -14,7 +14,7 @@ describe("Timeline", () => {
   it("loads timeline items automatically on scroll in mobile viewport", async () => {
     await page.viewport(414, 896);
 
-    const screen = await render(
+    await render(
       <TestRouterProvider>
         <TestI18nProvider>
           <TestQueryProvider>
@@ -25,26 +25,31 @@ describe("Timeline", () => {
     );
 
     await expect
-      .poll(
-        () => document.querySelectorAll('[data-testid="timeline-item"]').length
-      )
-      .toBe(7);
+      .poll(() => document.querySelectorAll("article").length)
+      .toBe(10);
 
+    // Scroll to trigger loading more items
     window.scrollTo({
       top: document.documentElement.scrollHeight,
       behavior: "instant",
     });
 
+    // Wait for more items to load after scroll
     await expect
-      .poll(
-        () => document.querySelectorAll('[data-testid="timeline-item"]').length,
-        { timeout: 5000 }
-      )
+      .poll(() => document.querySelectorAll("article").length, {
+        timeout: 5000,
+      })
       .toBe(15);
 
+    // Scroll again to see the end message
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "instant",
+    });
+
     await expect.element(page.getByText(/davidops/i)).toBeVisible();
-    await expect
-      .element(screen.getByText(/you've reached the end/i))
-      .toBeVisible();
+    const status = page.getByRole("status");
+    await expect.element(status).toHaveTextContent(/you've reached the end/i);
+    await expect.element(status).toBeVisible();
   });
 });
