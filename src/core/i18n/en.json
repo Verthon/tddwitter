@@ -3,5 +3,19 @@
   "core.toggleMenu": "toggle menu",
   "core.welcome": "Welcome to <strong>TDDwitter</strong>",
   "core.greeting": "Hello {name}, you have {count} new messages",
-  "core.nav.home": "Home"
+  "core.nav.home": "Home",
+  "core.auth.sidebar.login": "Log in",
+  "core.auth.sidebar.createAccount": "Create account",
+  "core.auth.login.title": "Sign in to TDDwitter",
+  "core.auth.login.subtitle": "Welcome back! Please enter your details",
+  "core.auth.login.emailLabel": "Email",
+  "core.auth.login.passwordLabel": "Password",
+  "core.auth.login.submitButton": "Log in",
+  "core.auth.login.submitting": "Logging in...",
+  "core.auth.login.createAccount": "Create account",
+  "core.auth.login.forgotPassword": "Forgot password?",
+  "core.auth.login.error.emailRequired": "Email is required",
+  "core.auth.login.error.emailInvalid": "Please enter a valid email address",
+  "core.auth.login.error.passwordRequired": "Password is required",
+  "core.auth.login.error.passwordMinLength": "Password must be at least 6 characters"
 }

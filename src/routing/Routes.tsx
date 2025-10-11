@@ -11,6 +11,10 @@ const TimelinePage: LazyComponent = lazy(
   () => import(/* webpackChunkName: "timeline-page" */ '../timeline/Timeline'),
 );
 
+const LoginPage: LazyComponent = lazy(
+  () => import(/* webpackChunkName: "login-page" */ '../core/auth/pages/LoginPage'),
+);
+
 const RootLayout = () => (
   <>
     <Outlet />
@@ -22,6 +26,7 @@ export const AppRoutes = () => (
     <Routes>
       <Route element={<RootLayout />}>
         <Route path={routesConfig.home} element={<TimelinePage />} />
+        <Route path={routesConfig.login} element={<LoginPage />} />
       </Route>
     </Routes>
   </Suspense>
