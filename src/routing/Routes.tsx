@@ -15,6 +15,10 @@ const LoginPage: LazyComponent = lazy(
   () => import(/* webpackChunkName: "login-page" */ '../core/auth/pages/LoginPage'),
 );
 
+const RegisterPage: LazyComponent = lazy(
+  () => import(/* webpackChunkName: "register-page" */ '../core/auth/pages/RegisterPage'),
+);
+
 const RootLayout = () => (
   <>
     <Outlet />
@@ -27,6 +31,7 @@ export const AppRoutes = () => (
       <Route element={<RootLayout />}>
         <Route path={routesConfig.home} element={<TimelinePage />} />
         <Route path={routesConfig.login} element={<LoginPage />} />
+        <Route path={routesConfig.signup} element={<RegisterPage />} />
       </Route>
     </Routes>
   </Suspense>

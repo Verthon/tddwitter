@@ -3,15 +3,24 @@ import { useTranslation } from 'src/i18n/useTranslation';
 import { Heading } from 'src/ui/heading/Heading';
 import { Text } from 'src/ui/text/Text';
 
-import { LoginForm } from '../components/LoginForm';
-import { useLogin } from '../hooks/useLogin';
+import { RegisterForm } from '../components/RegisterForm';
+import { useRegister } from '../hooks/useRegister';
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const { t } = useTranslation();
-  const { login } = useLogin();
+  const { register } = useRegister();
 
-  const handleLogin = (data: { email: string; password: string }) => {
-    login(data);
+  const handleRegister = (data: {
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }) => {
+    register({
+      username: data.username,
+      email: data.email,
+      password: data.password,
+    });
   };
 
   return (
@@ -21,16 +30,16 @@ const LoginPage = () => {
           <div className="text-center mb-8">
             <div className="mb-2">
               <Heading variant="heading-md" as="h1">
-                {t('core.auth.login.title')}
+                {t('core.auth.register.title')}
               </Heading>
             </div>
             <Text size="sm" color="secondary">
-              {t('core.auth.login.subtitle')}
+              {t('core.auth.register.subtitle')}
             </Text>
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-8">
-            <LoginForm onSubmit={handleLogin} />
+            <RegisterForm onSubmit={handleRegister} />
           </div>
         </div>
       </div>
@@ -38,4 +47,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

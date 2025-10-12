@@ -33,10 +33,55 @@ export const fetchUser = async (): Promise<UserResponse> => {
       'Content-Type': 'application/json',
     },
   });
-  
+
   if (!response.ok) {
     throw new Error(`Failed to fetch user: ${response.statusText}`);
   }
-  
+
+  return response.json();
+};
+
+export interface RegisterData {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export const register = async (data: RegisterData): Promise<UserResponse> => {
+  const response = await fetch(`${apiUrl}/register`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to register: ${response.statusText}`);
+  }
+
+  return response.json();
+};
+
+export interface LoginData {
+  email: string;
+  password: string;
+}
+
+export const login = async (data: LoginData): Promise<UserResponse> => {
+  const response = await fetch(`${apiUrl}/login`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to login: ${response.statusText}`);
+  }
+
   return response.json();
 };
