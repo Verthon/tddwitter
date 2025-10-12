@@ -46,3 +46,4 @@ Basically we will wrap the `@base-ui-components/react` in our component wrappers
 - each component should be encapsulated and independent
 - limit the amount of the props to max 10 to keep API clean (use compound components or simply composition instead)
 - for any icons always use the heroicons https://heroicons.com/ we have already their package installed `@heroicons/react`
+- **CRUCIAL** do not add className prop to any component

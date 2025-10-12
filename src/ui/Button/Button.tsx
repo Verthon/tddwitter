@@ -5,9 +5,9 @@ interface ButtonProps {
   isDisabled?: boolean;
   variant?: 'primary' | 'secondary' | 'outline';
   size?: 'sm' | 'md' | 'lg';
+  fullWidth?: boolean;
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   type?: 'button' | 'submit' | 'reset';
-  className?: string;
 }
 
 const baseClasses =
@@ -33,9 +33,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       isDisabled = false,
       variant = 'primary',
       size = 'md',
+      fullWidth = false,
       onClick,
       type = 'button',
-      className = '',
       ...props
     },
     ref,
@@ -44,8 +44,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ? 'opacity-50 cursor-not-allowed hover:bg-current'
       : '';
 
+    const widthClasses = fullWidth ? 'w-full' : '';
+
     const buttonClasses =
-      `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${className}`.trim();
+      `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${widthClasses}`.trim();
 
     return (
       <button

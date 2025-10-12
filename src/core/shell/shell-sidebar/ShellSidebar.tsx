@@ -32,7 +32,7 @@ export const ShellSidebar = () => {
           <Text weight="bold">John Doe</Text>
         </SignedIn>
         <SignedOut>
-          <Text weight="bold" className="text-xl">
+          <Text weight="bold" size="xl">
             {t("core.title")}
           </Text>
         </SignedOut>
@@ -60,7 +60,7 @@ export const ShellSidebar = () => {
             variant="primary"
             size="md"
             onClick={handleLoginClick}
-            className="w-full"
+            fullWidth
           >
             {t("core.auth.sidebar.login")}
           </Button>
@@ -68,7 +68,7 @@ export const ShellSidebar = () => {
             variant="outline"
             size="md"
             onClick={handleSignupClick}
-            className="w-full"
+            fullWidth
           >
             {t("core.auth.sidebar.createAccount")}
           </Button>

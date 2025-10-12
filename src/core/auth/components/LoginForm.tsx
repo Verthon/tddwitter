@@ -147,7 +147,7 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
           variant="primary"
           size="lg"
           isDisabled={state.isSubmitting}
-          className="w-full"
+          fullWidth
         >
           {state.isSubmitting ? t('core.auth.login.submitting') : t('core.auth.login.submitButton')}
         </Button>
@@ -158,7 +158,7 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
           size="lg"
           onClick={handleCreateAccountClick}
           isDisabled={state.isSubmitting}
-          className="w-full"
+          fullWidth
         >
           {t('core.auth.login.createAccount')}
         </Button>

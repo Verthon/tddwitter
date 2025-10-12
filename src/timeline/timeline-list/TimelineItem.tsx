@@ -19,12 +19,14 @@ export const TimelineItem = ({ avatar, username, content }: TimelineItemProps) =
       <Avatar src={avatar} alt={`${username}'s avatar`} size={40} />
 
       <div className="flex flex-col gap-1 flex-1 min-w-0">
-        <Text weight="bold" className="truncate" id={headingId}>
-          {username}
-        </Text>
-        <p className="whitespace-pre-wrap break-words text-sm text-gray-900">
+        <div className="truncate">
+          <Text weight="bold" as="div" id={headingId}>
+            {username}
+          </Text>
+        </div>
+        <Text size="sm" as="p">
           {content}
-        </p>
+        </Text>
       </div>
     </article>
   );
