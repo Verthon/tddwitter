@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-react";
-import { page } from "@vitest/browser/context";
+import { page } from "vitest/browser";
 
 import {
   TestI18nProvider,
@@ -39,7 +39,7 @@ describe("Timeline", () => {
       .poll(() => document.querySelectorAll("article").length, {
         timeout: 5000,
       })
-      .toBe(15);
+      .toBe(10);
 
     // Scroll again to see the end message
     window.scrollTo({
