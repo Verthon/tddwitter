@@ -17,7 +17,7 @@ type HeadingOwnProps<E extends ElementType> = {
 };
 
 type HeadingProps<E extends ElementType> = HeadingOwnProps<E> &
-  Omit<ComponentPropsWithoutRef<E>, keyof HeadingOwnProps<E>>;
+  Omit<ComponentPropsWithoutRef<E>, keyof HeadingOwnProps<E> | 'className'>;
 
 export const Heading = <E extends ElementType = 'h2'>({
   children,
@@ -25,12 +25,11 @@ export const Heading = <E extends ElementType = 'h2'>({
   as,
   ...props
 }: HeadingProps<E>) => {
-  const Component = as;
+  const Component = as as ElementType;
   const variantClass = variantClassMap[variant];
-  const componentProps = props as ComponentPropsWithoutRef<E>;
 
   return (
-    <Component className={variantClass} {...componentProps}>
+    <Component className={variantClass} {...props}>
       {children}
     </Component>
   );

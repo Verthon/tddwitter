@@ -1,4 +1,4 @@
-import { Avatar as BaseAvatar } from "@base-ui-components/react/avatar";
+import { Avatar as BaseAvatar } from "@base-ui/react";
 
 type AvatarProps = {
   src?: string;

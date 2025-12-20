@@ -19,10 +19,12 @@ const RegisterPage: LazyComponent = lazy(
   () => import(/* webpackChunkName: "register-page" */ '../core/auth/pages/RegisterPage'),
 );
 
+const CreatePostPage: LazyComponent = lazy(
+  () => import(/* webpackChunkName: "create-post-page" */ '../composer/pages/CreatePostPage'),
+);
+
 const RootLayout = () => (
-  <>
-    <Outlet />
-  </>
+  <Outlet />
 );
 
 export const AppRoutes = () => (
@@ -32,6 +34,7 @@ export const AppRoutes = () => (
         <Route path={routesConfig.home} element={<TimelinePage />} />
         <Route path={routesConfig.login} element={<LoginPage />} />
         <Route path={routesConfig.signup} element={<RegisterPage />} />
+        <Route path={routesConfig.createPost} element={<CreatePostPage />} />
       </Route>
     </Routes>
   </Suspense>

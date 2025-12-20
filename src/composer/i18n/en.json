@@ -1,4 +1,6 @@
 {
   "composer.placeholder": "What's happening?",
-  "composer.button.tweet": "Post"
+  "composer.button.tweet": "Post",
+  "composer.createPost.heading": "Create New Post",
+  "composer.createPost.ariaLabel": "Create post"
 }
