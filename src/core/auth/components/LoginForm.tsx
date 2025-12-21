@@ -1,9 +1,10 @@
 import { type FormEvent, useReducer } from 'react';
 import { useNavigate } from 'react-router';
+import { Form } from '@base-ui/react/form';
 
 import { useTranslation } from 'src/i18n/useTranslation';
 import { Button } from 'src/ui/Button/Button';
-import { Input } from 'src/ui/input/Input';
+import { Field } from 'src/ui/field/Field';
 
 interface LoginFormProps {
   onSubmit?: (data: { email: string; password: string }) => void;
@@ -114,32 +115,36 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
-      <div>
-        <Input
-          label={t('core.auth.login.emailLabel')}
+    <Form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
+      <Field.Root name="email">
+        <Field.Label>{t('core.auth.login.emailLabel')}</Field.Label>
+        <Field.Control
           type="email"
           value={state.email}
           onChange={(e) => dispatch({ type: 'SET_EMAIL', payload: e.target.value })}
-          error={state.errors.email}
-          isDisabled={state.isSubmitting}
+          disabled={state.isSubmitting}
           autoComplete="email"
           required
         />
-      </div>
+        {state.errors.email && (
+          <Field.Error match={true}>{state.errors.email}</Field.Error>
+        )}
+      </Field.Root>
 
-      <div>
-        <Input
-          label={t('core.auth.login.passwordLabel')}
+      <Field.Root name="password">
+        <Field.Label>{t('core.auth.login.passwordLabel')}</Field.Label>
+        <Field.Control
           type="password"
           value={state.password}
           onChange={(e) => dispatch({ type: 'SET_PASSWORD', payload: e.target.value })}
-          error={state.errors.password}
-          isDisabled={state.isSubmitting}
+          disabled={state.isSubmitting}
           autoComplete="current-password"
           required
         />
-      </div>
+        {state.errors.password && (
+          <Field.Error match={true}>{state.errors.password}</Field.Error>
+        )}
+      </Field.Root>
 
       <div className="flex flex-col gap-3">
         <Button
@@ -173,6 +178,6 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
           {t('core.auth.login.forgotPassword')}
         </button>
       </div>
-    </form>
+    </Form>
   );
 };

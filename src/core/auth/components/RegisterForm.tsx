@@ -1,9 +1,10 @@
 import { type FormEvent, useReducer } from 'react';
 import { useNavigate } from 'react-router';
+import { Form } from '@base-ui/react/form';
 
 import { useTranslation } from 'src/i18n/useTranslation';
 import { Button } from 'src/ui/Button/Button';
-import { Input } from 'src/ui/input/Input';
+import { Field } from 'src/ui/field/Field';
 
 interface RegisterFormProps {
   onSubmit?: (data: {
@@ -156,58 +157,66 @@ export const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
-      <div>
-        <Input
-          label={t('core.auth.register.usernameLabel')}
+    <Form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
+      <Field.Root name="username">
+        <Field.Label>{t('core.auth.register.usernameLabel')}</Field.Label>
+        <Field.Control
           type="text"
           value={state.username}
           onChange={(e) => dispatch({ type: 'SET_USERNAME', payload: e.target.value })}
-          error={state.errors.username}
-          isDisabled={state.isSubmitting}
+          disabled={state.isSubmitting}
           autoComplete="username"
           required
         />
-      </div>
+        {state.errors.username && (
+          <Field.Error match={true}>{state.errors.username}</Field.Error>
+        )}
+      </Field.Root>
 
-      <div>
-        <Input
-          label={t('core.auth.register.emailLabel')}
+      <Field.Root name="email">
+        <Field.Label>{t('core.auth.register.emailLabel')}</Field.Label>
+        <Field.Control
           type="email"
           value={state.email}
           onChange={(e) => dispatch({ type: 'SET_EMAIL', payload: e.target.value })}
-          error={state.errors.email}
-          isDisabled={state.isSubmitting}
+          disabled={state.isSubmitting}
           autoComplete="email"
           required
         />
-      </div>
+        {state.errors.email && (
+          <Field.Error match={true}>{state.errors.email}</Field.Error>
+        )}
+      </Field.Root>
 
-      <div>
-        <Input
-          label={t('core.auth.register.passwordLabel')}
+      <Field.Root name="password">
+        <Field.Label>{t('core.auth.register.passwordLabel')}</Field.Label>
+        <Field.Control
           type="password"
           value={state.password}
           onChange={(e) => dispatch({ type: 'SET_PASSWORD', payload: e.target.value })}
-          error={state.errors.password}
-          isDisabled={state.isSubmitting}
+          disabled={state.isSubmitting}
           autoComplete="new-password"
           required
         />
-      </div>
+        {state.errors.password && (
+          <Field.Error match={true}>{state.errors.password}</Field.Error>
+        )}
+      </Field.Root>
 
-      <div>
-        <Input
-          label={t('core.auth.register.confirmPasswordLabel')}
+      <Field.Root name="confirmPassword">
+        <Field.Label>{t('core.auth.register.confirmPasswordLabel')}</Field.Label>
+        <Field.Control
           type="password"
           value={state.confirmPassword}
           onChange={(e) => dispatch({ type: 'SET_CONFIRM_PASSWORD', payload: e.target.value })}
-          error={state.errors.confirmPassword}
-          isDisabled={state.isSubmitting}
+          disabled={state.isSubmitting}
           autoComplete="new-password"
           required
         />
-      </div>
+        {state.errors.confirmPassword && (
+          <Field.Error match={true}>{state.errors.confirmPassword}</Field.Error>
+        )}
+      </Field.Root>
 
       <div className="flex flex-col gap-3">
         <Button
@@ -234,6 +243,6 @@ export const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
           {t('core.auth.register.signIn')}
         </button>
       </div>
-    </form>
+    </Form>
   );
 };

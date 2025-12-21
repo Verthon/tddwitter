@@ -35,5 +35,8 @@
   "core.auth.register.error.passwordRequired": "Password is required",
   "core.auth.register.error.passwordMinLength": "Password must be at least 6 characters",
   "core.auth.register.error.confirmPasswordRequired": "Please confirm your password",
-  "core.auth.register.error.passwordMismatch": "Passwords do not match"
+  "core.auth.register.error.passwordMismatch": "Passwords do not match",
+  "core.notFound.title": "Page not found",
+  "core.notFound.message": "Sorry, we couldn't find the page you're looking for.",
+  "core.notFound.backHome": "Go back home"
 }
