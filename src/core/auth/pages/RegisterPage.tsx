@@ -4,24 +4,9 @@ import { Heading } from 'src/ui/heading/Heading';
 import { Text } from 'src/ui/text/Text';
 
 import { RegisterForm } from '../components/RegisterForm';
-import { useRegister } from '../hooks/useRegister';
 
 const RegisterPage = () => {
   const { t } = useTranslation();
-  const { register } = useRegister();
-
-  const handleRegister = (data: {
-    username: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-  }) => {
-    register({
-      username: data.username,
-      email: data.email,
-      password: data.password,
-    });
-  };
 
   return (
     <Shell>
@@ -39,7 +24,7 @@ const RegisterPage = () => {
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-8">
-            <RegisterForm onSubmit={handleRegister} />
+            <RegisterForm />
           </div>
         </div>
       </div>

@@ -11,7 +11,7 @@ import {
 import RegisterPage from "./RegisterPage";
 
 describe('RegisterPage', () => {
-  it('allows user to register with username, email, password, and confirmation, then redirects to homepage', async () => {
+  it('redirects to homepage after successful registration', async () => {
     render(
       <TestRouterProvider>
         <TestI18nProvider>
@@ -22,18 +22,50 @@ describe('RegisterPage', () => {
       </TestRouterProvider>
     );
 
-    const usernameInput = page.getByLabelText(/username/i);
-    const emailInput = page.getByLabelText(/email/i);
-    const passwordInput = page.getByLabelText(/^password$/i);
-    const confirmPasswordInput = page.getByLabelText(/confirm password/i);
-    const submitButton = page.getByRole('button', { name: /sign up/i });
+    await userEvent.fill(page.getByLabelText(/username/i), 'johndoe');
+    await userEvent.fill(page.getByLabelText(/email/i), 'john@example.com');
+    await userEvent.fill(page.getByLabelText(/^password$/i), 'password123');
+    await userEvent.fill(page.getByLabelText(/confirm password/i), 'password123');
+    await userEvent.click(page.getByRole('button', { name: /sign up/i }));
 
-    await userEvent.fill(usernameInput, 'johndoe');
-    await userEvent.fill(emailInput, 'john@example.com');
-    await userEvent.fill(passwordInput, 'password123');
-    await userEvent.fill(confirmPasswordInput, 'password123');
-    await userEvent.click(submitButton);
+    await expect.poll(() => globalThis.location.pathname).toBe('/');
+  });
 
-    await expect.poll(() => window.location.pathname).toBe('/');
+  it('displays validation error for invalid email', async () => {
+    render(
+      <TestRouterProvider>
+        <TestI18nProvider>
+          <TestQueryProvider>
+            <RegisterPage />
+          </TestQueryProvider>
+        </TestI18nProvider>
+      </TestRouterProvider>
+    );
+
+    await userEvent.fill(page.getByLabelText(/username/i), 'johndoe');
+    await userEvent.fill(page.getByLabelText(/email/i), 'invalidemail');
+    await userEvent.fill(page.getByLabelText(/^password$/i), 'password123');
+    await userEvent.fill(page.getByLabelText(/confirm password/i), 'password123');
+    await userEvent.click(page.getByRole('button', { name: /sign up/i }));
+
+    await expect.element(page.getByText(/invalid email/i)).toBeVisible();
+  });
+
+  it('displays validation error for missing required fields', async () => {
+    render(
+      <TestRouterProvider>
+        <TestI18nProvider>
+          <TestQueryProvider>
+            <RegisterPage />
+          </TestQueryProvider>
+        </TestI18nProvider>
+      </TestRouterProvider>
+    );
+
+    await userEvent.click(page.getByRole('button', { name: /sign up/i }));
+
+    await expect.element(page.getByText(/username is required/i)).toBeVisible();
+    await expect.element(page.getByText(/email is required/i)).toBeVisible();
+    await expect.element(page.getByText(/password is required/i)).toBeVisible();
   });
 })
