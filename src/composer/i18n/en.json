@@ -2,5 +2,7 @@
   "composer.placeholder": "What's happening?",
   "composer.button.tweet": "Post",
   "composer.createPost.heading": "Create New Post",
-  "composer.createPost.ariaLabel": "Create post"
+  "composer.createPost.ariaLabel": "Create post",
+  "composer.form.label": "Post content",
+  "composer.form.charCount": "{remaining} characters remaining out of {max}"
 }

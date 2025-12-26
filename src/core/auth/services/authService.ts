@@ -1,4 +1,4 @@
-import { type MeResponse, type UserResponse } from '../types';
+import { type MeResponse, type UserResponse, type LoginPayload, type RegisterPayload } from '../types';
 
 const apiUrl = import.meta.env.PUBLIC_AUTH_API;
 
@@ -41,13 +41,7 @@ export const fetchUser = async (): Promise<UserResponse> => {
   return response.json();
 };
 
-export interface RegisterData {
-  username: string;
-  email: string;
-  password: string;
-}
-
-export const register = async (data: RegisterData): Promise<UserResponse> => {
+export const register = async (data: RegisterPayload): Promise<UserResponse> => {
   const response = await fetch(`${apiUrl}/register`, {
     method: 'POST',
     credentials: 'include',
@@ -64,12 +58,7 @@ export const register = async (data: RegisterData): Promise<UserResponse> => {
   return response.json();
 };
 
-export interface LoginData {
-  email: string;
-  password: string;
-}
-
-export const login = async (data: LoginData): Promise<UserResponse> => {
+export const login = async (data: LoginPayload): Promise<UserResponse> => {
   const response = await fetch(`${apiUrl}/login`, {
     method: 'POST',
     credentials: 'include',

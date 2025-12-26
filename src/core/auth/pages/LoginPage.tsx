@@ -4,15 +4,9 @@ import { Heading } from 'src/ui/heading/Heading';
 import { Text } from 'src/ui/text/Text';
 
 import { LoginForm } from '../components/LoginForm';
-import { useLogin } from '../hooks/useLogin';
 
 const LoginPage = () => {
   const { t } = useTranslation();
-  const { login } = useLogin();
-
-  const handleLogin = (data: { email: string; password: string }) => {
-    login(data);
-  };
 
   return (
     <Shell>
@@ -30,7 +24,7 @@ const LoginPage = () => {
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-8">
-            <LoginForm onSubmit={handleLogin} />
+            <LoginForm />
           </div>
         </div>
       </div>

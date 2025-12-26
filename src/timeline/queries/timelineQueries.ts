@@ -1,14 +1,12 @@
 import { infiniteQueryOptions } from '@tanstack/react-query';
 import { fetchTimeline } from '../services/timelineService';
 
-const TIMELINE_QUERY_KEY = 'timeline' as const;
-
 export const timelineQueries = {
-  all: () => [TIMELINE_QUERY_KEY] as const,
-  
+  all: () => ['timeline'] as const,
+  feeds: () => [...timelineQueries.all(), 'feed'] as const,
   feed: (pageSize = 10) =>
     infiniteQueryOptions({
-      queryKey: [...timelineQueries.all(), { pageSize }] as const,
+      queryKey: [...timelineQueries.feeds(), { pageSize }] as const,
       queryFn: ({ pageParam }) =>
         fetchTimeline({
           cursor: pageParam || undefined,
@@ -16,7 +14,7 @@ export const timelineQueries = {
         }),
       initialPageParam: null as string | null,
       getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.nextCursor : undefined,
-      staleTime: 1000 * 60, // 1 minute
-      gcTime: 1000 * 60 * 5, // 5 minutes
+      staleTime: 1000 * 60,
+      gcTime: 1000 * 60 * 5,
     }),
 } as const;

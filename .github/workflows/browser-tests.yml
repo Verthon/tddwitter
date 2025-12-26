@@ -1,0 +1,41 @@
+name: Browser Tests
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        project: [chromium, webkit]
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Use Node.js with Version set in .nvmrc
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Playwright
+        uses: ./.github/workflows/setup-playwright
+        with:
+          browser: ${{ matrix.project }}
+
+      - name: Run build
+        run: pnpm run build
+
+      - name: Run component tests
+        run: pnpm run test:browser:headless
+

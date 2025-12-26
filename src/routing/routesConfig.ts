@@ -3,4 +3,5 @@ export const routesConfig = {
   login: '/login',
   signup: '/signup',
   createPost: '/create-post',
+  post: '/post/:id',
 } as const;

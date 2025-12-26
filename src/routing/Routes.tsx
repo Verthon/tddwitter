@@ -23,6 +23,10 @@ const CreatePostPage: LazyComponent = lazy(
   () => import(/* webpackChunkName: "create-post-page" */ '../composer/pages/CreatePostPage'),
 );
 
+const PostDetailPage: LazyComponent = lazy(
+  () => import(/* webpackChunkName: "post-detail-page" */ '../timeline/pages/PostDetailPage'),
+);
+
 const NotFoundPage: LazyComponent = lazy(
   () => import(/* webpackChunkName: "not-found-page" */ '../core/pages/NotFoundPage'),
 );
@@ -39,6 +43,7 @@ export const AppRoutes = () => (
         <Route path={routesConfig.login} element={<LoginPage />} />
         <Route path={routesConfig.signup} element={<RegisterPage />} />
         <Route path={routesConfig.createPost} element={<CreatePostPage />} />
+        <Route path={routesConfig.post} element={<PostDetailPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

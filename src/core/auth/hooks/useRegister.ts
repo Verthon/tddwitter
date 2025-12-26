@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
-import { register } from '../services/authService';
+import { authMutations } from '../queries/authQueries';
 
 export const useRegister = () => {
   const navigate = useNavigate();
 
   const { mutate, isPending, isError } = useMutation({
-    mutationFn: register,
+    ...authMutations.register(),
     onSuccess: () => {
       navigate('/');
     },

@@ -4,6 +4,7 @@
   "core.welcome": "Welcome to <strong>TDDwitter</strong>",
   "core.greeting": "Hello {name}, you have {count} new messages",
   "core.nav.home": "Home",
+  "core.nav.createPost": "Create Post",
   "core.auth.sidebar.login": "Log in",
   "core.auth.sidebar.createAccount": "Create account",
   "core.auth.login.title": "Sign in to TDDwitter",
@@ -38,5 +39,6 @@
   "core.auth.register.error.passwordMismatch": "Passwords do not match",
   "core.notFound.title": "Page not found",
   "core.notFound.message": "Sorry, we couldn't find the page you're looking for.",
-  "core.notFound.backHome": "Go back home"
+  "core.notFound.backHome": "Go back home",
+  "core.scroll.scrollToTop": "Scroll to top"
 }

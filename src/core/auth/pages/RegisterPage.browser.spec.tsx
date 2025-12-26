@@ -48,7 +48,7 @@ describe('RegisterPage', () => {
     await userEvent.fill(page.getByLabelText(/confirm password/i), 'password123');
     await userEvent.click(page.getByRole('button', { name: /sign up/i }));
 
-    await expect.element(page.getByText(/invalid email/i)).toBeVisible();
+    await expect.element(page.getByLabelText(/email/i)).toBeInvalid();
   });
 
   it('displays validation error for missing required fields', async () => {
@@ -64,8 +64,8 @@ describe('RegisterPage', () => {
 
     await userEvent.click(page.getByRole('button', { name: /sign up/i }));
 
-    await expect.element(page.getByText(/username is required/i)).toBeVisible();
-    await expect.element(page.getByText(/email is required/i)).toBeVisible();
-    await expect.element(page.getByText(/password is required/i)).toBeVisible();
+    await expect.element(page.getByLabelText(/username/i)).toBeInvalid();
+    await expect.element(page.getByLabelText(/email/i)).toBeInvalid();
+    await expect.element(page.getByLabelText(/^password$/i)).toBeInvalid();
   });
 })

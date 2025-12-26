@@ -30,6 +30,6 @@ describe('LoginPage', () => {
     await userEvent.fill(passwordInput, 'password123');
     await userEvent.click(submitButton);
 
-    await expect.poll(() => window.location.pathname).toBe('/');
+    await expect.poll(() => globalThis.location.pathname).toBe('/');
   });
 })

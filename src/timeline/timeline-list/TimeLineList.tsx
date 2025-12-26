@@ -2,8 +2,10 @@ import { useEffect, useRef } from 'react';
 import { useInfiniteTimeline } from '../hooks/useInfiniteTimeline';
 import { TimelineItem } from './TimelineItem';
 import { Button } from 'src/ui/Button/Button';
+import { useTranslation } from 'src/i18n/useTranslation';
 
 export const TimelineList = () => {
+  const { t } = useTranslation();
   const {
     data,
     error,
@@ -24,7 +26,7 @@ export const TimelineList = () => {
           fetchNextPage();
         }
       },
-      { threshold: 1.0 }
+      { threshold: 1 }
     );
 
     if (observerRef.current) {
@@ -36,7 +38,7 @@ export const TimelineList = () => {
 
   if (isLoading) {
     return (
-      <div role="status" aria-live="polite" className="flex items-center justify-center py-8">
+      <div role="status" className="flex items-center justify-center py-8">
         <div className="text-sm text-gray-500">Loading timeline...</div>
       </div>
     );
@@ -49,7 +51,7 @@ export const TimelineList = () => {
           {error?.message || 'Failed to load timeline'}
         </div>
         <Button
-          onClick={() => window.location.reload()}
+          onClick={() => globalThis.location.reload()}
           variant="outline"
           size="sm"
         >
@@ -72,11 +74,14 @@ export const TimelineList = () => {
   return (
     <div className="w-full max-w-2xl mx-auto pb-16 md:pb-0">
       <div
-        className="bg-white border-l border-r min-h-screen"
+        className="bg-white border-l border-r border-gray-300 min-h-screen"
         role="feed"
         aria-label="Timeline feed"
         aria-busy={isFetchingNextPage}
       >
+        <h1 className="text-xl font-bold p-4 border-b border-gray-300 sticky top-0 bg-white z-10">
+          {t('timeline.heading')}
+        </h1>
         {allItems.map((item) => (
           <TimelineItem
             key={item.id}

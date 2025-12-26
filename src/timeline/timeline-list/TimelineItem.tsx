@@ -12,7 +12,7 @@ export const TimelineItem = ({ avatar, username, content }: TimelineItemProps) =
 
   return (
     <article
-      className="flex gap-3 py-4 px-3 border-b last:border-b-0"
+      className="flex gap-3 py-6 px-3 border-b last:border-b-0 border-gray-200"
       aria-labelledby={headingId}
       data-testid="timeline-item"
     >
