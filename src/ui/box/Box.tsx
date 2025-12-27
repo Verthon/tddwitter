@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, ElementType } from "react";
+import { type ComponentPropsWithoutRef, type ElementType } from "react";
 
 type PaddingValue = 2 | 4 | 6 | 12;
 type ResponsivePadding = PaddingValue | [PaddingValue, PaddingValue, PaddingValue];

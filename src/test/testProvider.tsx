@@ -1,9 +1,8 @@
-import { BrowserRouter, MemoryRouter } from "react-router";
+import { MemoryRouter } from "react-router";
 import { useMemo } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { I18nProvider } from "src/i18n/I18nProvider";
-import { AppRoutes } from "src/routing/Routes";
 
 export const TestRouterProvider: React.FC<React.PropsWithChildren> = ({
   children,

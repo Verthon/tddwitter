@@ -1,11 +1,11 @@
 import { Link } from 'react-router';
 
 import { useTranslation } from 'src/i18n/useTranslation';
-import { Button } from 'src/ui/button/Button';
 import { Heading } from 'src/ui/heading/Heading';
 import { Text } from 'src/ui/text/Text';
 
 import { Shell } from '../shell/Shell';
+import { Button } from 'src/ui/Button/Button';
 
 const NotFoundPage = () => {
   const { t } = useTranslation();

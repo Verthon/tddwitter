@@ -12,6 +12,7 @@
     "format": "biome format --write",
     "preview": "rsbuild preview",
     "test:browser": "vitest",
+    "lint": "pnpm run type-check",
     "test:browser:headless": "CI=true vitest",
     "type-check": "tsc --noEmit"
   },
