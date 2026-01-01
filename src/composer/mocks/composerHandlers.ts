@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { type CreatePostRequest, type CreatePostResponse } from '../types';
+import { dateService } from 'src/core/services/dateService';
 
 export const createComposerHandler = (baseUrl: string) => {
   return http.post(`${baseUrl}/posts`, async ({ request }) => {
@@ -8,7 +9,7 @@ export const createComposerHandler = (baseUrl: string) => {
     const response: CreatePostResponse = {
       id: crypto.randomUUID(),
       content: body.content,
-      timestamp: new Date().toISOString(),
+      timestamp: dateService.toISOString(),
       username: 'currentUser',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=currentUser',
     };

@@ -1,5 +1,5 @@
-import { infiniteQueryOptions } from '@tanstack/react-query';
-import { fetchTimeline } from '../services/timelineService';
+import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
+import { fetchTimeline, fetchPostById } from '../services/timelineService';
 
 export const timelineQueries = {
   all: () => ['timeline'] as const,
@@ -14,6 +14,14 @@ export const timelineQueries = {
         }),
       initialPageParam: null as string | null,
       getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.nextCursor : undefined,
+      staleTime: 1000 * 60,
+      gcTime: 1000 * 60 * 5,
+    }),
+  posts: () => [...timelineQueries.all(), 'post'] as const,
+  post: (id: string) =>
+    queryOptions({
+      queryKey: [...timelineQueries.posts(), id] as const,
+      queryFn: () => fetchPostById(id),
       staleTime: 1000 * 60,
       gcTime: 1000 * 60 * 5,
     }),

@@ -3,7 +3,7 @@ export interface TimelineItem {
   avatar: string;
   username: string;
   content: string;
-  timestamp: string; // ISO 8601 format
+  timestamp: string;
 }
 
 export interface TimelineResponse {
@@ -15,4 +15,12 @@ export interface TimelineResponse {
 export interface TimelineParams {
   cursor?: string;
   limit?: number;
+}
+
+export interface PostDetailResponse {
+  id: string;
+  avatar: string;
+  username: string;
+  content: string;
+  timestamp: string;
 }

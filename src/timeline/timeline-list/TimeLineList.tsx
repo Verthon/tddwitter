@@ -4,6 +4,75 @@ import { TimelineItem } from './TimelineItem';
 import { Button } from 'src/ui/Button/Button';
 import { useTranslation } from 'src/i18n/useTranslation';
 
+const LoadingState = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-center py-8">
+      <output className="text-sm text-gray-500">{t('timeline.loading')}</output>
+    </div>
+  );
+};
+
+const ErrorState = ({ message }: { message?: string }) => {
+  const { t } = useTranslation();
+  return (
+    <div role="alert" className="flex flex-col items-center justify-center py-8 gap-3">
+      <div className="text-sm text-red-600">
+        {message || t('timeline.error')}
+      </div>
+      <Button
+        onClick={() => globalThis.location.reload()}
+        variant="outline"
+        size="sm"
+      >
+        {t('timeline.tryAgain')}
+      </Button>
+    </div>
+  );
+};
+
+const EmptyState = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-center py-8">
+      <div className="text-sm text-gray-500">{t('timeline.noPosts')}</div>
+    </div>
+  );
+};
+
+const LoadingMoreIndicator = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-center py-4">
+      <output aria-live="polite" className="text-sm text-gray-500">{t('timeline.loadingMore')}</output>
+    </div>
+  );
+};
+
+const LoadMoreButton = ({ onClick }: { onClick: () => void }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-center py-4">
+      <Button
+        onClick={onClick}
+        variant="outline"
+        size="sm"
+      >
+        {t('timeline.loadMore')}
+      </Button>
+    </div>
+  );
+};
+
+const EndOfTimelineIndicator = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-center py-8">
+      <output className="text-sm text-gray-500">{t('timeline.endOfTimeline')}</output>
+    </div>
+  );
+};
+
 export const TimelineList = () => {
   const { t } = useTranslation();
   const {
@@ -37,38 +106,17 @@ export const TimelineList = () => {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   if (isLoading) {
-    return (
-      <div role="status" className="flex items-center justify-center py-8">
-        <div className="text-sm text-gray-500">Loading timeline...</div>
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (isError) {
-    return (
-      <div role="alert" className="flex flex-col items-center justify-center py-8 gap-3">
-        <div className="text-sm text-red-600">
-          {error?.message || 'Failed to load timeline'}
-        </div>
-        <Button
-          onClick={() => globalThis.location.reload()}
-          variant="outline"
-          size="sm"
-        >
-          Try again
-        </Button>
-      </div>
-    );
+    return <ErrorState message={error?.message} />;
   }
 
   const allItems = data?.pages?.flatMap(page => page.items) || [];
 
   if (allItems.length === 0) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <div className="text-sm text-gray-500">No posts yet</div>
-      </div>
-    );
+    return <EmptyState />;
   }
 
   return (
@@ -82,44 +130,28 @@ export const TimelineList = () => {
         <h1 className="text-xl font-bold p-4 border-b border-gray-300 sticky top-0 bg-white z-10">
           {t('timeline.heading')}
         </h1>
-        {allItems.map((item) => (
-          <TimelineItem
-            key={item.id}
-            avatar={item.avatar}
-            username={item.username}
-            content={item.content}
-          />
-        ))}
+        <ul>
+          {allItems.map((item) => (
+            <li key={item.id}>
+              <TimelineItem
+                id={item.id}
+                avatar={item.avatar}
+                username={item.username}
+                content={item.content}
+              />
+            </li>
+          ))}
+        </ul>
 
-        {/* Loading more indicator */}
-        {isFetchingNextPage && (
-          <div role="status" aria-live="polite" className="flex items-center justify-center py-4">
-            <div className="text-sm text-gray-500">Loading more...</div>
-          </div>
-        )}
+        {isFetchingNextPage && <LoadingMoreIndicator />}
 
-        {/* Manual load more button (fallback) */}
         {hasNextPage && !isFetchingNextPage && (
-          <div className="flex items-center justify-center py-4">
-            <Button
-              onClick={() => fetchNextPage()}
-              variant="outline"
-              size="sm"
-            >
-              Load more
-            </Button>
-          </div>
+          <LoadMoreButton onClick={() => fetchNextPage()} />
         )}
 
-        {/* Intersection observer target */}
         <div ref={observerRef} className="h-px" aria-hidden="true" />
 
-        {/* End of timeline indicator */}
-        {!hasNextPage && allItems.length > 0 && (
-          <div role="status" className="flex items-center justify-center py-8">
-            <div className="text-sm text-gray-500">You've reached the end</div>
-          </div>
-        )}
+        {!hasNextPage && allItems.length > 0 && <EndOfTimelineIndicator />}
       </div>
     </div>
   );

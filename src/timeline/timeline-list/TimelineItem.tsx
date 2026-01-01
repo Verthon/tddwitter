@@ -1,33 +1,42 @@
+import { Link } from 'react-router';
 import { Avatar } from 'src/ui/avatar/Avatar';
 import { Text } from 'src/ui/text/Text';
+import { routesConfig } from 'src/routing/routesConfig';
 
 interface TimelineItemProps {
+  id: string;
   avatar: string;
   username: string;
   content: string;
 }
 
-export const TimelineItem = ({ avatar, username, content }: TimelineItemProps) => {
-  const headingId = `timeline-item-${username}-${Date.now()}`;
+export const TimelineItem = ({ id, avatar, username, content }: TimelineItemProps) => {
+  const headingId = `timeline-item-heading-${id}`;
+  const postUrl = routesConfig.post.replace(':id', id);
 
   return (
-    <article
-      className="flex gap-3 py-6 px-3 border-b last:border-b-0 border-gray-200"
-      aria-labelledby={headingId}
-      data-testid="timeline-item"
+    <Link
+      to={postUrl}
+      className="block hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset transition-colors no-underline text-inherit"
     >
-      <Avatar src={avatar} alt={`${username}'s avatar`} size={40} />
+      <article
+        className="flex gap-3 py-6 px-3 border-b last:border-b-0 border-gray-200"
+        aria-labelledby={headingId}
+        data-testid="timeline-item"
+      >
+        <Avatar src={avatar} alt={`${username}'s avatar`} size={40} />
 
-      <div className="flex flex-col gap-1 flex-1 min-w-0">
-        <div className="truncate">
-          <Text weight="bold" as="div" id={headingId}>
-            {username}
+        <div className="flex flex-col gap-1 flex-1 min-w-0">
+          <div className="truncate">
+            <Text weight="bold" as="div" id={headingId}>
+              {username}
+            </Text>
+          </div>
+          <Text size="sm" as="p">
+            {content}
           </Text>
         </div>
-        <Text size="sm" as="p">
-          {content}
-        </Text>
-      </div>
-    </article>
+      </article>
+    </Link>
   );
 };

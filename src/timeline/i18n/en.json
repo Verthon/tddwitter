@@ -1,6 +1,15 @@
 {
   "timeline.empty": "Nothing to see here yet.",
   "timeline.heading": "TDDWitter",
+  "timeline.loading": "Loading timeline...",
+  "timeline.error": "Failed to load timeline",
+  "timeline.tryAgain": "Try again",
+  "timeline.loadingMore": "Loading more...",
+  "timeline.loadMore": "Load more",
+  "timeline.endOfTimeline": "You've reached the end",
+  "timeline.noPosts": "No posts yet",
   "postDetail.title": "Post",
-  "postDetail.backButton": "Go back"
+  "postDetail.backButton": "Go back",
+  "postDetail.loading": "Loading post...",
+  "postDetail.error": "Failed to load post"
 }

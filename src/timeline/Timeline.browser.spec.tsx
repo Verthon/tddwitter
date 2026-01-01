@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-react";
-import { page } from "vitest/browser";
+import { page, userEvent } from "vitest/browser";
 
 import {
   TestI18nProvider,
@@ -25,7 +25,7 @@ describe("Timeline", () => {
     );
 
     await expect
-      .poll(() => document.querySelectorAll("article").length)
+      .poll(() => page.getByRole("list").getByRole("listitem").length)
       .toBe(10);
 
     // Scroll to trigger loading more items
@@ -36,7 +36,7 @@ describe("Timeline", () => {
 
     // Wait for more items to load after scroll
     await expect
-      .poll(() => document.querySelectorAll("article").length, {
+      .poll(() => page.getByRole("list").getByRole("listitem").length, {
         timeout: 5000,
       })
       .toBe(10);
@@ -51,5 +51,26 @@ describe("Timeline", () => {
     const status = page.getByRole("status");
     await expect.element(status).toHaveTextContent(/you've reached the end/i);
     await expect.element(status).toBeVisible();
+  });
+
+  it("should display the details when list item is clicked", async () => {
+    await page.viewport(414, 896);
+
+    await render(
+      <TestRouterProvider>
+        <TestI18nProvider>
+          <TestQueryProvider>
+            <Timeline />
+          </TestQueryProvider>
+        </TestI18nProvider>
+      </TestRouterProvider>
+    );
+
+    const firstItem = page
+      .getByRole("list")
+      .getByRole("listitem")
+      .first();
+
+    await userEvent.click(firstItem);
   });
 });

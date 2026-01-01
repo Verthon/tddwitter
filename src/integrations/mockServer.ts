@@ -2,7 +2,7 @@ import { isCommonAssetRequest } from "msw";
 import { setupWorker } from "msw/browser";
 import { createComposerHandler } from "src/composer/mocks/composerHandlers";
 import { createAuthHandlers } from "src/core/auth/mocks/authHandlers";
-import { createTimelineHandler } from "src/timeline/mocks/timelineHandlers";
+import { createTimelineHandler, createPostDetailHandler } from "src/timeline/mocks/timelineHandlers";
 
 const timelineApiBase = import.meta.env.PUBLIC_TIMELINE_API;
 const authApiBase = import.meta.env.PUBLIC_AUTH_API;
@@ -10,6 +10,7 @@ const composerApiBase = import.meta.env.PUBLIC_COMPOSER_API;
 
 const handlers = [
   createTimelineHandler(timelineApiBase),
+  createPostDetailHandler(timelineApiBase),
   ...createAuthHandlers(authApiBase),
   createComposerHandler(composerApiBase),
 ];
