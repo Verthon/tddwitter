@@ -3,16 +3,19 @@ import { setupWorker } from "msw/browser";
 import { createComposerHandler } from "src/composer/mocks/composerHandlers";
 import { createAuthHandlers } from "src/core/auth/mocks/authHandlers";
 import { createTimelineHandler, createPostDetailHandler } from "src/timeline/mocks/timelineHandlers";
+import { createEngagementHandlers } from "src/engagement/mocks/engagementHandlers";
 
 const timelineApiBase = import.meta.env.PUBLIC_TIMELINE_API;
 const authApiBase = import.meta.env.PUBLIC_AUTH_API;
 const composerApiBase = import.meta.env.PUBLIC_COMPOSER_API;
+const engagementApiBase = import.meta.env.PUBLIC_ENGAGEMENT_API;
 
 const handlers = [
   createTimelineHandler(timelineApiBase),
   createPostDetailHandler(timelineApiBase),
   ...createAuthHandlers(authApiBase),
   createComposerHandler(composerApiBase),
+  ...createEngagementHandlers(engagementApiBase),
 ];
 
 export const worker = setupWorker(...handlers);

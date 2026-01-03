@@ -4,6 +4,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import enComposer from '../composer/i18n/en.json';
 import enCore from '../core/i18n/en.json';
 import enTimeline from '../timeline/i18n/en.json';
+import enEngagement from '../engagement/i18n/en.json';
 
 import { useLocaleContext } from './LocaleProvider';
 import type { MessageValues } from './types';
@@ -12,6 +13,7 @@ const allMessages = {
   ...enCore,
   ...enComposer,
   ...enTimeline,
+  ...enEngagement,
 } as const;
 
 export type MessageKey = keyof typeof allMessages;

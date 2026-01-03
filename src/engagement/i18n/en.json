@@ -1,0 +1,5 @@
+{
+  "engagement.like.ariaLabel": "Like",
+  "engagement.unlike.ariaLabel": "Unlike",
+  "engagement.likeCount": "{{count}} likes"
+}
