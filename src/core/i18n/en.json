@@ -40,5 +40,8 @@
   "core.notFound.title": "Page not found",
   "core.notFound.message": "Sorry, we couldn't find the page you're looking for.",
   "core.notFound.backHome": "Go back home",
-  "core.scroll.scrollToTop": "Scroll to top"
+  "core.scroll.scrollToTop": "Scroll to top",
+  "core.disaster.title": "Oops! Something went wrong",
+  "core.disaster.message": "We encountered an unexpected error. Please try refreshing the page to continue.",
+  "core.disaster.refreshButton": "Refresh page"
 }

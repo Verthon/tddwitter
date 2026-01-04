@@ -1,5 +1,6 @@
 {
   "engagement.like.ariaLabel": "Like",
   "engagement.unlike.ariaLabel": "Unlike",
-  "engagement.likeCount": "{{count}} likes"
+  "engagement.likeCount": "{{count}} likes",
+  "engagement.likeDisasterRecovery": "Like module is not available at the moment, please try again"
 }

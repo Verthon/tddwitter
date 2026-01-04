@@ -2,7 +2,8 @@ import { Link } from 'react-router';
 import { Avatar } from 'src/ui/avatar/Avatar';
 import { Text } from 'src/ui/text/Text';
 import { routesConfig } from 'src/routing/routesConfig';
-import { LikeButton } from 'src/engagement/components/LikeButton';
+import { useTranslation } from 'src/i18n/useTranslation';
+import { LikeButton } from 'src/engagement/public/LikeButton';
 
 interface TimelineItemProps {
   id: string;
@@ -12,6 +13,7 @@ interface TimelineItemProps {
 }
 
 export const TimelineItem = ({ id, avatar, username, content }: TimelineItemProps) => {
+  const { t } = useTranslation();
   const headingId = `timeline-item-heading-${id}`;
   const postUrl = routesConfig.post.replace(':id', id);
 
@@ -24,10 +26,8 @@ export const TimelineItem = ({ id, avatar, username, content }: TimelineItemProp
       <Link
         to={postUrl}
         className="absolute inset-0 z-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-inset no-underline"
-        aria-label={`View post by ${username}`}
-      >
-        <span className="sr-only">View post by {username}</span>
-      </Link>
+        aria-label={t('timeline.viewPost', { username })}
+      />
 
       <div className="relative z-10">
         <Avatar src={avatar} alt={`${username}'s avatar`} size={40} />

@@ -11,5 +11,6 @@
   "postDetail.title": "Post",
   "postDetail.backButton": "Go back",
   "postDetail.loading": "Loading post...",
-  "postDetail.error": "Failed to load post"
+  "postDetail.error": "Failed to load post",
+  "timeline.viewPost": "View post by {username}"
 }

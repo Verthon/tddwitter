@@ -12,7 +12,7 @@ interface ButtonProps {
 }
 
 const baseClasses =
-  'inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded-full disabled:cursor-not-allowed';
+  'inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded-full cursor-pointer disabled:cursor-not-allowed';
 
 const variantClasses = {
   primary: 'bg-blue-600 text-white hover:enabled:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-500',
