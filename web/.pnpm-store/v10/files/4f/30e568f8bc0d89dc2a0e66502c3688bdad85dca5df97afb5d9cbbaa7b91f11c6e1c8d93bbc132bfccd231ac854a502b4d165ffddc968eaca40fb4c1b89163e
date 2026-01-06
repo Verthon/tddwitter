@@ -1,0 +1,68 @@
+/**
+ * The dev middleware is modified based on
+ * https://github.com/webpack/webpack-dev-middleware
+ *
+ * MIT Licensed
+ * Copyright JS Foundation and other contributors
+ * https://github.com/webpack/webpack-dev-middleware/blob/master/LICENSE
+ */
+import type { Stats as FSStats, ReadStream } from 'node:fs';
+import type { IncomingMessage, ServerResponse as NodeServerResponse } from 'node:http';
+import type { Compiler, Configuration, MultiCompiler, MultiStats, Stats } from '@rspack/core';
+import { type Extra } from './utils/getFilenameFromUrl';
+export type ExtendedServerResponse = {
+    locals?: {
+        webpack?: {
+            devMiddleware?: Context;
+        };
+    };
+};
+export type ServerResponse = NodeServerResponse & ExtendedServerResponse;
+export type Watching = Compiler['watching'];
+export type MultiWatching = ReturnType<MultiCompiler['watch']>;
+export type OutputFileSystem = {
+    createReadStream?: (p: string, opts: {
+        start: number;
+        end: number;
+    }) => ReadStream;
+    statSync?: (p: string) => FSStats;
+    lstat?: (p: string) => unknown;
+    readFileSync?: (p: string) => Buffer;
+};
+export type Callback = (stats?: Stats | MultiStats) => void;
+export type Options = {
+    writeToDisk?: boolean | ((targetPath: string, compilationName?: string) => boolean);
+    publicPath?: NonNullable<Configuration['output']>['publicPath'];
+};
+export type NextFunction = (err?: unknown) => void;
+export type Context = {
+    state: boolean;
+    stats: Stats | MultiStats | undefined;
+    callbacks: Callback[];
+    options: Options;
+    compiler: Compiler | MultiCompiler;
+    watching: Watching | MultiWatching | undefined;
+    outputFileSystem: OutputFileSystem;
+};
+export type FilledContext = Omit<Context, 'watching'> & {
+    watching: Watching | MultiWatching;
+};
+export type Middleware<RequestInternal extends IncomingMessage = IncomingMessage, ResponseInternal extends ServerResponse = ServerResponse> = (req: RequestInternal, res: ResponseInternal, next: NextFunction) => Promise<void>;
+export type GetFilenameFromUrl = (url: string, extra?: Extra) => string | undefined;
+export type WaitUntilValid = (callback: Callback) => void;
+export type Invalidate = (callback: Callback) => void;
+export type Close = (callback: (err: Error | null | undefined) => void) => void;
+export type AdditionalMethods = {
+    getFilenameFromUrl: GetFilenameFromUrl;
+    watch: () => void;
+    waitUntilValid: WaitUntilValid;
+    invalidate: Invalidate;
+    close: Close;
+    context: Context;
+};
+export type API<RequestInternal extends IncomingMessage = IncomingMessage, ResponseInternal extends ServerResponse = ServerResponse> = Middleware<RequestInternal, ResponseInternal> & AdditionalMethods;
+export type WithOptional<T, K extends keyof T> = Omit<T, K> & Partial<T>;
+export type WithoutUndefined<T, K extends keyof T> = T & {
+    [P in K]-?: NonNullable<T[P]>;
+};
+export declare function devMiddleware<RequestInternal extends IncomingMessage = IncomingMessage, ResponseInternal extends ServerResponse = ServerResponse>(compiler: Compiler | MultiCompiler, options?: Options): Promise<API<RequestInternal, ResponseInternal>>;

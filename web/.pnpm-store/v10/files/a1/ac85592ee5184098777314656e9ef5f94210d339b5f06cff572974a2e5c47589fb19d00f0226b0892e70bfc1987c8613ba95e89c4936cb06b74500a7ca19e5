@@ -1,0 +1,2 @@
+import type { Context, WithOptional } from '../index';
+export declare function setupOutputFileSystem(context: WithOptional<Context, 'watching' | 'outputFileSystem'>): Promise<void>;

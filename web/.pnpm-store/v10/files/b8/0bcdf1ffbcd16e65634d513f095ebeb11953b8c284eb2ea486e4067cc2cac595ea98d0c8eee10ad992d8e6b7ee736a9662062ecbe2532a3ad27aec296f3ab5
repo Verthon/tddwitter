@@ -1,0 +1,1310 @@
+"use strict";
+let __rslib_import_meta_url__ = 'undefined' == typeof document ? new (require('url'.replace('', ''))).URL('file:' + __filename).href : document.currentScript && document.currentScript.src || new URL('main.js', document.baseURI).href;
+var __webpack_require__ = {};
+__webpack_require__.n = (module)=>{
+    var getter = module && module.__esModule ? ()=>module.default : ()=>module;
+    return __webpack_require__.d(getter, {
+        a: getter
+    }), getter;
+}, __webpack_require__.d = (exports1, definition)=>{
+    for(var key in definition)__webpack_require__.o(definition, key) && !__webpack_require__.o(exports1, key) && Object.defineProperty(exports1, key, {
+        enumerable: !0,
+        get: definition[key]
+    });
+}, __webpack_require__.o = (obj, prop)=>Object.prototype.hasOwnProperty.call(obj, prop), __webpack_require__.r = (exports1)=>{
+    'undefined' != typeof Symbol && Symbol.toStringTag && Object.defineProperty(exports1, Symbol.toStringTag, {
+        value: 'Module'
+    }), Object.defineProperty(exports1, '__esModule', {
+        value: !0
+    });
+};
+var __webpack_exports__ = {};
+__webpack_require__.r(__webpack_exports__), __webpack_require__.d(__webpack_exports__, {
+    Server: ()=>server_namespaceObject,
+    File: ()=>file_namespaceObject,
+    Json: ()=>json_namespaceObject,
+    EnvInfo: ()=>envinfo_namespaceObject,
+    Process: ()=>process_namespaceObject
+});
+var cache_namespaceObject = {};
+__webpack_require__.r(cache_namespaceObject), __webpack_require__.d(cache_namespaceObject, {
+    readFile: ()=>cache_readFile,
+    readFileSync: ()=>readFileSync,
+    readJSON: ()=>readJSON,
+    readJSONSync: ()=>readJSONSync
+});
+var file_namespaceObject = {};
+__webpack_require__.r(file_namespaceObject), __webpack_require__.d(file_namespaceObject, {
+    FileSharding: ()=>FileSharding,
+    cache: ()=>cache_namespaceObject,
+    fse: ()=>esm_namespaceObject
+});
+var json_namespaceObject = {};
+__webpack_require__.r(json_namespaceObject), __webpack_require__.d(json_namespaceObject, {
+    readPackageJson: ()=>readPackageJson,
+    stringify: ()=>stringify
+});
+var server_namespaceObject = {};
+__webpack_require__.r(server_namespaceObject), __webpack_require__.d(server_namespaceObject, {
+    createApp: ()=>createApp,
+    createGetPortSyncFunctionString: ()=>createGetPortSyncFunctionString,
+    createServer: ()=>createServer,
+    defaultPort: ()=>defaultPort,
+    getPort: ()=>getPort,
+    getPortSync: ()=>getPortSync
+});
+var envinfo_namespaceObject = {};
+__webpack_require__.r(envinfo_namespaceObject), __webpack_require__.d(envinfo_namespaceObject, {
+    getCPUInfo: ()=>getCPUInfo,
+    getGitBranch: ()=>getGitBranch,
+    getGitRepo: ()=>getGitRepo,
+    getGlobalNpmPackageVersion: ()=>getGlobalNpmPackageVersion,
+    getMemoryInfo: ()=>getMemoryInfo,
+    getNodeVersion: ()=>getNodeVersion,
+    getNpmPackageVersion: ()=>getNpmPackageVersion,
+    getNpmVersion: ()=>getNpmVersion,
+    getOSInfo: ()=>getOSInfo,
+    getPnpmVersion: ()=>getPnpmVersion,
+    getYarnVersion: ()=>getYarnVersion
+});
+var process_namespaceObject = {};
+__webpack_require__.r(process_namespaceObject), __webpack_require__.d(process_namespaceObject, {
+    getMemoryUsage: ()=>getMemoryUsage,
+    getMemoryUsageMessage: ()=>getMemoryUsageMessage
+});
+let external_fs_extra_namespaceObject = require("fs-extra");
+var external_fs_extra_default = __webpack_require__.n(external_fs_extra_namespaceObject);
+let external_fs_namespaceObject = require("fs");
+var external_fs_default = __webpack_require__.n(external_fs_namespaceObject);
+let external_path_namespaceObject = require("path");
+var external_path_default = __webpack_require__.n(external_path_namespaceObject);
+class FileSharding {
+    content;
+    limitBytes;
+    encoding;
+    constructor(content, limitBytes = 10485760, encoding = 'utf-8'){
+        this.content = content, this.limitBytes = limitBytes, this.encoding = encoding;
+    }
+    createVirtualShardingFiles(ext = '', index = 0) {
+        let bf = Buffer.from(this.content, this.encoding), res = [], threshold = this.limitBytes, tmpBytes = 0;
+        for(; bf.byteLength > tmpBytes;)res.push(bf.subarray(tmpBytes, tmpBytes + threshold)), tmpBytes += threshold;
+        return res.map((e, i)=>({
+                filename: `${i + index}${ext}`,
+                content: e
+            }));
+    }
+    async writeStringToFolder(folder, ext = '', index) {
+        let dist = external_path_default().resolve(folder);
+        await external_fs_extra_default().ensureDir(dist);
+        let res = this.createVirtualShardingFiles(ext, index);
+        return await Promise.all(res.map((e)=>new Promise((resolve, reject)=>{
+                let stream = external_fs_default().createWriteStream(external_path_default().join(dist, e.filename), this.encoding);
+                stream.end(e.content), stream.once('close', ()=>resolve(void 0)), stream.once('error', (err)=>reject(err));
+            }))), res;
+    }
+}
+let esm_namespaceObject = require("fs-extra/esm"), external_node_fs_namespaceObject = require("node:fs");
+var external_node_fs_default = __webpack_require__.n(external_node_fs_namespaceObject);
+let cache = new Map();
+async function cache_readFile(path1) {
+    if (cache.has(path1)) return cache.get(path1);
+    let res = await external_node_fs_default().promises.readFile(path1, 'utf-8');
+    return cache.set(path1, res), res;
+}
+function readFileSync(path1) {
+    if (cache.has(path1)) return cache.get(path1);
+    let res = external_node_fs_default().readFileSync(path1, 'utf-8');
+    return cache.set(path1, res), res;
+}
+async function readJSON(path1) {
+    return JSON.parse(await cache_readFile(path1));
+}
+function readJSONSync(path1) {
+    return JSON.parse(readFileSync(path1));
+}
+let external_json_stream_stringify_namespaceObject = require("json-stream-stringify"), external_zlib_namespaceObject = require("zlib"), external_buffer_namespaceObject = require("buffer"), external_picocolors_namespaceObject = require("picocolors");
+var external_picocolors_default = __webpack_require__.n(external_picocolors_namespaceObject);
+let external_rslog_namespaceObject = require("rslog"), types_namespaceObject = require("@rsdoctor/types");
+function debug(getMsg, prefix = '') {
+    process.env.DEBUG && (logger.level = 'verbose', logger.debug(`${prefix} ${getMsg()}`));
+}
+let rsdoctorLogger = (0, external_rslog_namespaceObject.createLogger)();
+rsdoctorLogger.override({
+    log: (message)=>{
+        console.log(`${external_picocolors_default().green('[RSDOCTOR LOG]')} ${message}`);
+    },
+    info: (message)=>{
+        console.log(`${external_picocolors_default().yellow('[RSDOCTOR INFO]')} ${message}`);
+    },
+    warn: (message)=>{
+        console.warn(`${external_picocolors_default().yellow('[RSDOCTOR WARN]')} ${message}`);
+    },
+    start: (message)=>{
+        console.log(`${external_picocolors_default().green('[RSDOCTOR START]')} ${message}`);
+    },
+    ready: (message)=>{
+        console.log(`${external_picocolors_default().green('[RSDOCTOR READY]')} ${message}`);
+    },
+    error: (message)=>{
+        console.error(`${external_picocolors_default().red('[RSDOCTOR ERROR]')} ${message}`);
+    },
+    success: (message)=>{
+        console.error(`${external_picocolors_default().green('[RSDOCTOR SUCCESS]')} ${message}`);
+    },
+    debug: (message)=>{
+        process.env.DEBUG && console.log(`${external_picocolors_default().blue('[RSDOCTOR DEBUG]')} ${message}`);
+    }
+});
+let _timers = new Map();
+function time(label) {
+    process.env.DEBUG === Constants.RsdoctorProcessEnvDebugKey && (_timers.has(label) || _timers.set(label, Date.now()));
+}
+function timeEnd(label) {
+    if (process.env.DEBUG !== Constants.RsdoctorProcessEnvDebugKey) return;
+    let start = _timers.get(label);
+    if (null == start) return void logger.debug(`Timer '${label}' does not exist.`);
+    let duration = Date.now() - start;
+    logger.debug(`Timer '${label}' ended: ${duration}ms`), _timers.delete(label);
+}
+function algorithm_mergeIntervals(intervals) {
+    let previous, current;
+    intervals.sort((a, b)=>a[0] - b[0]);
+    let result = [];
+    for(let i = 0; i < intervals.length; i++)current = intervals[i], !previous || current[0] > previous[1] ? (previous = current, result.push(current)) : previous[1] = Math.max(previous[1], current[1]);
+    return result;
+}
+function compressText(input) {
+    try {
+        return deflateSync(input).toString('base64');
+    } catch (e) {
+        return logger.debug(`compressText error: ${e}`), '';
+    }
+}
+function algorithm_decompressText(input) {
+    return inflateSync(Buffer.from(input, 'base64')).toString();
+}
+function random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+function isUrl(uri) {
+    return /^https?:\/\//.test(uri);
+}
+function isFilePath(uri) {
+    return isAbsolute(uri);
+}
+function url_isRemoteUrl(uri) {
+    return !!('string' == typeof uri && (isUrl(uri) || isFilePath(uri)));
+}
+function isShardingData(data) {
+    return !!(Array.isArray(data) && data.length > 0 && data.every((e)=>isRemoteUrl(e)));
+}
+async function fetchShardingData(shardingFiles, fetchImplement) {
+    let res = await Promise.all(shardingFiles.map((url)=>fetchImplement(url))), strings = 0 === res.length ? [] : res.reduce((t, e)=>t + e);
+    return 'object' == typeof strings ? strings : JSON.parse(decompressText(strings));
+}
+async function fetchShardingFiles(data, fetchImplement, filterKeys) {
+    return (await Promise.all(Object.keys(data).map(async (_key)=>{
+        let val = data[_key];
+        return filterKeys?.length && 0 > filterKeys.indexOf(_key) ? {
+            [_key]: []
+        } : isShardingData(val) ? {
+            [_key]: await fetchShardingData(val, fetchImplement)
+        } : {
+            [_key]: val
+        };
+    }))).reduce((t, c)=>Object.assign(t, c));
+}
+function findLoaderTotalTiming(loaders) {
+    let start = 1 / 0, end = -1 / 0;
+    for(let i = 0; i < loaders.length; i++){
+        let loader = loaders[i];
+        loader.startAt <= start && (start = loader.startAt), loader.endAt >= end && (end = loader.endAt);
+    }
+    return {
+        start,
+        end
+    };
+}
+function getLoadersCosts(filter, loaders) {
+    let match = {}, others = {};
+    loaders.forEach((e)=>{
+        filter(e) ? (match[e.pid] || (match[e.pid] = []), match[e.pid].push([
+            e.startAt,
+            e.endAt
+        ])) : (others[e.pid] || (others[e.pid] = []), others[e.pid].push([
+            e.startAt,
+            e.endAt
+        ]));
+    });
+    let costs = 0, pids = Object.keys(match);
+    for(let i = 0; i < pids.length; i++){
+        let pid = pids[i], _match = mergeIntervals(match[pid]), _others = mergeIntervals(others[pid] || []).filter(([s, e])=>_match.some((el)=>s >= el[0] && e <= el[1]));
+        costs += (_match.length ? _match.reduce((t, c)=>t += c[1] - c[0], 0) : 0) - (_others.length ? _others.reduce((t, c)=>t += c[1] - c[0], 0) : 0);
+    }
+    return costs;
+}
+function getLoaderCosts(loader, loaders) {
+    let blocked = loaders.filter((e)=>!e.loader.includes('builtin') && e !== loader && e.pid === loader.pid && !!(e.startAt >= loader.startAt) && !!(e.endAt <= loader.endAt)), costs = loader.endAt - loader.startAt;
+    return blocked.length && mergeIntervals(blocked.map((e)=>[
+            Math.max(e.startAt, loader.startAt),
+            Math.min(e.endAt, loader.endAt)
+        ])).forEach((e)=>{
+        let sub = e[1] - e[0];
+        costs -= sub;
+    }), costs;
+}
+function getLoaderNames(loaders) {
+    let names = new Set();
+    return loaders.forEach((e)=>e.loaders.forEach((l)=>names.add(getLoadrName(l.loader)))), [
+        ...names
+    ];
+}
+function getLoadersTransformData(loaders) {
+    let res = [];
+    for(let i = 0; i < loaders.length; i++){
+        let item = loaders[i];
+        for(let j = 0; j < item.loaders.length; j++){
+            let loader = item.loaders[j];
+            res.push(loader);
+        }
+    }
+    return res;
+}
+function getLoaderChartData(loaders) {
+    let res = [], list = getLoadersTransformData(loaders);
+    return loaders.forEach((item)=>{
+        item.loaders.forEach((el)=>{
+            res.push({
+                layer: item.resource.layer,
+                loader: getLoadrName(el.loader),
+                isPitch: el.isPitch,
+                startAt: el.startAt,
+                endAt: el.endAt,
+                pid: el.pid,
+                sync: el.sync,
+                resource: item.resource.path,
+                costs: getLoaderCosts(el, list)
+            });
+        });
+    }), res;
+}
+function getLoaderFileTree(loaders) {
+    let list = getLoadersTransformData(loaders);
+    return loaders.map((data)=>{
+        let { loaders: arr, resource } = data;
+        return {
+            path: resource.path,
+            layer: resource.layer,
+            loaders: arr.map((l)=>({
+                    key: l.path,
+                    loader: getLoadrName(l.loader),
+                    path: l.path,
+                    errors: l.errors,
+                    costs: getLoaderCosts(l, list)
+                }))
+        };
+    });
+}
+function getLoaderFileDetails(path1, loaders) {
+    let data = loaders.find((e)=>e.resource.path === path1);
+    if (!data) throw Error(`"${path1}" not match any loader data`);
+    let list = getLoadersTransformData(loaders);
+    return {
+        ...data,
+        loaders: data.loaders.map((el)=>({
+                ...el,
+                loader: getLoadrName(el.loader),
+                costs: getLoaderCosts(el, list)
+            }))
+    };
+}
+function getLoaderFolderStatistics(folder, loaders) {
+    let datas = loaders.filter((data)=>{
+        let { path: path1 } = data.resource;
+        return path1.startsWith(folder);
+    }), filteredLoaders = [], uniqueLoaders = new Map();
+    return datas.forEach((data)=>{
+        data.loaders.forEach((fl)=>{
+            let uniqueLoader = uniqueLoaders.get(fl.loader);
+            return uniqueLoader ? uniqueLoaders.set(fl.loader, {
+                files: uniqueLoader.files + 1,
+                path: fl.path
+            }) : uniqueLoaders.set(fl.loader, {
+                files: 1,
+                path: fl.path
+            }), filteredLoaders.push({
+                loader: fl.loader,
+                startAt: fl.startAt,
+                endAt: fl.endAt,
+                pid: fl.pid
+            });
+        });
+    }), Array.from(uniqueLoaders).map((uniqueLoader)=>{
+        let costs = getLoadersCosts((l)=>l.loader === uniqueLoader[0], filteredLoaders);
+        return {
+            loader: uniqueLoader[0],
+            files: uniqueLoader[1].files,
+            path: uniqueLoader[1].path,
+            costs
+        };
+    });
+}
+function collectResourceDirectories(loaders, root) {
+    let directories = new Set();
+    return loaders.forEach((item)=>{
+        if (item.resource.path.startsWith(root)) {
+            let pathParts = item.resource.path.split(root).slice(1).join('/').split('/');
+            if (pathParts.length >= 2) {
+                let twoLevelDir = pathParts.slice(0, 2).join('/');
+                directories.add(`${root}/${twoLevelDir}`);
+            }
+        } else {
+            let pathParts = item.resource.path.split('/'), twoLevelDir = pathParts.slice(0, pathParts.length - 1).join('/');
+            directories.add(twoLevelDir);
+        }
+    }), Array.from(directories);
+}
+function getDirectoriesLoaders(loaders, root) {
+    return collectResourceDirectories(loaders, root || process.cwd()).map((directory)=>{
+        let stats = getLoaderFolderStatistics(directory, loaders);
+        return {
+            directory,
+            stats
+        };
+    });
+}
+function getLoaderFileFirstInput(file, loaders) {
+    for(let i = 0; i < loaders.length; i++){
+        let item = loaders[i];
+        if (item.resource.path === file) {
+            let nonPitchLoaders = item.loaders.filter((e)=>!e.isPitch);
+            if (!nonPitchLoaders.length) return '';
+            return nonPitchLoaders[0].input || '';
+        }
+    }
+    return '';
+}
+function getLoaderFileInputAndOutput(file, loader, loaderIndex, loaders) {
+    for(let i = 0; i < loaders.length; i++){
+        let item = loaders[i];
+        if (item.resource.path === file) for(let j = 0; j < item.loaders.length; j++){
+            let l = item.loaders[j];
+            if (l.loader === loader && l.loaderIndex === loaderIndex) return {
+                input: l.input || '',
+                output: l.result || ''
+            };
+            return {
+                input: '',
+                output: ''
+            };
+        }
+    }
+    return {
+        input: '',
+        output: ''
+    };
+}
+let LoaderInternalPropertyName = '__l__', isVue = (compiler)=>('module' in compiler.options && compiler.options.module.rules || []).some((rule)=>!!(rule && 'object' == typeof rule && rule.test instanceof RegExp && rule.test?.test('.vue'))), getLoadrName = (loader)=>{
+    let regResults = loader.includes('node_modules') ? loader.split('node_modules') : null;
+    return regResults ? regResults[regResults.length - 1] : loader;
+}, external_process_namespaceObject = require("process");
+function toFixedDigits(num, digits = 2) {
+    return 0 === digits ? Math.floor(num) : +num.toFixed(digits);
+}
+function getUnit(num, type) {
+    return 'm' === type ? num > 1 ? 'mins' : 'min' : num > 1 ? 'hours' : 'hour';
+}
+function formatCosts(costs) {
+    if ((costs = Number(costs)) >= 1000) {
+        let sec = costs / 1000;
+        if (sec >= 60) {
+            let mins = sec / 60;
+            if (mins >= 60) {
+                let hours = toFixedDigits(mins / 60, 0), restMins = toFixedDigits(mins % 60, 1), hUnit = getUnit(hours, 'h');
+                return restMins > 0 ? `${hours}${hUnit} ${restMins}${getUnit(restMins, 'm')}` : `${hours}${hUnit}`;
+            }
+            let mUnit = getUnit(mins = toFixedDigits(mins, 0), 'm'), restSec = toFixedDigits(sec % 60, 0);
+            return restSec > 0 ? `${mins}${mUnit} ${restSec}s` : `${mins}${mUnit}`;
+        }
+        return `${toFixedDigits(sec, 1)}s`;
+    }
+    if (costs >= 10) return `${+toFixedDigits(costs, 0)}ms`;
+    if (costs >= 1) return `${+toFixedDigits(costs, 1)}ms`;
+    let r = +toFixedDigits(costs, 2);
+    return 0 === r && (r = +toFixedDigits(costs, 3)), `${r}ms`;
+}
+function getCurrentTimestamp(start, startHRTime) {
+    let endHRTime = hrtime(startHRTime);
+    return start + 1000 * endHRTime[0] + (process.env.RSTEST ? Math.round(endHRTime[1] / 1000000) : endHRTime[1] / 1000000);
+}
+function isResolveSuccessData(data) {
+    return !!data.result;
+}
+function isResolveFailData(data) {
+    return !!data.error;
+}
+function getResolverCosts(resolver, resolvers) {
+    let blocked = resolvers.filter((e)=>e !== resolver && e.pid === resolver.pid && e.startAt >= resolver.startAt && e.endAt <= resolver.endAt), costs = resolver.endAt - resolver.startAt;
+    return blocked.length && mergeIntervals(blocked.map((e)=>[
+            Math.max(e.startAt, resolver.startAt),
+            Math.min(e.endAt, resolver.endAt)
+        ])).forEach((e)=>{
+        let sub = e[1] - e[0];
+        costs -= sub;
+    }), costs;
+}
+function getResolverFileTree(resolver) {
+    return resolver.map((e)=>({
+            issuerPath: e.issuerPath
+        }));
+}
+function getResolverFileDetails(filepath, resolvers, modules, moduleCodeMap) {
+    let module = modules.find((item)=>item.path === filepath), matchResolvers = resolvers.filter((e)=>e.issuerPath === filepath), before = module && moduleCodeMap && moduleCodeMap[module.id] ? moduleCodeMap[module.id].source : '', after = matchResolvers.reduce((t, c)=>c.request && isResolveSuccessData(c) ? t.replace(RegExp(`["']${c.request}["']`), `"${c.result}"`) : t, before);
+    return {
+        filepath,
+        before,
+        after,
+        resolvers: matchResolvers.map((e)=>({
+                ...e,
+                costs: getResolverCosts(e, resolvers)
+            }))
+    };
+}
+function modules_getModulesByAsset(asset, chunks, modules, filterModules, checkModules) {
+    let cks = getChunksByChunkIds(getChunkIdsByAsset(asset), chunks);
+    return getModulesByChunks(asset.path, cks, modules, filterModules, checkModules);
+}
+function getModuleIdsByChunk(chunk) {
+    let { modules = [] } = chunk;
+    return modules;
+}
+function getModuleIdsByModulesIds(moduleIds, modules) {
+    return moduleIds.map((id)=>modules.find((m)=>m.id === id)).filter(Boolean);
+}
+function getModulesByChunk(chunk, modules, filterModules) {
+    return getModuleIdsByChunk(chunk).map((id)=>{
+        let module = modules.find((e)=>e.id === id);
+        if (filterModules && filterModules.length > 0) {
+            if (!module) return null;
+            let filtered = {};
+            for (let key of filterModules)void 0 !== module[key] && (filtered[key] = module[key]);
+            return filtered;
+        }
+        return module;
+    }).filter(Boolean);
+}
+function getTypeChecker(assetPath) {
+    return isStyleExt(assetPath) ? isStyleExt : isJsExt(assetPath) ? isJsExt : ()=>!0;
+}
+function getModulesByChunks(assetPath, chunks, modules, filterModules, checkModules) {
+    let res = [], typeChecker = getTypeChecker(assetPath);
+    try {
+        chunks.forEach((chunk)=>{
+            getModulesByChunk(chunk, modules, filterModules).forEach((md)=>{
+                let name = md.path || '';
+                typeChecker(name) && (!checkModules || checkModules(md)) && !res.filter((_m)=>_m.id === md.id).length && res.push(md);
+            });
+        });
+    } catch (error) {
+        logger.debug(error);
+    }
+    return res;
+}
+function getModuleByDependency(dep, modules) {
+    return modules.find((item)=>item.id === dep.module);
+}
+function filterModulesAndDependenciesByPackageDeps(deps, dependencies, modules) {
+    let _dependencies = [], _modules = [];
+    for(let i = 0; i < deps.length; i++){
+        let dep = getDependencyByPackageData(deps[i], dependencies);
+        if (dep) {
+            _dependencies.push(dep);
+            let module = getModuleByDependency(dep, modules);
+            module && _modules.push(module);
+        }
+    }
+    return {
+        dependencies: _dependencies,
+        modules: _modules
+    };
+}
+function getModuleDetails(moduleId, modules, dependencies) {
+    let module = modules.find((e)=>e.id === moduleId);
+    return {
+        module,
+        dependencies: getDependenciesByModule(module, dependencies)
+    };
+}
+let EXT = 'js|css|html', hashPattern = /[a-z|A-Z|0-9]{4,32}/, hashSeparatorPattern = /[-|.]/, fileExtensionPattern = /(?:\.[a-z｜A-Z|0-9]{2,}){1,}/, filenamePattern = RegExp(`(.*)${hashSeparatorPattern.source}${hashPattern.source}(${fileExtensionPattern.source})$`);
+function formatAssetName(assetName, fileConfig) {
+    let splitFilesList = fileConfig?.split('.'), outputFileTailName = '', unHashedFileName = assetName;
+    return splitFilesList?.length && splitFilesList.length >= 3 && splitFilesList[splitFilesList.length - 2]?.indexOf('[') < 0 && 'js|css|html'.indexOf(splitFilesList[splitFilesList.length - 1]) > -1 ? (outputFileTailName = splitFilesList[splitFilesList.length - 2], unHashedFileName = assetName.replace(/(.*)(\.[a-f0-9]{4,32})([^.]*.[^.]+){2,}/g, '$1'), `${unHashedFileName}.${outputFileTailName}.${assetName.substring(assetName.lastIndexOf('.') + 1)}`) : assetName.replace(filenamePattern, '$1$2');
+}
+function isAssetMatchExtension(asset, ext) {
+    return asset.path.slice(-ext.length) === ext || extname(asset.path) === ext;
+}
+function isAssetMatchExtensions(asset, exts) {
+    return !!exts.length && exts.some((ext)=>isAssetMatchExtension(asset, ext));
+}
+function filterAssetsByExtensions(assets, exts) {
+    return 'string' == typeof exts ? assets.filter((e)=>isAssetMatchExtension(e, exts)) : Array.isArray(exts) ? assets.filter((e)=>isAssetMatchExtensions(e, exts)) : [];
+}
+function filterAssets(assets, filterOrExtensions) {
+    return filterOrExtensions && (assets = 'function' == typeof filterOrExtensions ? assets.filter(filterOrExtensions) : filterAssetsByExtensions(assets, filterOrExtensions)), assets;
+}
+function getAssetsSizeInfo(assets, chunks, options = {}) {
+    let { withFileContent = !0, filterOrExtensions } = options;
+    return (assets = assets.filter((e)=>!isAssetMatchExtensions(e, Constants.MapExtensions)), filterOrExtensions && (assets = filterAssets(assets, filterOrExtensions)), assets.length) ? {
+        count: assets.length,
+        size: assets.reduce((t, c)=>t + c.size, 0),
+        files: assets.map((e)=>({
+                path: e.path,
+                size: e.size,
+                gzipSize: e.gzipSize,
+                initial: isInitialAsset(e, chunks),
+                content: withFileContent ? e.content : void 0
+            }))
+    } : {
+        count: 0,
+        size: 0,
+        files: []
+    };
+}
+function isInitialAsset(asset, chunks) {
+    return getChunksByAsset(asset, chunks).some((e)=>!!e.initial);
+}
+function getInitialAssetsSizeInfo(assets, chunks, options = {}) {
+    return options.filterOrExtensions && (assets = filterAssets(assets, options.filterOrExtensions)), getAssetsSizeInfo(assets, chunks, {
+        ...options,
+        filterOrExtensions: (asset)=>isInitialAsset(asset, chunks)
+    });
+}
+function getAssetsDiffResult(baseline, current) {
+    return {
+        all: {
+            total: diffAssetsByExtensions(baseline, current)
+        },
+        js: {
+            total: diffAssetsByExtensions(baseline, current, Constants.JSExtension),
+            initial: diffAssetsByExtensions(baseline, current, Constants.JSExtension, !0)
+        },
+        css: {
+            total: diffAssetsByExtensions(baseline, current, Constants.CSSExtension),
+            initial: diffAssetsByExtensions(baseline, current, Constants.CSSExtension, !0)
+        },
+        imgs: {
+            total: diffAssetsByExtensions(baseline, current, Constants.ImgExtensions)
+        },
+        html: {
+            total: diffAssetsByExtensions(baseline, current, Constants.HtmlExtension)
+        },
+        media: {
+            total: diffAssetsByExtensions(baseline, current, Constants.MediaExtensions)
+        },
+        fonts: {
+            total: diffAssetsByExtensions(baseline, current, Constants.FontExtensions)
+        },
+        others: {
+            total: diffAssetsByExtensions(baseline, current, (asset)=>!isAssetMatchExtensions(asset, [
+                    Constants.JSExtension,
+                    Constants.CSSExtension,
+                    Constants.HtmlExtension
+                ].concat(Constants.ImgExtensions, Constants.MediaExtensions, Constants.FontExtensions, Constants.MapExtensions)))
+        }
+    };
+}
+function diffSize(bSize, cSize) {
+    let isEqual = bSize === cSize;
+    return {
+        percent: isEqual ? 0 : 0 === bSize ? 100 : Math.abs(cSize - bSize) / bSize * 100,
+        state: isEqual ? Client.RsdoctorClientDiffState.Equal : bSize > cSize ? Client.RsdoctorClientDiffState.Down : Client.RsdoctorClientDiffState.Up
+    };
+}
+function diffAssetsByExtensions(baseline, current, filterOrExtensions, isInitial = !1) {
+    let cSize, cCount, { size: bSize, count: bCount } = isInitial ? getInitialAssetsSizeInfo(baseline.assets, baseline.chunks, {
+        filterOrExtensions
+    }) : getAssetsSizeInfo(baseline.assets, baseline.chunks, {
+        filterOrExtensions
+    });
+    if (baseline === current) cSize = bSize, cCount = bCount;
+    else {
+        let { size, count } = isInitial ? getInitialAssetsSizeInfo(current.assets, current.chunks, {
+            filterOrExtensions
+        }) : getAssetsSizeInfo(current.assets, current.chunks, {
+            filterOrExtensions
+        });
+        cSize = size, cCount = count;
+    }
+    let { percent, state } = diffSize(bSize, cSize);
+    return {
+        size: {
+            baseline: bSize,
+            current: cSize
+        },
+        count: {
+            baseline: bCount,
+            current: cCount
+        },
+        percent,
+        state
+    };
+}
+function getAssetsSummary(assets, chunks, options = {}) {
+    let jsOpt = {
+        ...options,
+        filterOrExtensions: Constants.JSExtension
+    }, cssOpt = {
+        ...options,
+        filterOrExtensions: Constants.CSSExtension
+    }, imgOpt = {
+        ...options,
+        filterOrExtensions: Constants.ImgExtensions
+    }, htmlOpt = {
+        ...options,
+        filterOrExtensions: Constants.HtmlExtension
+    }, mediaOpt = {
+        ...options,
+        filterOrExtensions: Constants.MediaExtensions
+    }, fontOpt = {
+        ...options,
+        filterOrExtensions: Constants.FontExtensions
+    }, otherOpt = {
+        ...options,
+        filterOrExtensions: (asset)=>!isAssetMatchExtensions(asset, [
+                Constants.JSExtension,
+                Constants.CSSExtension,
+                Constants.HtmlExtension
+            ].concat(Constants.ImgExtensions, Constants.MediaExtensions, Constants.FontExtensions, Constants.MapExtensions))
+    };
+    return {
+        all: {
+            total: getAssetsSizeInfo(assets, chunks, options)
+        },
+        js: {
+            total: getAssetsSizeInfo(assets, chunks, jsOpt),
+            initial: getInitialAssetsSizeInfo(assets, chunks, jsOpt)
+        },
+        css: {
+            total: getAssetsSizeInfo(assets, chunks, cssOpt),
+            initial: getInitialAssetsSizeInfo(assets, chunks, cssOpt)
+        },
+        imgs: {
+            total: getAssetsSizeInfo(assets, chunks, imgOpt)
+        },
+        html: {
+            total: getAssetsSizeInfo(assets, chunks, htmlOpt)
+        },
+        media: {
+            total: getAssetsSizeInfo(assets, chunks, mediaOpt)
+        },
+        fonts: {
+            total: getAssetsSizeInfo(assets, chunks, fontOpt)
+        },
+        others: {
+            total: getAssetsSizeInfo(assets, chunks, otherOpt)
+        }
+    };
+}
+function getAssetDetails(assetPath, assets, chunks, modules, checkModules) {
+    let asset = assets.find((e)=>e.path === assetPath);
+    return {
+        asset,
+        chunks: getChunksByAsset(asset, chunks),
+        modules: getModulesByAsset(asset, chunks, modules, void 0, checkModules)
+    };
+}
+function getAllBundleData(assets, chunks, modules, filtersModules) {
+    let result = [];
+    try {
+        for(let i = 0; i < assets.length; i++){
+            let asset = assets[i];
+            result.push({
+                asset,
+                modules: getModulesByAsset(asset, chunks, modules, filtersModules)
+            });
+        }
+        return result;
+    } catch (error) {
+        return console.error(error), [];
+    }
+}
+function extname(filename) {
+    let matches = filename.split('?')[0].match(/\.([0-9a-z]+)(?:[\?#]|$)/i);
+    return matches ? `.${matches[1]}` : '';
+}
+let sep = ',';
+function getBundleDiffPageQueryString(files) {
+    let qs = encodeURIComponent(files.join(','));
+    return qs && (qs = `?${Client.RsdoctorClientUrlQuery.BundleDiffFiles}=${qs}`), qs;
+}
+function getBundleDiffPageUrl(files) {
+    let qs = getBundleDiffPageQueryString(files);
+    if ('development' === process.env.NODE_ENV && 'undefined' != typeof location) {
+        let { search = '', origin } = location;
+        return search && (qs += `&${search.slice(1)}`), `${origin}${qs}#${Client.RsdoctorClientRoutes.BundleDiff}`;
+    }
+    return `${qs}#${Client.RsdoctorClientRoutes.BundleDiff}`;
+}
+function parseFilesFromBundlePageUrlQuery(queryValue) {
+    return decodeURIComponent(queryValue).split(',');
+}
+function getPackageRelationAlertDetails(modules, dependencies, root, packageDependencies, moduleCodeMap) {
+    return packageDependencies.slice().reverse().map((dep)=>{
+        let dependency = dependencies.find((item)=>item.id === dep.dependencyId);
+        if (!dependency) return null;
+        let module = modules.find((item)=>item.id === dependency.module);
+        return module ? {
+            group: dep.group,
+            module,
+            dependency,
+            relativePath: relative(root, module.path),
+            moduleCode: moduleCodeMap?.[module.id]
+        } : null;
+    }).filter(Boolean);
+}
+class APIDataLoader {
+    loader;
+    constructor(loader){
+        this.loader = loader, this.loadAPI = this.loadAPI.bind(this);
+    }
+    log(...args) {
+        console.log(`[${this.constructor.name}]`, ...args);
+    }
+    loadAPI(...args) {
+        let [api, body] = args;
+        switch(api){
+            case SDK.ServerAPI.API.LoadDataByKey:
+                return this.loader.loadData(body.key);
+            case SDK.ServerAPI.API.GetProjectInfo:
+                return Promise.all([
+                    this.loader.loadData('root'),
+                    this.loader.loadData('pid'),
+                    this.loader.loadData('hash'),
+                    this.loader.loadData('summary'),
+                    this.loader.loadData('configs'),
+                    this.loader.loadData('envinfo'),
+                    this.loader.loadData('errors')
+                ]).then(([root, pid, hash, summary, configs, envinfo, errors])=>({
+                        root,
+                        pid,
+                        hash,
+                        summary,
+                        configs,
+                        envinfo,
+                        errors
+                    }));
+            case SDK.ServerAPI.API.GetClientRoutes:
+                if ('undefined' != typeof window && window?.[Constants.WINDOW_RSDOCTOR_TAG]) return window[Constants.WINDOW_RSDOCTOR_TAG].enableRoutes;
+                return this.loader.loadManifest().then((res)=>{
+                    let { enableRoutes = [] } = res.client || {};
+                    return enableRoutes;
+                });
+            case SDK.ServerAPI.API.GetLoaderNames:
+                return this.loader.loadData('loader').then((res)=>Loader.getLoaderNames(res || []));
+            case SDK.ServerAPI.API.GetLayers:
+                return this.loader.loadData('moduleGraph').then((res)=>{
+                    let { layers } = res || {};
+                    return layers;
+                });
+            case SDK.ServerAPI.API.GetLoaderChartData:
+                return this.loader.loadData('loader').then((res)=>Loader.getLoaderChartData(res || []));
+            case SDK.ServerAPI.API.GetLoaderFileTree:
+                return this.loader.loadData('loader').then((res)=>Loader.getLoaderFileTree(res || []));
+            case SDK.ServerAPI.API.GetLoaderFileDetails:
+                return this.loader.loadData('loader').then((res)=>Loader.getLoaderFileDetails(body.path, res || []));
+            case SDK.ServerAPI.API.GetLoaderFolderStatistics:
+                return this.loader.loadData('loader').then((res)=>Loader.getLoaderFolderStatistics(body.folder, res || []));
+            case SDK.ServerAPI.API.GetLoaderFileFirstInput:
+                return this.loader.loadData('loader').then((res)=>Loader.getLoaderFileFirstInput(body.file, res || []));
+            case SDK.ServerAPI.API.GetLoaderFileInputAndOutput:
+                return this.loader.loadData('loader').then((res)=>Loader.getLoaderFileFirstInput(body.file, res || []));
+            case SDK.ServerAPI.API.GetResolverFileTree:
+                return this.loader.loadData('resolver').then((res)=>Resolver.getResolverFileTree(res || []));
+            case SDK.ServerAPI.API.GetResolverFileDetails:
+                return Promise.all([
+                    this.loader.loadData('resolver'),
+                    this.loader.loadData('moduleGraph.modules'),
+                    this.loader.loadData('moduleCodeMap')
+                ]).then((res)=>{
+                    let resolverData = res[0], modules = res[1], moduleCodeMap = res[2];
+                    return Resolver.getResolverFileDetails(body.filepath, resolverData || [], modules || [], moduleCodeMap || {});
+                });
+            case SDK.ServerAPI.API.GetPluginSummary:
+                return this.loader.loadData('plugin').then((res)=>Plugin.getPluginSummary(res || {}));
+            case SDK.ServerAPI.API.GetPluginData:
+                return this.loader.loadData('plugin').then((res)=>{
+                    let { hooks, tapNames } = body;
+                    return Plugin.getPluginData(res || {}, hooks, tapNames);
+                });
+            case SDK.ServerAPI.API.GetAssetsSummary:
+                return this.loader.loadData('chunkGraph').then((res)=>{
+                    let { withFileContent = !0 } = body, { assets = [], chunks = [] } = res || {};
+                    return Graph.getAssetsSummary(assets, chunks, {
+                        withFileContent
+                    });
+                });
+            case SDK.ServerAPI.API.GetAssetDetails:
+                return Promise.all([
+                    this.loader.loadData('chunkGraph'),
+                    this.loader.loadData('moduleGraph'),
+                    this.loader.loadData('configs')
+                ]).then((res)=>{
+                    let { assetPath } = body, { isRspack, hasSourceMap } = checkSourceMapSupport(res[2] || []), { assets = [], chunks = [] } = res[0] || {}, { modules = [] } = res[1] || {};
+                    return Graph.getAssetDetails(assetPath, assets, chunks, modules, isRspack || hasSourceMap ? (_module)=>!0 : ()=>!0);
+                });
+            case SDK.ServerAPI.API.GetSummaryBundles:
+                return Promise.all([
+                    this.loader.loadData('chunkGraph'),
+                    this.loader.loadData('moduleGraph')
+                ]).then((res)=>{
+                    let { assets = [], chunks = [] } = res[0] || {}, { modules = [] } = res[1] || {};
+                    return Graph.getAllBundleData(assets, chunks, modules, [
+                        'id',
+                        'path',
+                        'size',
+                        'kind'
+                    ]);
+                });
+            case SDK.ServerAPI.API.GetChunksByModuleId:
+                return Promise.all([
+                    this.loader.loadData('chunkGraph'),
+                    this.loader.loadData('moduleGraph')
+                ]).then((res)=>{
+                    let { moduleId } = body, { chunks = [] } = res[0] || {}, { modules = [] } = res[1] || {};
+                    return Graph.getChunksByModuleId(moduleId, modules, chunks);
+                });
+            case SDK.ServerAPI.API.GetModuleDetails:
+                return Promise.all([
+                    this.loader.loadData('chunkGraph'),
+                    this.loader.loadData('moduleGraph')
+                ]).then((res)=>{
+                    let { moduleId } = body, { modules = [], dependencies = [] } = res[1] || {};
+                    return Graph.getModuleDetails(moduleId, modules, dependencies);
+                });
+            case SDK.ServerAPI.API.GetModulesByModuleIds:
+                return this.loader.loadData('moduleGraph').then((res)=>{
+                    let { moduleIds } = body, { modules = [] } = res || {};
+                    return Graph.getModuleIdsByModulesIds(moduleIds, modules);
+                });
+            case SDK.ServerAPI.API.GetEntryPoints:
+                return Promise.all([
+                    this.loader.loadData('chunkGraph')
+                ]).then((res)=>{
+                    let [chunkGraph] = res, { entrypoints = [] } = chunkGraph || {};
+                    return Graph.getEntryPoints(entrypoints);
+                });
+            case SDK.ServerAPI.API.GetModuleCodeByModuleId:
+                return this.loader.loadData('moduleCodeMap').then((moduleCodeMap)=>{
+                    let { moduleId } = body;
+                    return moduleCodeMap ? moduleCodeMap[moduleId] : {
+                        source: '',
+                        transformed: '',
+                        parsedSource: ''
+                    };
+                });
+            case SDK.ServerAPI.API.GetModuleCodeByModuleIds:
+                return this.loader.loadData('moduleCodeMap').then((moduleCodeMap)=>{
+                    let { moduleIds } = body, _moduleCodeData = {};
+                    return moduleCodeMap ? (moduleIds.forEach((id)=>{
+                        _moduleCodeData[id] = moduleCodeMap[id];
+                    }), _moduleCodeData) : [];
+                });
+            case SDK.ServerAPI.API.GetAllModuleGraph:
+                return this.loader.loadData('moduleGraph').then((moduleGraph)=>moduleGraph?.modules);
+            case SDK.ServerAPI.API.GetSearchModules:
+                return Promise.all([
+                    this.loader.loadData('moduleGraph'),
+                    this.loader.loadData('chunkGraph')
+                ]).then((res)=>{
+                    let [moduleGraph, chunkGraph] = res, { moduleName } = body;
+                    if (!moduleName) return [];
+                    let assetMap = chunkGraph.chunks.reduce((acc, chunk)=>(chunk.assets.forEach((asset)=>{
+                            acc[chunk.id] || (acc[chunk.id] = []), acc[chunk.id].push(asset);
+                        }), acc), {}), searchedChunksMap = new Map();
+                    return moduleGraph?.modules.filter((module)=>{
+                        module.webpackId.includes(moduleName) && module.chunks.forEach((chunk)=>{
+                            searchedChunksMap.has(chunk) || (assetMap[chunk] || []).forEach((asset)=>{
+                                asset.endsWith('.js') && searchedChunksMap.set(chunk, asset);
+                            });
+                        });
+                    }), Object.fromEntries(searchedChunksMap);
+                });
+            case SDK.ServerAPI.API.GetSearchModuleInChunk:
+                return Promise.all([
+                    this.loader.loadData('moduleGraph'),
+                    this.loader.loadData('root')
+                ]).then((res)=>{
+                    let [moduleGraph, root] = res, { moduleName, chunk } = body;
+                    return moduleName ? moduleGraph?.modules.filter((module)=>module.webpackId.includes(moduleName) && module.chunks.includes(chunk)).map((filteredModule)=>({
+                            id: filteredModule.id,
+                            path: filteredModule.path,
+                            relativePath: relative(root, filteredModule.path)
+                        })) : [];
+                });
+            case SDK.ServerAPI.API.GetAllChunkGraph:
+                return this.loader.loadData('chunkGraph').then((chunkGraph)=>chunkGraph?.chunks);
+            case SDK.ServerAPI.API.GetPackageRelationAlertDetails:
+                return Promise.all([
+                    this.loader.loadData('moduleGraph'),
+                    this.loader.loadData('errors'),
+                    this.loader.loadData('root'),
+                    this.loader.loadData('moduleCodeMap')
+                ]).then((res)=>{
+                    let { id, target } = body, [moduleGraph, errors = [], root = '', moduleCodeMap] = res, { modules = [], dependencies = [] } = moduleGraph || {}, { packages = [] } = errors.find((e)=>e.id === id) || {}, { dependencies: pkgDependencies = [] } = packages.find((e)=>e.target.name === target.name && e.target.root === target.root && e.target.version === target.version) || {};
+                    return Alerts.getPackageRelationAlertDetails(modules, dependencies, root, pkgDependencies, moduleCodeMap || {});
+                });
+            case SDK.ServerAPI.API.GetOverlayAlerts:
+                return this.loader.loadData('errors').then((res)=>(res || []).filter((e)=>e.code === Rule.RuleMessageCodeEnumerated.Overlay));
+            case SDK.ServerAPI.API.BundleDiffManifest:
+                return this.loader.loadManifest();
+            case SDK.ServerAPI.API.GetBundleDiffSummary:
+                return Promise.all([
+                    this.loader.loadManifest(),
+                    this.loader.loadData('root'),
+                    this.loader.loadData('hash'),
+                    this.loader.loadData('errors'),
+                    this.loader.loadData('chunkGraph'),
+                    this.loader.loadData('moduleGraph'),
+                    this.loader.loadData('moduleCodeMap'),
+                    this.loader.loadData('packageGraph'),
+                    this.loader.loadData('configs')
+                ]).then(([_manifest, root = '', hash = '', errors = {}, chunkGraph = {}, moduleGraph = {}, moduleCodeMap = {}, packageGraph = {}, configs = []])=>{
+                    let outputFilename = '';
+                    return 'string' == typeof configs[0]?.config?.output?.chunkFilename && (outputFilename = configs[0]?.config.output.chunkFilename), {
+                        root,
+                        hash,
+                        errors,
+                        chunkGraph,
+                        moduleGraph,
+                        packageGraph,
+                        outputFilename,
+                        moduleCodeMap
+                    };
+                });
+            case SDK.ServerAPI.API.GetChunkGraph:
+                return this.loader.loadData('chunkGraph').then((res)=>{
+                    let { chunks = [] } = res || {};
+                    return chunks;
+                });
+            case SDK.ServerAPI.API.GetAllModuleGraphFilter:
+                return this.loader.loadData('moduleGraph').then((moduleGraph)=>moduleGraph?.modules.map((m)=>({
+                            id: m.id,
+                            webpackId: m.webpackId,
+                            path: m.path,
+                            size: m.size,
+                            chunks: m.chunks,
+                            kind: m.kind
+                        })));
+            case SDK.ServerAPI.API.GetModuleByName:
+                return this.loader.loadData('moduleGraph').then((moduleGraph)=>{
+                    let { moduleName } = body, { modules = [] } = moduleGraph || {};
+                    return modules.filter((m)=>m.path.includes(moduleName)).map((m)=>({
+                            id: m.id,
+                            path: m.path
+                        })) || [];
+                });
+            case SDK.ServerAPI.API.GetModuleIssuerPath:
+                return this.loader.loadData('moduleGraph').then((moduleGraph)=>{
+                    let { moduleId } = body, modules = moduleGraph?.modules || [], issuerPath = modules.find((m)=>String(m.id) === moduleId)?.issuerPath || [];
+                    return Array.isArray(issuerPath) && issuerPath.length > 0 && 'number' == typeof issuerPath[0] ? issuerPath.map((id)=>modules.find((m)=>m.id === id)?.path).filter(Boolean) : issuerPath;
+                });
+            case SDK.ServerAPI.API.GetPackageInfo:
+                return this.loader.loadData('packageGraph').then((packageGraph)=>packageGraph?.packages);
+            case SDK.ServerAPI.API.GetPackageDependency:
+                return this.loader.loadData('packageGraph').then((packageGraph)=>packageGraph?.dependencies || []);
+            case SDK.ServerAPI.API.GetChunkGraphAI:
+                return this.loader.loadData('chunkGraph').then((res)=>{
+                    let { chunks = [] } = res || {};
+                    return chunks.map(({ modules, ...rest })=>rest);
+                });
+            case SDK.ServerAPI.API.GetChunkByIdAI:
+                return Promise.all([
+                    this.loader.loadData('chunkGraph'),
+                    this.loader.loadData('moduleGraph')
+                ]).then(([chunkGraph, moduleGraph])=>{
+                    let { chunks = [] } = chunkGraph || {}, { modules = [] } = moduleGraph || {}, { chunkId } = body, chunkInfo = chunks.find((c)=>c.id === chunkId);
+                    if (!chunkInfo) return null;
+                    let chunkModules = modules.filter((m)=>chunkInfo.modules.includes(m.id)).map((module)=>({
+                            id: module.id,
+                            path: module.path,
+                            size: module.size,
+                            chunks: module.chunks,
+                            kind: module.kind,
+                            issuerPath: module.issuerPath
+                        }));
+                    return chunkInfo.modulesInfo = chunkModules, chunkInfo;
+                });
+            case SDK.ServerAPI.API.GetDirectoriesLoaders:
+                return Promise.all([
+                    this.loader.loadData('root'),
+                    this.loader.loadData('loader')
+                ]).then(([root, loaders])=>Loader.getDirectoriesLoaders(loaders || [], root || ''));
+            default:
+                throw Error(`API not implement: "${api}"`);
+        }
+    }
+}
+function isUndefined(value) {
+    return void 0 === value;
+}
+function isNumber(value) {
+    return 'number' == typeof value && !Number.isNaN(value);
+}
+function isObject(value) {
+    return 'object' == typeof value && null !== value;
+}
+function isEmpty(value) {
+    return null == value || Array.isArray(value) && 0 === value.length || 'object' == typeof value && 0 === Object.keys(value).length;
+}
+function last(array) {
+    return array[array.length - 1];
+}
+function compact(array) {
+    return array.filter((item)=>null != item || !item);
+}
+function isNil(value) {
+    return null == value;
+}
+let isPlainObject = (obj)=>null !== obj && 'object' == typeof obj && Object.getPrototypeOf(obj) === Object.prototype, isString = (v)=>'string' == typeof v || !!v && 'object' == typeof v && !Array.isArray(v) && '[object String]' === ({}).toString.call(v);
+function pick(obj, keys) {
+    let result = {};
+    for(let i = 0; i < keys.length; i++){
+        let key = keys[i];
+        Object.hasOwn(obj, key) && (result[key] = obj[key]);
+    }
+    return result;
+}
+let PACKAGE_PREFIX = /(?:node_modules|~)(?:\/\.pnpm)?/, PACKAGE_SLUG = /[a-zA-Z0-9]+(?:[-|_|.]+[a-zA-Z0-9]+)*/, VERSION = /@[\w|\-|_|.]+/, VERSION_NUMBER = '@([\\d.]+)', MODULE_PATH_PACKAGES = RegExp(`(?:${PACKAGE_PREFIX.source}/)(?:(?:@${PACKAGE_SLUG.source}[/|+])?(?:${PACKAGE_SLUG.source}\\+)*(?:${PACKAGE_SLUG.source})(?:${VERSION.source})?)(?:_(?:@${PACKAGE_SLUG.source}[/|+])?(?:${PACKAGE_SLUG.source})(?:@${PACKAGE_SLUG.source})?)*/`, 'g'), PACKAGE_PATH_NAME = /(?:(?:node_modules|~)(?:\/\.pnpm)?\/)(?:((?:@[a-zA-Z0-9]+(?:[-|_|.]+[a-zA-Z0-9]+)*[/|+])?(?:(?:[a-zA-Z0-9]+(?:[-|_|.]+[a-zA-Z0-9]+)*\+)*)(?:[a-zA-Z0-9]+(?:[-|_|.]+[a-zA-Z0-9]+)*))(?:@[\w|\-|_|.]+)?)(?:_((?:@[a-zA-Z0-9]+(?:[-|_|.]+[a-zA-Z0-9]+)*[/|+])?(?:[a-zA-Z0-9]+(?:[-|_|.]+[a-zA-Z0-9]+)*))(?:@[a-zA-Z0-9]+(?:[-|_|.]+[a-zA-Z0-9]+)*))*\//gm, uniqLast = (data)=>{
+    let res = [];
+    return data.forEach((item, index)=>{
+        data.slice(index + 1).includes(item) || res.push(item);
+    }), res;
+}, getPackageMetaFromModulePath = (modulePath)=>{
+    let paths = modulePath.match(MODULE_PATH_PACKAGES);
+    if (!paths) return {
+        name: '',
+        version: ''
+    };
+    let names = uniqLast(paths.flatMap((packagePath)=>{
+        let found = packagePath.matchAll(PACKAGE_PATH_NAME);
+        return found ? compact([
+            ...found
+        ].flat()).slice(1).filter(Boolean).map((name)=>name.replace(/\+/g, '/')) : [];
+    }));
+    if (isEmpty(names)) return {
+        name: '',
+        version: ''
+    };
+    let name = last(names), pattern = RegExp(`(.*)(${last(paths)}).*`), path1 = modulePath.replace(pattern, '$1$2').replace(/\/$/, '');
+    return {
+        name,
+        version: path1 && name && path1.match(RegExp(`${name}@([\\d.]+)`))?.flat().slice(1)?.[0] || ''
+    };
+}, external_os_namespaceObject = require("os");
+var external_os_default = __webpack_require__.n(external_os_namespaceObject);
+function writeMcpPort(port, builderName) {
+    let homeDir = os.homedir(), rsdoctorDir = path.join(homeDir, '.cache/rsdoctor'), mcpPortFilePath = path.join(rsdoctorDir, 'mcp.json');
+    fs.existsSync(rsdoctorDir) || fs.mkdirSync(rsdoctorDir, {
+        recursive: !0
+    });
+    let mcpJson = {
+        portList: {},
+        port: 0
+    };
+    if (fs.existsSync(mcpPortFilePath)) try {
+        mcpJson = JSON.parse(fs.readFileSync(mcpPortFilePath, 'utf8'));
+    } catch (error) {
+        logger.debug('Failed to parse mcp.json', error);
+    }
+    mcpJson.portList || (mcpJson.portList = {}), mcpJson.portList[builderName || 'builder'] = port, mcpJson.port = port, fs.writeFileSync(mcpPortFilePath, JSON.stringify(mcpJson, null, 2), 'utf8');
+}
+function getMcpConfigPath() {
+    let homeDir = os.homedir(), rsdoctorDir = path.join(homeDir, '.cache/rsdoctor');
+    return path.join(rsdoctorDir, 'mcp.json');
+}
+let external_stream_namespaceObject = require("stream"), maxFileSize = 419430400;
+function stringify(json, replacer, space, cycle) {
+    let jsonList = [];
+    return json && 'object' == typeof json ? new Promise((resolve, reject)=>{
+        let stream = new external_json_stream_stringify_namespaceObject.JsonStreamStringify(json, replacer, space, cycle), currentLength = 0, currentContent = '', batchProcessor = new external_stream_namespaceObject.Transform({
+            readableObjectMode: !0,
+            transform (chunk, _encoding, callback) {
+                chunk.toString().split('\\n').forEach((line)=>{
+                    currentLength + line.length > 419430400 && (jsonList.push(currentContent), currentContent = '', currentLength = 0), line.length && (currentContent += line, currentLength += line.length);
+                }), callback();
+            }
+        });
+        stream.pipe(batchProcessor).on('data', (line)=>{
+            currentLength + line.length > 419430400 && (jsonList.push(currentContent), currentContent = '', currentLength = 0), line.length && (currentContent += line, currentLength += line.length);
+        }).on('end', ()=>{
+            jsonList.length < 1 && jsonList.push(currentContent), resolve(jsonList);
+        }).on('error', (err)=>reject(err));
+    }) : Promise.resolve(JSON.stringify(json, replacer, space));
+}
+let readPackageJson = (file, readFile)=>{
+    let result, current = file;
+    for(; '/' !== current && !result;){
+        let parent = (0, external_path_namespaceObject.dirname)(current);
+        if (parent === current) break;
+        current = parent, readFile && (result = readFile((0, external_path_namespaceObject.join)(current, 'package.json'))), readFile ? result?.name || (result = void 0) : result = getPackageMetaFromModulePath(file);
+    }
+    if (result) return !readFile || result.name && result.version ? {
+        ...result,
+        root: current
+    } : readPackageJson((0, external_path_namespaceObject.dirname)(current), readFile);
+}, index_js_namespaceObject = require("../compiled/connect/index.js");
+var index_js_default = __webpack_require__.n(index_js_namespaceObject);
+let external_http_namespaceObject = require("http");
+var external_http_default = __webpack_require__.n(external_http_namespaceObject);
+let external_get_port_namespaceObject = require("get-port");
+var external_get_port_default = __webpack_require__.n(external_get_port_namespaceObject);
+let external_child_process_namespaceObject = require("child_process"), RESTRICTED_PORTS = [
+    3659,
+    4045,
+    6000,
+    6665,
+    6666,
+    6667,
+    6668,
+    6669
+];
+function getRandomPort(min, max) {
+    let port;
+    do port = random(min, max);
+    while (RESTRICTED_PORTS.includes(port));
+    return port;
+}
+let defaultPort = getRandomPort(3000, 8999);
+async function getPort(expectPort) {
+    return external_get_port_default()({
+        port: expectPort
+    });
+}
+let createGetPortSyncFunctionString = (expectPort)=>`
+(() => {
+const net = require('net');
+
+function getPort(expectPort) {
+  return new Promise((resolve, reject) => {
+    const server = net.createServer();
+    server.unref();
+    server.on('error', reject);
+    server.listen(expectPort, () => {
+      const { port } = server.address();
+      server.close(() => {
+        resolve(port);
+      });
+    });
+  });
+}
+
+async function getAvailablePort(expectPort) {
+  let port = expectPort;
+  while (true) {
+    try {
+      const res = await getPort(port);
+      return res;
+    } catch (error) {
+      port += Math.floor(Math.random() * 100 + 1);
+    }
+  }
+}
+
+getAvailablePort(${expectPort}).then(port => process.stdout.write(port.toString()));
+})();
+`.trim();
+function getPortSync(expectPort) {
+    let statement = '\n' === external_os_default().EOL ? createGetPortSyncFunctionString(expectPort) : createGetPortSyncFunctionString(expectPort).replace(/\n/g, '');
+    return Number((0, external_child_process_namespaceObject.execSync)(`node -e "${statement}"`, {
+        encoding: 'utf-8'
+    }));
+}
+function createApp() {
+    return index_js_default()();
+}
+async function createServer(port) {
+    let app = createApp(), server = external_http_default().createServer(app), res = {
+        app,
+        server,
+        port,
+        close: ()=>new Promise((resolve, reject)=>{
+                'closeAllConnections' in server && server.closeAllConnections(), 'closeIdleConnections' in server && server.closeIdleConnections(), server.close((err)=>{
+                    err && reject(err), resolve();
+                });
+            })
+    };
+    return new Promise((resolve)=>{
+        server.listen(port, ()=>{
+            resolve(res);
+        });
+    });
+}
+let external_envinfo_namespaceObject = require("envinfo");
+var external_envinfo_default = __webpack_require__.n(external_envinfo_namespaceObject);
+let helpers = external_envinfo_default().helpers, run = external_envinfo_default().run, getCPUInfo = ()=>helpers.getCPUInfo().then((res)=>res[1]), getOSInfo = ()=>helpers.getOSInfo().then((res)=>res[1]), getMemoryInfo = ()=>helpers.getMemoryInfo().then((res)=>res[1]), getNodeVersion = ()=>helpers.getNodeInfo().then((res)=>res[1]), getYarnVersion = ()=>helpers.getYarnInfo().then((res)=>res[1]), getNpmVersion = ()=>helpers.getnpmInfo().then((res)=>res[1]), getPnpmVersion = ()=>helpers.getpnpmInfo().then((res)=>res[1]);
+function getNpmPackageVersion(pkg) {
+    let isArray = Array.isArray(pkg);
+    return run({
+        npmPackages: isArray ? pkg : [
+            pkg
+        ]
+    }, {
+        json: !0,
+        showNotFound: !0
+    }).then((res)=>{
+        let { npmPackages = {} } = JSON.parse(res) || {};
+        return isArray ? pkg.map((e)=>npmPackages[e] || 'Not Found') : npmPackages[pkg];
+    });
+}
+function getGlobalNpmPackageVersion(pkg) {
+    let isArray = Array.isArray(pkg);
+    return run({
+        npmGlobalPackages: isArray ? pkg : [
+            pkg
+        ]
+    }, {
+        json: !0,
+        showNotFound: !0
+    }).then((res)=>{
+        let { npmGlobalPackages = {} } = JSON.parse(res) || {};
+        return isArray ? pkg.map((e)=>npmGlobalPackages[e] || 'Not Found') : npmGlobalPackages[pkg];
+    });
+}
+function getGitBranch() {
+    return new Promise((resolve, reject)=>{
+        (0, external_child_process_namespaceObject.exec)('git branch --show-current', (err, stdout)=>{
+            err ? (0, external_child_process_namespaceObject.exec)('git branch', (err, stdout)=>{
+                err ? reject(err) : resolve(stdout.split('\n').map((e)=>e.replace('* ', '')).join('').trim());
+            }) : resolve(stdout.trim());
+        });
+    });
+}
+function getGitRepo() {
+    return new Promise((resolve, reject)=>{
+        (0, external_child_process_namespaceObject.exec)('git config --get remote.origin.url', (err, stdout)=>{
+            err ? reject(err) : resolve(stdout.trim());
+        });
+    });
+}
+let filesize_index_js_namespaceObject = require("../compiled/filesize/index.js");
+function getMemoryUsage() {
+    return (0, external_process_namespaceObject.memoryUsage)();
+}
+function getMemoryUsageMessage() {
+    let usage = getMemoryUsage(), msgs = [
+        `RSS: ${(0, filesize_index_js_namespaceObject.filesize)(usage.rss)}`,
+        `Heap Total: ${(0, filesize_index_js_namespaceObject.filesize)(usage.heapTotal)}`,
+        `Heap Used: ${(0, filesize_index_js_namespaceObject.filesize)(usage.heapUsed)}`
+    ];
+    return usage.arrayBuffers && msgs.push(`ArrayBuffers: ${(0, filesize_index_js_namespaceObject.filesize)(usage.arrayBuffers)}`), usage.external && msgs.push(`External: ${(0, filesize_index_js_namespaceObject.filesize)(usage.external)}`), `["${external_process_namespaceObject.pid}" Memory Usage] ${msgs.join(', ')}`;
+}
+for(var __webpack_i__ in exports.EnvInfo = __webpack_exports__.EnvInfo, exports.File = __webpack_exports__.File, exports.Json = __webpack_exports__.Json, exports.Process = __webpack_exports__.Process, exports.Server = __webpack_exports__.Server, __webpack_exports__)-1 === [
+    "EnvInfo",
+    "File",
+    "Json",
+    "Process",
+    "Server"
+].indexOf(__webpack_i__) && (exports[__webpack_i__] = __webpack_exports__[__webpack_i__]);
+Object.defineProperty(exports, '__esModule', {
+    value: !0
+});

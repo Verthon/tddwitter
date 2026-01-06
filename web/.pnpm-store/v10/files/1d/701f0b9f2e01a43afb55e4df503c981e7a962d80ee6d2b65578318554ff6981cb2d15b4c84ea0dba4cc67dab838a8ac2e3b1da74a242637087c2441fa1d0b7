@@ -1,0 +1,2 @@
+import { SDK } from '@rsdoctor/types';
+export declare function getAssetsModulesData(moduleGraph: SDK.ModuleGraphInstance, chunkGraph: SDK.ChunkGraphInstance, bundleDir: string, sourceMapSets: Map<string, string>, hasParseBundle?: boolean): Promise<void>;

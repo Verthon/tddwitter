@@ -1,0 +1,55 @@
+import 'module';
+/*#__PURE__*/ import.meta.url;
+import path from "path";
+import { CheckSyntax } from "../../../../compiled/@rsbuild/plugin-check-syntax/index.js";
+import { loadConfig } from "browserslist-load-config";
+import { defineRule } from "../../rule.js";
+import { Linter } from "@rsdoctor/types";
+const title = 'ecma-version-check';
+const rule = defineRule(()=>({
+        meta: {
+            code: 'E1004',
+            title,
+            category: 'bundle',
+            severity: Linter.Severity.Warn,
+            defaultConfig: {
+                ecmaVersion: void 0,
+                targets: []
+            }
+        },
+        async check ({ chunkGraph, report, ruleConfig, root, configs }) {
+            for (const asset of chunkGraph.getAssets()){
+                var _configs_, _buildConfig_output;
+                if ('.js' !== path.extname(asset.path)) continue;
+                const browserslistConfig = loadConfig({
+                    path: root,
+                    env: 'production'
+                });
+                const { exclude, excludeOutput, targets, ecmaVersion } = ruleConfig;
+                const finalTargets = targets || browserslistConfig || [];
+                if (!finalTargets.length && !ecmaVersion) return;
+                const buildConfig = null == (_configs_ = configs[0]) ? void 0 : _configs_.config;
+                const context = (null == buildConfig ? void 0 : buildConfig.context) || root;
+                const checkSyntax = new CheckSyntax({
+                    exclude,
+                    excludeOutput,
+                    ecmaVersion,
+                    rootPath: context,
+                    targets: finalTargets
+                });
+                const outputDir = (null == buildConfig ? void 0 : null == (_buildConfig_output = buildConfig.output) ? void 0 : _buildConfig_output.path) || path.resolve(root, 'dist');
+                const assetPath = path.resolve(outputDir, asset.path);
+                await checkSyntax.check(assetPath, asset.content);
+                checkSyntax.errors.forEach((err)=>{
+                    report({
+                        message: `Found syntax that does not match "ecmaVersion <= ${checkSyntax.ecmaVersion}"`,
+                        detail: {
+                            error: err,
+                            type: 'link'
+                        }
+                    });
+                });
+            }
+        }
+    }));
+export { rule };

@@ -1,54 +1,16 @@
 {
-  "name": "rsbuild-react-ts",
+  "name": "tddwitter",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
+  "description": "TDDwitter - A Twitter clone built with TDD",
   "scripts": {
-    "build": "rsbuild build",
-    "build:analyze": "RSDOCTOR=true rsbuild build",
-    "check": "biome check --write",
-    "dev": "rsbuild dev --open",
-    "dev:mock": "PUBLIC_MOCK=true rsbuild dev --open",
-    "format": "biome format --write",
-    "preview": "rsbuild preview",
-    "test:browser": "vitest",
-    "lint": "pnpm run type-check",
-    "test:browser:headless": "CI=true vitest",
-    "type-check": "tsc --noEmit"
+    "dev": "pnpm --parallel -r dev",
+    "build": "pnpm -r build",
+    "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api dev"
   },
-  "dependencies": {
-    "@base-ui/react": "1.0.0",
-    "@heroicons/react": "2.2.0",
-    "@tanstack/react-query": "5.90.2",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
-    "react-error-boundary": "6.0.1",
-    "react-intl": "7.1.11",
-    "react-router": "7.9.3",
-    "zod": "4.2.1"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "2.2.3",
-    "@rsbuild/core": "1.5.6",
-    "@rsbuild/plugin-react": "1.4.0",
-    "@rsdoctor/rspack-plugin": "1.3.1",
-    "@tailwindcss/postcss": "4.1.13",
-    "@types/react": "19.1.13",
-    "@types/react-dom": "19.1.9",
-    "@vitejs/plugin-react": "5.0.4",
-    "@vitest/browser": "4.0.16",
-    "@vitest/browser-playwright": "4.0.16",
-    "msw": "2.12.4",
-    "playwright": "1.55.1",
-    "tailwindcss": "4.1.13",
-    "typescript": "5.9.3",
-    "vite-tsconfig-paths": "5.1.4",
-    "vitest": "4.0.16",
-    "vitest-browser-react": "2.0.2"
-  },
-  "msw": {
-    "workerDirectory": [
-      "public"
-    ]
-  }
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.9.0"
 }

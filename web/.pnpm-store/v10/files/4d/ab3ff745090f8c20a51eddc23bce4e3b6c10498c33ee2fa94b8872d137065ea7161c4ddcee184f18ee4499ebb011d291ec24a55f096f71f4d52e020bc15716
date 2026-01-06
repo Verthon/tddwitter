@@ -1,0 +1,45 @@
+import 'module';
+/*#__PURE__*/ import.meta.url;
+import { Build } from "../../index.js";
+import { getSDK } from "../../../inner-plugins/index.js";
+import { omit } from "lodash-es";
+import path from "path";
+const loaderModule = function(...args) {
+    var _this__module, _this__module1;
+    const time = Date.now();
+    const code = args[0];
+    const _options = this.getOptions();
+    const sdk = getSDK(_options.builderName);
+    const loaderData = {
+        resource: {
+            path: (null == (_this__module = this._module) ? void 0 : _this__module.layer) ? `${this.resourcePath}[${this._module.layer}]` : this.resourcePath,
+            query: Build.Utils.parseQuery(this.resourceQuery),
+            queryRaw: this.resourceQuery,
+            ext: path.extname(this.resourcePath).slice(1),
+            ...(null == (_this__module1 = this._module) ? void 0 : _this__module1.layer) ? {
+                layer: this._module.layer
+            } : {}
+        },
+        loaders: [
+            {
+                loader: _options.loader,
+                loaderIndex: this.loaderIndex,
+                path: _options.loader,
+                input: 'start' === _options.type ? code : null,
+                result: 'end' === _options.type ? code : null,
+                startAt: 'start' === _options.type ? time : 0,
+                endAt: 'end' === _options.type ? time : 0,
+                options: omit(_options.options, 'type'),
+                isPitch: false,
+                sync: false,
+                errors: [],
+                pid: process.pid,
+                ppid: process.ppid
+            }
+        ]
+    };
+    null == sdk || sdk.reportLoaderStartOrEnd(loaderData);
+    this.callback(null, ...args);
+};
+const probeLoader = loaderModule;
+export { probeLoader as default, loaderModule };
