@@ -1,4 +1,0 @@
-import { Plugin } from '@rsdoctor/types';
-import type { ProxyLoaderOptions } from '../../types';
-declare const loaderModule: Plugin.LoaderDefinition<ProxyLoaderOptions, {}>;
-export default loaderModule;

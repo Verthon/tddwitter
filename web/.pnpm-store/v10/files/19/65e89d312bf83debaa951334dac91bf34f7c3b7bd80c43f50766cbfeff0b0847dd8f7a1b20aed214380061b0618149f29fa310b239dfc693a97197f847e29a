@@ -1,3 +1,0 @@
-import type { IncomingMessage } from 'node:http';
-import type { FilledContext, ServerResponse, Middleware as TMiddleware } from './index';
-export declare function wrapper<Request extends IncomingMessage, Response extends ServerResponse>(context: FilledContext): TMiddleware<Request, Response>;

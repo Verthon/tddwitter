@@ -1,3 +1,0 @@
-import type { IncomingMessage } from 'node:http';
-import type { FilledContext } from '../index';
-export declare function ready<Request extends IncomingMessage>(context: FilledContext, callback: (...args: any[]) => any, req?: Request): void;

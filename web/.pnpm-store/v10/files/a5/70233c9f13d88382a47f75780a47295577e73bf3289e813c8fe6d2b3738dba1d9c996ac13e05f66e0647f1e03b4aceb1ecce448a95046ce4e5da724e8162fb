@@ -1,4 +1,0 @@
-import 'module';
-/*#__PURE__*/ import.meta.url;
-import * as __WEBPACK_EXTERNAL_MODULE__build_index_js_0bf6183b__ from "./build/index.js";
-export { __WEBPACK_EXTERNAL_MODULE__build_index_js_0bf6183b__ as Build };

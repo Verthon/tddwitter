@@ -1,8 +1,0 @@
-import 'module';
-/*#__PURE__*/ import.meta.url;
-import * as __WEBPACK_EXTERNAL_MODULE__chunks_index_js_0dff7c47__ from "./chunks/index.js";
-import * as __WEBPACK_EXTERNAL_MODULE__utils_index_js_1ffdce1c__ from "./utils/index.js";
-import * as __WEBPACK_EXTERNAL_MODULE__loader_index_js_7618f2f0__ from "./loader/index.js";
-import * as __WEBPACK_EXTERNAL_MODULE__types_index_js_def0ea92__ from "../../types/index.js";
-import * as __WEBPACK_EXTERNAL_MODULE__module_graph_index_js_3ee70f67__ from "./module-graph/index.js";
-export { __WEBPACK_EXTERNAL_MODULE__chunks_index_js_0dff7c47__ as Chunks, __WEBPACK_EXTERNAL_MODULE__loader_index_js_7618f2f0__ as Loader, __WEBPACK_EXTERNAL_MODULE__module_graph_index_js_3ee70f67__ as ModuleGraph, __WEBPACK_EXTERNAL_MODULE__types_index_js_def0ea92__ as Types, __WEBPACK_EXTERNAL_MODULE__utils_index_js_1ffdce1c__ as Utils };

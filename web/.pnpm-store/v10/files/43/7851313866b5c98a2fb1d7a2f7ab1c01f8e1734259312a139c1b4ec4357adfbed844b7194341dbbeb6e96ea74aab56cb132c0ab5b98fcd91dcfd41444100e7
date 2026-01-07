@@ -1,4 +1,0 @@
-import { Linter } from '@rsdoctor/types';
-import { Config } from './types';
-export type { Config, CheckVersion } from './types';
-export declare const rule: Linter.RuleData<Config, "duplicate-package">;
