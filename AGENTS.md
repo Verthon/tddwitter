@@ -1,0 +1,1 @@
+NEVER read any .env.* file

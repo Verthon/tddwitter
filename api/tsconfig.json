@@ -3,14 +3,19 @@
     "target": "ESNext",
     "module": "NodeNext",
     "strict": true,
+    "noUncheckedIndexedAccess": true,
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
-    "types": [
-      "node"
-    ],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "baseUrl": ".",
+		"paths": {
+			"@/*": ["src/*"]
+		},
+
+		/* Vitest Options */
+		"types": ["node", "vitest/globals"],
   },
   "exclude": ["node_modules"]
 }
