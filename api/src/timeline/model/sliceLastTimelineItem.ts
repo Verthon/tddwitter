@@ -3,10 +3,12 @@ import type { TimelineItem } from "./TimelineItem.js";
 
 type SliceLastTimelineItemProps = ReadonlyProps<{
   sortedItems: TimelineItem[];
+  currentLimit: number;
 }>;
 
 export const sliceLastTimelineItem = ({
   sortedItems,
+  currentLimit,
 }: SliceLastTimelineItemProps) => {
-  return sortedItems.slice(0, -1);
+  return sortedItems.slice(0, currentLimit);
 };
