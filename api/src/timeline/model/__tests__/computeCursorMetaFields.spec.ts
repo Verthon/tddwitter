@@ -28,7 +28,7 @@ describe("computeCursorMetaFields", () => {
       })
     ).toStrictEqual({
       hasMoreItems: true,
-      nextCursor: { createdAt: 1710000000002, id: "3" },
+      nextCursor: { createdAt: 1710000000002, id: "3", "publicId": "post-3" },
     });
   });
 });

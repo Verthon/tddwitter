@@ -2,13 +2,15 @@ import type { Repository } from "@/common/repository/Repository.js";
 import type { TimelineItemRaw } from "../model/TimelineItemRaw.js";
 import type { ReadonlyProps } from "@/common/ReadonlyProps.js";
 import { compareTimelineItems } from "../model/compareTimelineItems.js";
+import type { Sql } from "postgres";
+import type { GetTimelineReturn } from "./timelineService.js";
 
 interface TimelineItemRepository extends Repository<TimelineItemRaw, string> {
   findMany(
     props: ReadonlyProps<{
       limit: number;
-      cursor: { id: string, createdAt: number } | null;
-    }>
+      cursor: { id: string; createdAt: number } | null;
+    }>,
   ): Promise<TimelineItemRaw[]>;
 }
 
@@ -17,7 +19,7 @@ type InMemoryRepositoryOptions<Entity, Id> = ReadonlyProps<{
 }>;
 
 const createInMemoryTimelineItemRepository = (
-  options: InMemoryRepositoryOptions<TimelineItemRaw, string>
+  options: InMemoryRepositoryOptions<TimelineItemRaw, string>,
 ): TimelineItemRepository => {
   const storage = new Map<string, TimelineItemRaw>();
 
@@ -44,7 +46,7 @@ const createInMemoryTimelineItemRepository = (
       }
 
       const cursorIndex = sortedItems.findIndex(
-        (item) => item.id === cursor.id && item.createdAt === cursor.createdAt
+        (item) => item.id === cursor.id && item.createdAt === cursor.createdAt,
       );
 
       if (cursorIndex === -1) {
@@ -53,6 +55,40 @@ const createInMemoryTimelineItemRepository = (
 
       const startIndex = cursorIndex + 1;
       return sortedItems.slice(startIndex, startIndex + limit);
+    },
+  };
+};
+
+type PostRow = {
+  id: string;
+  public_id: string;
+  created_at: Date;
+};
+
+export const createTimelineItemRepository = (sql: Sql) => {
+  return {
+    findAll: async ({
+      createdAt,
+      limit,
+      publicId,
+    }: GetTimelineReturn): Promise<TimelineItemRaw[]> => {
+      const hasCursor = createdAt !== undefined && publicId !== undefined;
+      const rows = await sql<PostRow[]>`
+    SELECT id, public_id, created_at 
+    FROM posts
+    WHERE ${
+      hasCursor
+        ? sql`(created_at, public_id) < (${new Date(createdAt)}, ${publicId})`
+        : sql`TRUE`
+    }
+    ORDER BY created_at DESC, public_id DESC
+    LIMIT ${limit}
+  `;
+      return rows.map((row) => ({
+        id: row.id,
+        publicId: row.public_id,
+        createdAt: row.created_at.getTime(),
+      }));
     },
   };
 };

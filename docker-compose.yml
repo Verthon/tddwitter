@@ -23,6 +23,7 @@ services:
     command: sh -c "corepack enable && pnpm install && pnpm db:migrate && pnpm db:seed && pnpm dev"
     environment:
       - NODE_ENV=development
+      - PORT=4000
       - DB_HOST=db
       - DB_NAME=tddwitter_db
       - DB_USER_FILE=/run/secrets/postgres_user

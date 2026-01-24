@@ -8,16 +8,21 @@
     "type-check": "tsc --noEmit",
     "db:migrate": "tsx db/migrate.ts",
     "db:seed": "tsx db/seed.ts",
+    "lint": "oxlint",
+    "format": "oxfmt",
     "test:unit": "vitest"
   },
   "dependencies": {
     "@hono/node-server": "1.19.6",
+    "date-fns": "4.1.0",
     "hono": "4.11.3",
     "postgres": "3.4.8",
     "zod": "4.2.1"
   },
   "devDependencies": {
     "@types/node": "24.10.4",
+    "oxfmt": "0.26.0",
+    "oxlint": "1.41.0",
     "tsx": "4.21.0",
     "typescript": "5.8.3",
     "vite-tsconfig-paths": "5.1.4",

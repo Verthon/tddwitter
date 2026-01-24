@@ -19,7 +19,7 @@ describe("createTimelineModel", () => {
       { id: "2", publicId: "post-2", createdAt: 2 },
     ]);
     expect(timeline.hasMoreItems).toBe(true);
-    expect(timeline.nextCursor).toEqual({ createdAt: 2, id: "2" });
+    expect(timeline.nextCursor).toEqual({ createdAt: 2, id: "2",  publicId: "post-2", });
   });
 
   it("returns all items when the items count is equal to the limit", () => {

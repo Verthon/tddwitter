@@ -15,7 +15,7 @@ export const computeCursorMetaFields = ({
     ? sortedItems.at(currentLimit - 1)
     : null;
   const nextCursor = cursorItem
-    ? { createdAt: cursorItem.createdAt, id: cursorItem.id }
+    ? { createdAt: cursorItem.createdAt, id: cursorItem.id, publicId: cursorItem.publicId }
     : null;
 
   return {
