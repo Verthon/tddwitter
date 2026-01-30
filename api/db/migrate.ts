@@ -1,39 +1,13 @@
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import sql from "../src/infra/db.js";
+import migrate from "node-pg-migrate";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const migrationsDir = path.join(__dirname, "migrations");
+import { getEnv } from "../src/infra/env.js";
 
-const getMigrationFiles = (): string[] => {
-  return fs
-    .readdirSync(migrationsDir)
-    .filter((file) => file.endsWith(".sql"))
-    .sort();
-};
+const env = getEnv();
 
-const runMigration = async (filePath: string): Promise<void> => {
-  const content = fs.readFileSync(filePath, "utf-8");
-  await sql.unsafe(content);
-};
-
-export const migrate = async (): Promise<void> => {
-  console.log("Running migrations...");
-
-  const files = getMigrationFiles();
-
-  for (const file of files) {
-    const filePath = path.join(migrationsDir, file);
-    console.log(`  Applying ${file}...`);
-    await runMigration(filePath);
-  }
-
-  console.log(`Done. Applied ${files.length} migration(s).`);
-  await sql.end();
-};
-
-migrate().catch((err) => {
-  console.error("Migration failed:", err);
-  process.exit(1);
+await migrate({
+  databaseUrl: `postgres://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_HOST}:5432/${env.DB_NAME}`,
+  direction: "up",
+  dir: "db/migrations",
+  migrationsTable: "pgmigrations",
+  singleTransaction: true,
 });

@@ -20,7 +20,12 @@ services:
       - /app/node_modules
     ports:
       - "4000:4000"
-    command: sh -c "corepack enable && pnpm install && pnpm db:migrate && pnpm db:seed && pnpm dev"
+    command: sh -c "
+      corepack enable && 
+      pnpm install && 
+      DATABASE_URL=postgres://$$(cat /run/secrets/postgres_user):$$(cat /run/secrets/postgres_password)@$$DB_HOST:5432/$$DB_NAME pnpm db:migrate &&
+      pnpm db:seed && 
+      pnpm dev"
     environment:
       - NODE_ENV=development
       - PORT=4000
@@ -32,7 +37,8 @@ services:
       - postgres_user
       - postgres_password
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - backend
   db:
@@ -47,10 +53,15 @@ services:
     environment:
       POSTGRES_USER_FILE: /run/secrets/postgres_user
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
-      POSTGRES_DB: tddwitter_db
+      POSTGRES_DB: ${DB_NAME:-tddwitter_db}
     secrets:
       - postgres_user
       - postgres_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$(cat /run/secrets/postgres_user) -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   pgadmin:
     container_name: pgadmin-container
     image: dpage/pgadmin4:9.11.0
