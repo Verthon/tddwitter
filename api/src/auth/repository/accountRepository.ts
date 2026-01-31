@@ -1,5 +1,9 @@
 import type { Sql } from "postgres";
 
+import { failure, success } from "@/common/result/Result.js";
+import { isUniqueViolation } from "@/infra/errors.js";
+
+
 export type Account = {
   readonly id: number;
   readonly email: string;
@@ -10,11 +14,6 @@ export type Account = {
 export type NewAccount = {
   readonly email: string;
   readonly passwordHash: string;
-};
-
-export type AccountRepository = {
-  findByEmail(email: string): Promise<Account | null>;
-  save(account: NewAccount): Promise<Account>;
 };
 
 type AccountRow = {
@@ -31,22 +30,27 @@ const toAccount = (row: AccountRow): Account => ({
   createdAt: row.created_at,
 });
 
-export const createSQLAccountRepository = (sql: Sql): AccountRepository => ({
-  async findByEmail(email: string) {
-    const rows = await sql<AccountRow[]>`
-      SELECT id, email, password_hash, created_at
-      FROM accounts
-      WHERE email = ${email}
-    `;
-    return rows.length > 0 ? toAccount(rows[0]) : null;
-  },
-
+export const createSQLAccountRepository = (sql: Sql) => ({
   async save(account: NewAccount) {
-    const rows = await sql<AccountRow[]>`
-      INSERT INTO accounts (email, password_hash)
-      VALUES (${account.email}, ${account.passwordHash})
-      RETURNING id, email, password_hash, created_at
-    `;
-    return toAccount(rows[0]);
+    try {
+      const [row] = await sql<AccountRow[]>`
+        INSERT INTO accounts (email, password_hash)
+        VALUES (${account.email}, ${account.passwordHash})
+        RETURNING id, email, password_hash, created_at
+      `;
+
+      //@ts-expect-error guaranteed by the library
+      return success(toAccount(row));
+    } catch (error) {
+      if (isUniqueViolation(error)) {
+        return failure({ type: "DUPLICATE_EMAIL" as const });
+      }
+      return failure({
+        type: "DATABASE_ERROR" as const,
+        details: error instanceof Error ? error.message : String(error),
+      });
+    }
   },
 });
+
+export type AccountRepository = ReturnType<typeof createSQLAccountRepository>;
