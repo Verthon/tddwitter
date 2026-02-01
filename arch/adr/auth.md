@@ -24,7 +24,6 @@ Constraints: Must follow existing patterns (repo layer, TypeScript strict)
 
 Industry-standard pattern, transferable knowledge to other projects
 Simple request/response flow (no DID resolution, no PDS communication)
-Can implement in 4-5 clear steps matching existing repo pattern
 Hono has built-in JWT helpers (reduces custom crypto code)
 
 ## Rejected

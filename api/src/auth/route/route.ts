@@ -12,7 +12,7 @@ export const createAuthRoutes = (
   const authRoutes = new Hono();
 
   authRoutes.post("/register", async (c) => {
-    const body = await c.req.json();
+    const body = await c.req.json<unknown>();
     const result = await registerService.register(body);
 
     if (result._tag === "Failure") {
@@ -43,14 +43,16 @@ export const createAuthRoutes = (
         );
       }
 
-      return c.json({ error: localizedMessage({ en: 'unknown error' }) }, 500);
+      return c.json({ error: localizedMessage({ en: "unknown error" }) }, 500);
     }
 
     const { id, email } = result.value;
     return c.json({ id, email }, 201);
   });
 
-  // POST /login — TODO: implement in next iteration
+  authRoutes.post("/login", async (c) => {
+    const body = await c.req.json<unknown>();
+  });
 
   return authRoutes;
 };
