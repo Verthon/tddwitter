@@ -1,8 +1,7 @@
 import { HttpResponse } from 'msw';
-import { TestI18nProvider, TestQueryProvider } from 'src/test/testProvider';
+import { renderWithProviders } from 'src/test/renderWithProviders';
 import { describe, expect, it } from 'vitest';
 import { page } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
 import { mockEngagementResponse } from '../../mocks/mockEngagementResponse';
 import { LikeCount } from '../LikeCount';
 
@@ -20,13 +19,7 @@ describe('LikeCount', () => {
       ),
     );
 
-    await render(
-      <TestQueryProvider>
-        <TestI18nProvider>
-          <LikeCount postId="test-post-1" />
-        </TestI18nProvider>
-      </TestQueryProvider>,
-    );
+    await renderWithProviders(<LikeCount postId="test-post-1" />);
 
     await expect.element(page.getByText('1,230 likes')).toBeVisible();
   });
@@ -44,13 +37,7 @@ describe('LikeCount', () => {
       ),
     );
 
-    await render(
-      <TestQueryProvider>
-        <TestI18nProvider>
-          <LikeCount postId="test-post-2" />
-        </TestI18nProvider>
-      </TestQueryProvider>,
-    );
+    await renderWithProviders(<LikeCount postId="test-post-2" />);
 
     await expect.element(page.getByText('0 likes')).toBeVisible();
   });
@@ -68,13 +55,7 @@ describe('LikeCount', () => {
       ),
     );
 
-    await render(
-      <TestQueryProvider>
-        <TestI18nProvider>
-          <LikeCount postId="test-post-3" />
-        </TestI18nProvider>
-      </TestQueryProvider>,
-    );
+    await renderWithProviders(<LikeCount postId="test-post-3" />);
 
     await expect.element(page.getByText('1 like')).toBeVisible();
   });

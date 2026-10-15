@@ -1,11 +1,7 @@
-import {
-  TestI18nProvider,
-  TestQueryProvider,
-  TestRouterProvider,
-} from 'src/test/testProvider';
+import enComposer from 'src/composer/i18n/en.json';
+import { renderWithProviders } from 'src/test/renderWithProviders';
 import { describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
 
 import { CreatePostPage } from './pages/CreatePostPage';
 
@@ -13,33 +9,38 @@ describe('CreatePost', () => {
   it('fills the create post form with content', async () => {
     await page.viewport(414, 896);
 
-    await render(
-      <TestRouterProvider>
-        <TestI18nProvider>
-          <TestQueryProvider>
-            <CreatePostPage />
-          </TestQueryProvider>
-        </TestI18nProvider>
-      </TestRouterProvider>,
-    );
+    await renderWithProviders(<CreatePostPage />, { route: '/create-post' });
 
-    const textarea = page.getByPlaceholder(/what's happening/i);
+    const textarea = page.getByLabelText(enComposer['composer.form.label']);
     await expect.element(textarea).toBeVisible();
 
-    await textarea.fill('This is my first post on this Twitter clone!');
+    await userEvent.fill(
+      textarea,
+      'This is my first post on this Twitter clone!',
+    );
 
     await expect
       .element(textarea)
       .toHaveValue('This is my first post on this Twitter clone!');
 
-    const charCount = page.getByText(/256 characters remaining out of 300/i);
-    await expect.element(charCount).toBeVisible();
+    await expect
+      .element(page.getByRole('status'))
+      .toHaveTextContent(
+        enComposer['composer.form.charCount']
+          .replace('{remaining}', '256')
+          .replace('{max}', '300'),
+      );
 
-    const submitButton = page.getByRole('button', { name: /post/i });
+    const submitButton = page.getByRole('button', {
+      name: enComposer['composer.button.tweet'],
+      exact: true,
+    });
     await expect.element(submitButton).toBeEnabled();
 
     await userEvent.click(submitButton);
 
-    await expect.poll(() => globalThis.location.pathname).toBe('/');
+    await expect
+      .element(page.getByTestId('location'))
+      .toHaveTextContent(/^\/$/);
   });
 });

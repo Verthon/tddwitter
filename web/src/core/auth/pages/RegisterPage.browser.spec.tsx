@@ -1,76 +1,59 @@
-import {
-  TestI18nProvider,
-  TestQueryProvider,
-  TestRouterProvider,
-} from 'src/test/testProvider';
+import enCore from 'src/core/i18n/en.json';
+import { renderWithProviders } from 'src/test/renderWithProviders';
 import { describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
 
 import RegisterPage from './RegisterPage';
 
+const usernameField = () =>
+  page.getByLabelText(enCore['core.auth.register.usernameLabel']);
+const emailField = () =>
+  page.getByLabelText(enCore['core.auth.register.emailLabel']);
+const passwordField = () =>
+  page.getByLabelText(enCore['core.auth.register.passwordLabel'], {
+    exact: true,
+  });
+const confirmPasswordField = () =>
+  page.getByLabelText(enCore['core.auth.register.confirmPasswordLabel']);
+const submitButton = () =>
+  page.getByRole('button', { name: enCore['core.auth.register.submitButton'] });
+
 describe('RegisterPage', () => {
   it('redirects to homepage after successful registration', async () => {
-    render(
-      <TestRouterProvider>
-        <TestI18nProvider>
-          <TestQueryProvider>
-            <RegisterPage />
-          </TestQueryProvider>
-        </TestI18nProvider>
-      </TestRouterProvider>,
-    );
+    await renderWithProviders(<RegisterPage />, { route: '/signup' });
 
-    await userEvent.fill(page.getByLabelText(/username/i), 'johndoe');
-    await userEvent.fill(page.getByLabelText(/email/i), 'john@example.com');
-    await userEvent.fill(page.getByLabelText(/^password$/i), 'password123');
-    await userEvent.fill(
-      page.getByLabelText(/confirm password/i),
-      'password123',
-    );
-    await userEvent.click(page.getByRole('button', { name: /sign up/i }));
+    await userEvent.fill(usernameField(), 'johndoe');
+    await userEvent.fill(emailField(), 'john@example.com');
+    await userEvent.fill(passwordField(), 'password123');
+    await userEvent.fill(confirmPasswordField(), 'password123');
+    await userEvent.click(submitButton());
 
-    await expect.poll(() => globalThis.location.pathname).toBe('/');
+    await expect
+      .element(page.getByTestId('location'))
+      .toHaveTextContent(/^\/$/);
   });
 
   it('displays validation error for invalid email', async () => {
-    render(
-      <TestRouterProvider>
-        <TestI18nProvider>
-          <TestQueryProvider>
-            <RegisterPage />
-          </TestQueryProvider>
-        </TestI18nProvider>
-      </TestRouterProvider>,
-    );
+    await renderWithProviders(<RegisterPage />, { route: '/signup' });
 
-    await userEvent.fill(page.getByLabelText(/username/i), 'johndoe');
-    await userEvent.fill(page.getByLabelText(/email/i), 'invalidemail');
-    await userEvent.fill(page.getByLabelText(/^password$/i), 'password123');
-    await userEvent.fill(
-      page.getByLabelText(/confirm password/i),
-      'password123',
-    );
-    await userEvent.click(page.getByRole('button', { name: /sign up/i }));
+    await userEvent.fill(usernameField(), 'johndoe');
+    await userEvent.fill(emailField(), 'invalidemail');
+    await userEvent.fill(passwordField(), 'password123');
+    await userEvent.fill(confirmPasswordField(), 'password123');
+    await userEvent.click(submitButton());
 
-    await expect.element(page.getByLabelText(/email/i)).toBeInvalid();
+    await expect.element(emailField()).toBeInvalid();
+    await expect.element(page.getByTestId('location')).not.toBeInTheDocument();
   });
 
   it('displays validation error for missing required fields', async () => {
-    render(
-      <TestRouterProvider>
-        <TestI18nProvider>
-          <TestQueryProvider>
-            <RegisterPage />
-          </TestQueryProvider>
-        </TestI18nProvider>
-      </TestRouterProvider>,
-    );
+    await renderWithProviders(<RegisterPage />, { route: '/signup' });
 
-    await userEvent.click(page.getByRole('button', { name: /sign up/i }));
+    await userEvent.click(submitButton());
 
-    await expect.element(page.getByLabelText(/username/i)).toBeInvalid();
-    await expect.element(page.getByLabelText(/email/i)).toBeInvalid();
-    await expect.element(page.getByLabelText(/^password$/i)).toBeInvalid();
+    await expect.element(usernameField()).toBeInvalid();
+    await expect.element(emailField()).toBeInvalid();
+    await expect.element(passwordField()).toBeInvalid();
+    await expect.element(confirmPasswordField()).toBeInvalid();
   });
 });

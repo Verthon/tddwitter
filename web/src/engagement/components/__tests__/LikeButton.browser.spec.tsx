@@ -1,8 +1,8 @@
 import { HttpResponse } from 'msw';
-import { TestI18nProvider, TestQueryProvider } from 'src/test/testProvider';
+import enEngagement from 'src/engagement/i18n/en.json';
+import { renderWithProviders } from 'src/test/renderWithProviders';
 import { describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
-import { render } from 'vitest-browser-react';
 import { mockEngagementResponse } from '../../mocks/mockEngagementResponse';
 import { LikeButtonComponent as LikeButton } from '../LikeButton';
 
@@ -20,15 +20,12 @@ describe('LikeButton', () => {
       ),
     );
 
-    await render(
-      <TestQueryProvider>
-        <TestI18nProvider>
-          <LikeButton postId="test-post-1" />
-        </TestI18nProvider>
-      </TestQueryProvider>,
-    );
+    await renderWithProviders(<LikeButton postId="test-post-1" />);
 
-    const button = page.getByRole('button', { name: /like/i });
+    const button = page.getByRole('button', {
+      name: enEngagement['engagement.like.ariaLabel'],
+      exact: true,
+    });
     await expect.element(button).toBeVisible();
   });
 
@@ -45,15 +42,12 @@ describe('LikeButton', () => {
       ),
     );
 
-    await render(
-      <TestQueryProvider>
-        <TestI18nProvider>
-          <LikeButton postId="test-post-2" />
-        </TestI18nProvider>
-      </TestQueryProvider>,
-    );
+    await renderWithProviders(<LikeButton postId="test-post-2" />);
 
-    const button = page.getByRole('button', { name: /unlike/i });
+    const button = page.getByRole('button', {
+      name: enEngagement['engagement.unlike.ariaLabel'],
+      exact: true,
+    });
     await expect.element(button).toBeVisible();
   });
 
@@ -82,20 +76,20 @@ describe('LikeButton', () => {
       ),
     );
 
-    await render(
-      <TestQueryProvider>
-        <TestI18nProvider>
-          <LikeButton postId="test-post-3" />
-        </TestI18nProvider>
-      </TestQueryProvider>,
-    );
+    await renderWithProviders(<LikeButton postId="test-post-3" />);
 
-    const button = page.getByRole('button', { name: /like/i });
+    const button = page.getByRole('button', {
+      name: enEngagement['engagement.like.ariaLabel'],
+      exact: true,
+    });
     await expect.element(button).toBeVisible();
 
     await userEvent.click(button);
 
-    const unlikeButton = page.getByRole('button', { name: /unlike/i });
+    const unlikeButton = page.getByRole('button', {
+      name: enEngagement['engagement.unlike.ariaLabel'],
+      exact: true,
+    });
     await expect.element(unlikeButton).toBeVisible();
   });
 });

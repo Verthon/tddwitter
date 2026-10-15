@@ -1,21 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useMemo } from 'react';
-import { MemoryRouter } from 'react-router';
+import { type PropsWithChildren, useMemo } from 'react';
 
 import { I18nProvider } from 'src/i18n/I18nProvider';
 
-export const TestRouterProvider: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => (
-  <MemoryRouter>
-    {/* <AppRoutes /> */}
-    {children}
-  </MemoryRouter>
-);
-
-export const TestQueryProvider: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+export const TestQueryProvider = ({ children }: PropsWithChildren) => {
   const client = useMemo(
     () =>
       new QueryClient({
@@ -26,6 +14,6 @@ export const TestQueryProvider: React.FC<React.PropsWithChildren> = ({
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 };
 
-export const TestI18nProvider: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => <I18nProvider>{children}</I18nProvider>;
+export const TestI18nProvider = ({ children }: PropsWithChildren) => (
+  <I18nProvider>{children}</I18nProvider>
+);

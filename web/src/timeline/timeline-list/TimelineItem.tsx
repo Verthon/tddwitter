@@ -34,11 +34,11 @@ export const TimelineItem = ({
         aria-label={t('timeline.viewPost', { username })}
       />
 
-      <div className="relative z-10">
+      <div className="relative z-10 pointer-events-none">
         <Avatar src={avatar} alt={`${username}'s avatar`} size={40} />
       </div>
 
-      <div className="relative z-10 flex flex-col gap-1 flex-1 min-w-0">
+      <div className="relative z-10 pointer-events-none flex flex-col gap-1 flex-1 min-w-0">
         <div className="truncate">
           <Text weight="bold" as="div" id={headingId}>
             {username}
@@ -47,7 +47,7 @@ export const TimelineItem = ({
         <Text size="sm" as="p">
           {content}
         </Text>
-        <div className="mt-2">
+        <div className="mt-2 pointer-events-auto self-start">
           <LikeButton postId={id} />
         </div>
       </div>
