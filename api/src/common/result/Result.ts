@@ -19,3 +19,7 @@ export const failure = <Error>(error: Error): Failure<Error> => ({
   _tag: "Failure",
   error,
 });
+
+export const assertNever = (value: never): never => {
+  throw new Error(`Unhandled case: ${JSON.stringify(value)}`);
+};

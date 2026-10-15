@@ -20,25 +20,19 @@ export const createTimelineService = ({
         limit: currentLimit + 1,
       } satisfies TimelineCursorParams);
 
-      const result = createTimelineModel({
+      const timeline = createTimelineModel({
         currentLimit: currentLimit,
         items: timelineData,
       });
 
-      if (result._tag === "Success") {
-        return {
-          items: result.value.items.map((item) => {
-            return {
-              publicId: item.publicId,
-              createdAt: item.createdAt,
-            };
-          }),
-          nextCursor: result.value.nextCursor,
-          hasMoreItems: result.value.hasMoreItems,
-        };
-      }
-
-      return "Invariant violation" as const
+      return {
+        items: timeline.items.map((item) => ({
+          publicId: item.publicId,
+          createdAt: item.createdAt,
+        })),
+        nextCursor: timeline.nextCursor,
+        hasMoreItems: timeline.hasMoreItems,
+      };
     },
   };
 };

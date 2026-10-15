@@ -10,6 +10,7 @@ import { createAuthRoutes } from './auth/route/route.js'
 import { createSQLTimelineRepository } from './timeline/list/repository.js'
 import { createTimelineService } from './timeline/list/timelineService.js'
 import { createTimelineRoutes } from './timeline/route/route.js'
+import { handleUnexpectedError } from './common/http/handleUnexpectedError.js'
 
 const registerService = createRegisterService({
   repository: createSQLAccountRepository(sql),
@@ -20,6 +21,8 @@ const timelineService = createTimelineService({
 })
 
 const app = new Hono()
+
+app.onError(handleUnexpectedError)
 
 app.get('/api/health', (c) => {
   return c.json({ status: 'ok' })

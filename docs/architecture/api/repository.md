@@ -8,7 +8,7 @@ Purpose: port for loading and saving one kind of data. Services depend on the po
 - SQL adapter: `createSQLXRepository(sql: Sql): XRepository`. postgres.js tagged templates only, never string concatenation. Map snake_case rows to domain types in one `toX(row)` function.
 - In-memory adapter: `createInMemoryXRepository(seed?)` ending in `satisfies XRepository`. It must enforce the same constraints the database enforces (e.g. unique email), or tests pass against a fake the database would reject.
 - Expected outcomes (not found, duplicate) are `Result` failures with a tagged `type`.
-- Infrastructure failures: open question, see `docs/tasks/onboarding.md`. Don't add new `DATABASE_ERROR` results until it's decided.
+- Infrastructure failures (connection lost, query error, anything unexpected) are thrown, not returned. When you catch a driver error to translate an expected case (unique violation → `DUPLICATE_EMAIL`), rethrow everything else. No `DATABASE_ERROR` results.
 
 ## Pattern
 

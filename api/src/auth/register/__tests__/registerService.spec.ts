@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { createRegisterService } from "../registerService.js";
 import { createInMemoryAccountRepository } from "../../repository/inMemoryAccountRepository.js";
-import { expectSuccess, expectFailure } from "@/common/test-utils/result.js";
+import { expectSuccess, expectFailureOfType } from "@/common/test-utils/result.js";
 
 const fakeHash = async (password: string) => `hashed_${password}`;
 
@@ -39,8 +39,7 @@ describe("registerService", () => {
       password: "correct-horse-2",
     });
 
-    const error = expectFailure(result);
-    expect(error.type).toBe("DUPLICATE_EMAIL");
+    expectFailureOfType(result, "DUPLICATE_EMAIL");
   });
 
   it("returns VALIDATION_ERROR for invalid email", async () => {
@@ -51,8 +50,7 @@ describe("registerService", () => {
       password: "correct-horse-1",
     });
 
-    const error = expectFailure(result);
-    expect(error.type).toBe("VALIDATION_ERROR");
+    expectFailureOfType(result, "VALIDATION_ERROR");
   });
 
   it("returns VALIDATION_ERROR for short password", async () => {
@@ -63,7 +61,6 @@ describe("registerService", () => {
       password: "short",
     });
 
-    const error = expectFailure(result);
-    expect(error.type).toBe("VALIDATION_ERROR");
+    expectFailureOfType(result, "VALIDATION_ERROR");
   });
 });

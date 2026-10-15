@@ -45,10 +45,7 @@ export const createSQLAccountRepository = (sql: Sql) => ({
       if (isUniqueViolation(error)) {
         return failure({ type: "DUPLICATE_EMAIL" as const });
       }
-      return failure({
-        type: "DATABASE_ERROR" as const,
-        details: error instanceof Error ? error.message : String(error),
-      });
+      throw error;
     }
   },
 });

@@ -1,18 +1,19 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { createAuthRoutes } from "../route.js";
 import { createRegisterService } from "../../register/registerService.js";
 import { createInMemoryAccountRepository } from "../../repository/inMemoryAccountRepository.js";
+import type { AccountRepository } from "../../repository/accountRepository.js";
+import { createTestApp, rejectWith } from "@/common/test-utils/http.js";
 
 const fakeHash = async (password: string) => `hashed_${password}`;
 
-const setup = () => {
-  const repository = createInMemoryAccountRepository();
+const setup = (repository: AccountRepository = createInMemoryAccountRepository()) => {
   const service = createRegisterService({ repository, hashPassword: fakeHash });
-  const app = createAuthRoutes(service);
+  const app = createTestApp(createAuthRoutes(service));
   return { app };
 };
 
-const post = (app: ReturnType<typeof createAuthRoutes>, body: unknown) =>
+const post = (app: ReturnType<typeof createTestApp>, body: unknown) =>
   app.request("/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -48,5 +49,30 @@ describe("POST /register", () => {
     const res = await post(app, { email: "bad", password: "short" });
 
     expect(res.status).toBe(400);
+  });
+
+  it("returns 400 with the standard error body for a malformed JSON body", async () => {
+    const { app } = setup();
+
+    const res = await app.request("/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: "{not json",
+    });
+
+    expect(res.status).toBe(400);
+    expect(await res.json()).toStrictEqual({ error: { en: "Malformed JSON body" } });
+  });
+
+  it("returns a generic 500 without leaking details when the repository throws", async () => {
+    const logError = vi.spyOn(console, "error").mockImplementation(() => {});
+    const { app } = setup({ save: rejectWith(new Error("connection refused")) });
+
+    const res = await post(app, { email: "user@example.com", password: "correct-horse-1" });
+
+    expect(res.status).toBe(500);
+    expect(await res.json()).toStrictEqual({ error: { en: "Something went wrong" } });
+    expect(logError).toHaveBeenCalledOnce();
+    logError.mockRestore();
   });
 });
