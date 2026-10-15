@@ -10,7 +10,9 @@
     "db:seed": "tsx db/seed.ts",
     "lint": "oxlint",
     "format": "oxfmt",
-    "test:unit": "vitest"
+    "test:unit": "vitest run",
+    "test:watch": "vitest",
+    "check": "pnpm lint && pnpm type-check && pnpm test:unit"
   },
   "dependencies": {
     "@hono/node-server": "1.19.6",

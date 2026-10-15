@@ -1,7 +1,7 @@
 # Twitter clone
 
-The application should look similar and behave similarly to the regular twitter
-To move fast we skip the API instead we will use mocks with msw
+The application should look similar and behave similarly to the regular twitter.
+Services call the API from `PUBLIC_*_API` env vars. MSW mocks back the tests and `pnpm dev:mock`.
 
 ## Stack
 
@@ -22,8 +22,10 @@ To move fast we skip the API instead we will use mocks with msw
 
 ### Testing
 
-- for integration tests use always pattern `**/**.spec.browser.ts|tsx`
-- for unit test use always the pattern `**/**.spec.unit.ts`
+- for integration tests use always pattern `**/*.browser.spec.ts|tsx`
+- for unit test use always the pattern `**/*.unit.spec.ts`
+- other names are not picked up by vitest
+- `pnpm lint:fix` applies biome formatting and safe fixes
 
 ### Tailwind
 

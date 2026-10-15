@@ -1,20 +1,22 @@
 {
-  "name": "rsbuild-react-ts",
+  "name": "web",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "rsbuild build",
     "build:analyze": "RSDOCTOR=true rsbuild build",
-    "check": "biome check --write",
     "dev": "rsbuild dev --open",
     "dev:mock": "PUBLIC_MOCK=true rsbuild dev --open",
     "format": "biome format --write",
     "preview": "rsbuild preview",
     "test:browser": "vitest",
-    "lint": "pnpm run type-check",
+    "lint": "biome check",
     "test:browser:headless": "CI=true vitest",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "lint:fix": "biome check --write",
+    "test:unit": "vitest run --project unit",
+    "check": "pnpm lint && pnpm type-check && CI=true vitest run"
   },
   "dependencies": {
     "@base-ui/react": "1.0.0",
