@@ -25,6 +25,9 @@ Bring tddwitter back after 8 months idle, port gym's agent setup, and push the f
 
 ## Open questions
 
+- Acceptance-test seam: `docs/specs/README.md` says the HTTP route (api) and the page (web). gym uses the use-case service. Decide before writing the login acceptance tests.
+- Branch `wip/login`: delete it once the login spec is done, or earlier.
+- The hook-bypass guard blocks any command that contains `core.hooksPath`, commit messages included.
 - Repository infrastructure failures: `Result` with `DATABASE_ERROR` (account) or a thrown error mapped to a generic 500 (timeline; gym's rule)? This blocks the login spec, because `findByEmail` needs an answer.
 - Register hashes with bcrypt cost 10 in `api/src/index.ts`. `wip/login`'s `passwordHasher` uses 12. Pick one hasher for both.
 - Register returns the raw DB error message on 500 (`api/src/auth/route/route.ts`).
