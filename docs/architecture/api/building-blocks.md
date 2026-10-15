@@ -11,3 +11,5 @@ Layout: `api/src/<feature>/` holds one vertical slice. Folders inside it: `<useC
 | Pure domain logic | `api/src/timeline/model/` | plain functions, no I/O |
 
 Wiring happens only in `api/src/index.ts` (composition root). Imports use the `@/` alias and `.js` extensions.
+
+Hono how-tos (cookies, JWT, middleware, testing): use the `hono-api` skill.

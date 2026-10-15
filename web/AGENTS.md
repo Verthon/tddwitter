@@ -26,6 +26,7 @@ Services call the API from `PUBLIC_*_API` env vars. MSW mocks back the tests and
 - for unit test use always the pattern `**/*.unit.spec.ts`
 - other names are not picked up by vitest
 - `pnpm lint:fix` applies biome formatting and safe fixes
+- Writing or fixing `*.browser.spec.tsx`: use the `web-browser-tests` skill.
 
 ### Tailwind
 
