@@ -1,4 +1,4 @@
-import { http, HttpResponse } from 'msw';
+import { HttpResponse, http } from 'msw';
 import { getLikeMetadata, toggleLike } from './fixtures';
 
 export const createEngagementHandlers = (baseUrl: string) => {
@@ -22,7 +22,7 @@ export const createEngagementHandlers = (baseUrl: string) => {
       if (!metadata.isLiked) {
         return HttpResponse.json(
           { error: 'Post was already liked' },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
@@ -41,7 +41,7 @@ export const createEngagementHandlers = (baseUrl: string) => {
       if (metadata.isLiked) {
         return HttpResponse.json(
           { error: 'Post was not liked' },
-          { status: 400 }
+          { status: 400 },
         );
       }
 

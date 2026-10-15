@@ -33,17 +33,17 @@ const timelineQuerySchema = z
 
 export const parseTimelineQuery = (userQuery: unknown) => {
   if (userQuery === undefined) {
-    return { valid: false, reason: errors.queryEmpty.en };
+    return { valid: false as const, reason: errors.queryEmpty.en };
   }
 
   const result = timelineQuerySchema.safeParse(userQuery);
 
   if (!result.success) {
     return {
-      valid: false,
+      valid: false as const,
       reason: result.error.issues[0]?.message ?? errors.unknown.en,
     };
   }
 
-  return { valid: true, data: result.data };
+  return { valid: true as const, data: result.data };
 };

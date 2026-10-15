@@ -1,14 +1,13 @@
-import { describe, expect, it } from "vitest";
-import { render } from "vitest-browser-react";
-import { page, userEvent } from "vitest/browser";
 import { HttpResponse } from 'msw';
+import { TestI18nProvider, TestQueryProvider } from 'src/test/testProvider';
+import { describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
+import { render } from 'vitest-browser-react';
+import { mockEngagementResponse } from '../../mocks/mockEngagementResponse';
+import { LikeButtonComponent as LikeButton } from '../LikeButton';
 
-import { LikeButton } from "../LikeButton";
-import { TestQueryProvider, TestI18nProvider } from "src/test/testProvider";
-import { mockEngagementResponse } from "../../mocks/mockEngagementResponse";
-
-describe("LikeButton", () => {
-  it("renders unfilled heart icon when not liked", async () => {
+describe('LikeButton', () => {
+  it('renders unfilled heart icon when not liked', async () => {
     mockEngagementResponse(
       'get',
       '/posts/test-post-1/like',
@@ -17,8 +16,8 @@ describe("LikeButton", () => {
         {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-        }
-      )
+        },
+      ),
     );
 
     await render(
@@ -26,14 +25,14 @@ describe("LikeButton", () => {
         <TestI18nProvider>
           <LikeButton postId="test-post-1" />
         </TestI18nProvider>
-      </TestQueryProvider>
+      </TestQueryProvider>,
     );
 
-    const button = page.getByRole("button", { name: /like/i });
+    const button = page.getByRole('button', { name: /like/i });
     await expect.element(button).toBeVisible();
   });
 
-  it("renders filled heart icon when liked", async () => {
+  it('renders filled heart icon when liked', async () => {
     mockEngagementResponse(
       'get',
       '/posts/test-post-2/like',
@@ -42,8 +41,8 @@ describe("LikeButton", () => {
         {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-        }
-      )
+        },
+      ),
     );
 
     await render(
@@ -51,14 +50,14 @@ describe("LikeButton", () => {
         <TestI18nProvider>
           <LikeButton postId="test-post-2" />
         </TestI18nProvider>
-      </TestQueryProvider>
+      </TestQueryProvider>,
     );
 
-    const button = page.getByRole("button", { name: /unlike/i });
+    const button = page.getByRole('button', { name: /unlike/i });
     await expect.element(button).toBeVisible();
   });
 
-  it("toggles like state when clicked", async () => {
+  it('toggles like state when clicked', async () => {
     mockEngagementResponse(
       'get',
       '/posts/test-post-3/like',
@@ -67,8 +66,8 @@ describe("LikeButton", () => {
         {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-        }
-      )
+        },
+      ),
     );
 
     mockEngagementResponse(
@@ -79,8 +78,8 @@ describe("LikeButton", () => {
         {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-        }
-      )
+        },
+      ),
     );
 
     await render(
@@ -88,15 +87,15 @@ describe("LikeButton", () => {
         <TestI18nProvider>
           <LikeButton postId="test-post-3" />
         </TestI18nProvider>
-      </TestQueryProvider>
+      </TestQueryProvider>,
     );
 
-    const button = page.getByRole("button", { name: /like/i });
+    const button = page.getByRole('button', { name: /like/i });
     await expect.element(button).toBeVisible();
 
     await userEvent.click(button);
 
-    const unlikeButton = page.getByRole("button", { name: /unlike/i });
+    const unlikeButton = page.getByRole('button', { name: /unlike/i });
     await expect.element(unlikeButton).toBeVisible();
   });
 });

@@ -1,4 +1,4 @@
-import { type CreatePostRequest, type CreatePostResponse } from '../types';
+import type { CreatePostRequest, CreatePostResponse } from '../types';
 
 const apiUrl = import.meta.env.PUBLIC_COMPOSER_API;
 
@@ -6,7 +6,9 @@ if (!apiUrl) {
   throw new Error('PUBLIC_COMPOSER_API environment variable is not configured');
 }
 
-export const createPost = async (data: CreatePostRequest): Promise<CreatePostResponse> => {
+export const createPost = async (
+  data: CreatePostRequest,
+): Promise<CreatePostResponse> => {
   const url = new URL(`${apiUrl}/posts`);
 
   const response = await fetch(url.toString(), {

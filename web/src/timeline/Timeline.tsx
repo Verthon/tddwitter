@@ -1,9 +1,9 @@
-import { Shell } from '../core/shell/Shell';
-import { TimelineList } from './timeline-list/TimeLineList';
-import { FloatingActionsContainer } from '../ui/floatingActionsContainer/FloatingActionsContainer';
-import { ScrollToTopButton } from '../core/scroll/components/ScrollToTopButton';
 import { CreatePost } from '../composer/components/CreatePost';
 import { SignedIn } from '../core/auth/components/SignedIn';
+import { ScrollToTopButton } from '../core/scroll/components/ScrollToTopButton';
+import { Shell } from '../core/shell/Shell';
+import { FloatingActionsContainer } from '../ui/floatingActionsContainer/FloatingActionsContainer';
+import { TimelineList } from './timeline-list/TimeLineList';
 
 const Timeline = () => {
   return (

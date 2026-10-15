@@ -1,6 +1,6 @@
-import { http, HttpResponse } from 'msw';
-import { type TimelineResponse, type PostDetailResponse } from '../types';
+import { HttpResponse, http } from 'msw';
 import { decodeCursor } from 'src/api/utils/cursor';
+import type { PostDetailResponse, TimelineResponse } from '../types';
 import { timelineMockItems } from './fixtures';
 
 export const createTimelineHandler = (baseUrl: string) => {
@@ -13,7 +13,7 @@ export const createTimelineHandler = (baseUrl: string) => {
     if (cursor) {
       const cursorTimestamp = decodeCursor(cursor);
       startIndex = timelineMockItems.findIndex(
-        item => item.timestamp < cursorTimestamp
+        (item) => item.timestamp < cursorTimestamp,
       );
       if (startIndex === -1) {
         const response: TimelineResponse = {
@@ -28,9 +28,8 @@ export const createTimelineHandler = (baseUrl: string) => {
     const items = timelineMockItems.slice(startIndex, startIndex + limit);
     const hasMore = startIndex + limit < timelineMockItems.length;
 
-    const nextCursor = hasMore && items.length > 0
-      ? btoa(items.at(-1)!.timestamp)
-      : null;
+    const nextCursor =
+      hasMore && items.length > 0 ? btoa(items.at(-1)!.timestamp) : null;
 
     const response: TimelineResponse = {
       items,
@@ -51,13 +50,10 @@ export const createPostDetailHandler = (baseUrl: string) => {
   return http.get(`${baseUrl}/timeline/:id`, ({ params }) => {
     const { id } = params;
 
-    const post = timelineMockItems.find(item => item.id === id);
+    const post = timelineMockItems.find((item) => item.id === id);
 
     if (!post) {
-      return HttpResponse.json(
-        { error: 'Post not found' },
-        { status: 404 }
-      );
+      return HttpResponse.json({ error: 'Post not found' }, { status: 404 });
     }
 
     const response: PostDetailResponse = {

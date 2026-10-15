@@ -8,7 +8,7 @@ describe("compareTimelineItems - given any two timeline items determine which go
     expect(compareTimelineItems(newer, older)).toBeLessThan(0);
   });
 
-  it("places older items after newer ones ", () => {
+  it("places older items after newer ones", () => {
     const older = { id: "1", createdAt: 1_320_000 };
     const newer = { id: "2", createdAt: 1_430_000 };
 

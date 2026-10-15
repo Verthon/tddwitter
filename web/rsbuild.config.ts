@@ -1,10 +1,10 @@
-import { defineConfig } from "@rsbuild/core";
-import { pluginReact } from "@rsbuild/plugin-react";
+import { defineConfig } from '@rsbuild/core';
+import { pluginReact } from '@rsbuild/plugin-react';
 
 export default defineConfig({
   plugins: [pluginReact()],
   html: {
-    title: "TDDWitter",
+    title: 'TDDWitter',
   },
   dev: {
     lazyCompilation: false,

@@ -1,10 +1,7 @@
 import { Hono } from "hono";
-import bcrypt from "bcrypt";
 
-import sql from "@/infra/db.js";
 import { localizedMessage } from "@/i18n/localizedResponse.js";
-import { createSQLAccountRepository } from "../repository/accountRepository.js";
-import { createRegisterService } from "../register/registerService.js";
+import type { createRegisterService } from "../register/registerService.js";
 
 export const createAuthRoutes = (
   registerService: ReturnType<typeof createRegisterService>,
@@ -50,17 +47,5 @@ export const createAuthRoutes = (
     return c.json({ id, email }, 201);
   });
 
-  authRoutes.post("/login", async (c) => {
-    const body = await c.req.json<unknown>();
-  });
-
   return authRoutes;
 };
-
-const repository = createSQLAccountRepository(sql);
-const registerService = createRegisterService({
-  repository,
-  hashPassword: (password) => bcrypt.hash(password, 10),
-});
-
-export const authRoutes = createAuthRoutes(registerService);

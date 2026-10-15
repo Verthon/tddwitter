@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
-
-import { ShellNav } from './shell-nav/ShellNav';
 import { MobileNav } from './mobile-nav/MobileNav';
+import { ShellNav } from './shell-nav/ShellNav';
 import { ShellSidebar } from './shell-sidebar/ShellSidebar';
 
 interface ShellProps {

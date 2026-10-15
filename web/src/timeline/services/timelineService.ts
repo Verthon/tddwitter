@@ -1,4 +1,8 @@
-import { type TimelineResponse, type TimelineParams, type PostDetailResponse } from '../types';
+import type {
+  PostDetailResponse,
+  TimelineParams,
+  TimelineResponse,
+} from '../types';
 
 const apiUrl = import.meta.env.PUBLIC_TIMELINE_API;
 
@@ -6,7 +10,9 @@ if (!apiUrl) {
   throw new Error('PUBLIC_TIMELINE_API environment variable is not configured');
 }
 
-export const fetchTimeline = async (params: TimelineParams = {}): Promise<TimelineResponse> => {
+export const fetchTimeline = async (
+  params: TimelineParams = {},
+): Promise<TimelineResponse> => {
   const url = new URL(`${apiUrl}/timeline`);
 
   if (params.cursor) {
@@ -31,7 +37,9 @@ export const fetchTimeline = async (params: TimelineParams = {}): Promise<Timeli
   return response.json();
 };
 
-export const fetchPostById = async (id: string): Promise<PostDetailResponse> => {
+export const fetchPostById = async (
+  id: string,
+): Promise<PostDetailResponse> => {
   const url = new URL(`${apiUrl}/timeline/${id}`);
 
   const response = await fetch(url.toString(), {

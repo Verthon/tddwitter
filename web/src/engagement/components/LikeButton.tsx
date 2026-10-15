@@ -1,9 +1,9 @@
-import { useTranslation } from "src/i18n/useTranslation";
-import { HeartIcon as HeartOutline } from "@heroicons/react/24/outline";
-import { HeartIcon as HeartSolid } from "@heroicons/react/24/solid";
-import { IconButton } from "../../ui/IconButton/IconButton";
-import { useLikeMetadata } from "../hooks/useLikeMetadata";
-import { useLikePost } from "../hooks/useLikePost";
+import { HeartIcon as HeartOutline } from '@heroicons/react/24/outline';
+import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
+import { useTranslation } from 'src/i18n/useTranslation';
+import { IconButton } from '../../ui/IconButton/IconButton';
+import { useLikeMetadata } from '../hooks/useLikeMetadata';
+import { useLikePost } from '../hooks/useLikePost';
 
 interface LikeButtonProps {
   postId: string;
@@ -15,8 +15,8 @@ export const LikeButtonComponent = ({ postId }: LikeButtonProps) => {
   const { like, unlike } = useLikePost(postId);
 
   const ariaLabel = isLiked
-    ? t("engagement.unlike.ariaLabel")
-    : t("engagement.like.ariaLabel");
+    ? t('engagement.unlike.ariaLabel')
+    : t('engagement.like.ariaLabel');
 
   const handleClick = () => {
     if (isLiked) {

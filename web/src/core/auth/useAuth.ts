@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { authQueries } from './queries/authQueries';
-import { type AuthorizationStatus } from './types';
+import type { AuthorizationStatus } from './types';
 
 interface UseAuthReturn {
   authorizationStatus: AuthorizationStatus;
@@ -12,7 +12,7 @@ const deriveAuthorizationStatus = (
   isPending: boolean,
   isError: boolean,
   error: Error | null,
-  userId?: string
+  userId?: string,
 ): AuthorizationStatus => {
   if (isPending) return 'pending';
   if (isError && error?.message === 'Unauthorized') return 'unauthenticated';
@@ -26,7 +26,7 @@ export const useAuth = (): UseAuthReturn => {
 
   const authorizationStatus = useMemo(
     () => deriveAuthorizationStatus(isPending, isError, error, data?.userId),
-    [isPending, isError, error, data?.userId]
+    [isPending, isError, error, data?.userId],
   );
 
   return {

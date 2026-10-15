@@ -1,13 +1,13 @@
-import { http, type HttpResponse as MSWHttpResponse } from 'msw';
+import { http } from 'msw';
 import { worker } from './mockServer';
 
 export const createMockResponse = (baseUrl: string) => {
   return (
     method: 'get' | 'post' | 'delete' | 'put' | 'patch',
     endpoint: string,
-    response: MSWHttpResponse
+    response: Response,
   ) => {
     const fullUrl = `${baseUrl}${endpoint}`;
-    worker.use(http[method](fullUrl, () => response));
+    worker.use(http[method](fullUrl, () => response.clone()));
   };
 };

@@ -15,8 +15,8 @@ interface ExponentialBackoffOptions {
 export const calculateExponentialBackoff = ({
   attemptIndex,
   baseDelay = 1000,
-  maxDelay = 30000
+  maxDelay = 30000,
 }: ExponentialBackoffOptions): number => {
-  const exponentialDelay = baseDelay * (2 ** attemptIndex);
+  const exponentialDelay = baseDelay * 2 ** attemptIndex;
   return Math.min(exponentialDelay, maxDelay);
 };

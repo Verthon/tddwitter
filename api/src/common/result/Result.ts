@@ -1,9 +1,9 @@
-type Success<Value> = {
+export type Success<Value> = {
   readonly _tag: "Success";
   readonly value: Value;
 };
 
-type Failure<Error> = {
+export type Failure<Error> = {
   readonly _tag: "Failure";
   readonly error: Error;
 };

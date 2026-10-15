@@ -3,8 +3,8 @@ import { IntlProvider } from 'react-intl';
 import enComposer from '../composer/i18n/en.json';
 
 import enCore from '../core/i18n/en.json';
-import enTimeline from '../timeline/i18n/en.json';
 import enEngagement from '../engagement/i18n/en.json';
+import enTimeline from '../timeline/i18n/en.json';
 import { LocaleProvider, useLocaleContext } from './LocaleProvider';
 
 const messagesByLocale = {

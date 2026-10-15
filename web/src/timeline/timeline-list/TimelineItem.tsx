@@ -1,9 +1,9 @@
 import { Link } from 'react-router';
+import { LikeButton } from 'src/engagement/public/LikeButton';
+import { useTranslation } from 'src/i18n/useTranslation';
+import { routesConfig } from 'src/routing/routesConfig';
 import { Avatar } from 'src/ui/avatar/Avatar';
 import { Text } from 'src/ui/text/Text';
-import { routesConfig } from 'src/routing/routesConfig';
-import { useTranslation } from 'src/i18n/useTranslation';
-import { LikeButton } from 'src/engagement/public/LikeButton';
 
 interface TimelineItemProps {
   id: string;
@@ -12,7 +12,12 @@ interface TimelineItemProps {
   content: string;
 }
 
-export const TimelineItem = ({ id, avatar, username, content }: TimelineItemProps) => {
+export const TimelineItem = ({
+  id,
+  avatar,
+  username,
+  content,
+}: TimelineItemProps) => {
   const { t } = useTranslation();
   const headingId = `timeline-item-heading-${id}`;
   const postUrl = routesConfig.post.replace(':id', id);

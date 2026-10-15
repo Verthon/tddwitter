@@ -1,17 +1,22 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { engagementMutations, engagementKeys } from '../queries/engagementQueries';
+import {
+  engagementKeys,
+  engagementMutations,
+} from '../queries/engagementQueries';
 
 export const useLikePost = (postId: string) => {
   const queryClient = useQueryClient();
 
   const likeMutation = useMutation({
     ...engagementMutations.likePost(),
-    onSettled: () => queryClient.invalidateQueries({ queryKey: engagementKeys.like(postId) }),
+    onSuccess: (metadata) =>
+      queryClient.setQueryData(engagementKeys.like(postId), metadata),
   });
 
   const unlikeMutation = useMutation({
     ...engagementMutations.unlikePost(),
-    onSettled: () => queryClient.invalidateQueries({ queryKey: engagementKeys.like(postId) }),
+    onSuccess: (metadata) =>
+      queryClient.setQueryData(engagementKeys.like(postId), metadata),
   });
 
   return {

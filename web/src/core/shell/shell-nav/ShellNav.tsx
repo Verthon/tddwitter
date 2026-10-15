@@ -14,7 +14,10 @@ const MobileDrawer = ({ open, onClose }: MobileDrawerProps) => (
       open ? 'pointer-events-auto' : 'pointer-events-none'
     }`}
   >
-    <div
+    <button
+      type="button"
+      tabIndex={-1}
+      aria-hidden="true"
       className={`flex-1 bg-black/30 transition-opacity duration-300 ${
         open ? 'opacity-100' : 'opacity-0'
       }`}

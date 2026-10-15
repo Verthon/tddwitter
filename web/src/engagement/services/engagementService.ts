@@ -3,10 +3,14 @@ import type { LikeMetadata } from '../types';
 const apiUrl = import.meta.env.PUBLIC_ENGAGEMENT_API;
 
 if (!apiUrl) {
-  throw new Error('PUBLIC_ENGAGEMENT_API environment variable is not configured');
+  throw new Error(
+    'PUBLIC_ENGAGEMENT_API environment variable is not configured',
+  );
 }
 
-export const fetchLikeMetadata = async (postId: string): Promise<LikeMetadata> => {
+export const fetchLikeMetadata = async (
+  postId: string,
+): Promise<LikeMetadata> => {
   const url = new URL(`${apiUrl}/posts/${postId}/like`);
 
   const response = await fetch(url.toString(), {

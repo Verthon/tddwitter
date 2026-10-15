@@ -1,9 +1,12 @@
-import { isCommonAssetRequest } from "msw";
-import { setupWorker } from "msw/browser";
-import { createComposerHandler } from "src/composer/mocks/composerHandlers";
-import { createAuthHandlers } from "src/core/auth/mocks/authHandlers";
-import { createTimelineHandler, createPostDetailHandler } from "src/timeline/mocks/timelineHandlers";
-import { createEngagementHandlers } from "src/engagement/mocks/engagementHandlers";
+import { isCommonAssetRequest } from 'msw';
+import { setupWorker } from 'msw/browser';
+import { createComposerHandler } from 'src/composer/mocks/composerHandlers';
+import { createAuthHandlers } from 'src/core/auth/mocks/authHandlers';
+import { createEngagementHandlers } from 'src/engagement/mocks/engagementHandlers';
+import {
+  createPostDetailHandler,
+  createTimelineHandler,
+} from 'src/timeline/mocks/timelineHandlers';
 
 const timelineApiBase = import.meta.env.PUBLIC_TIMELINE_API;
 const authApiBase = import.meta.env.PUBLIC_AUTH_API;
@@ -21,7 +24,7 @@ const handlers = [
 export const worker = setupWorker(...handlers);
 
 export const startMocking = async (): Promise<void> => {
-  if (import.meta.env.PUBLIC_MOCK === "true") {
+  if (import.meta.env.PUBLIC_MOCK === 'true') {
     await worker.start({
       onUnhandledRequest: (request, print) => {
         if (isCommonAssetRequest(request)) {
@@ -31,7 +34,7 @@ export const startMocking = async (): Promise<void> => {
         print.warning();
       },
       serviceWorker: {
-        url: "/mockServiceWorker.js",
+        url: '/mockServiceWorker.js',
       },
     });
   }

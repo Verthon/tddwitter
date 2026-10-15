@@ -12,28 +12,39 @@ const TimelinePage: LazyComponent = lazy(
 );
 
 const LoginPage: LazyComponent = lazy(
-  () => import(/* webpackChunkName: "login-page" */ '../core/auth/pages/LoginPage'),
+  () =>
+    import(/* webpackChunkName: "login-page" */ '../core/auth/pages/LoginPage'),
 );
 
 const RegisterPage: LazyComponent = lazy(
-  () => import(/* webpackChunkName: "register-page" */ '../core/auth/pages/RegisterPage'),
+  () =>
+    import(
+      /* webpackChunkName: "register-page" */ '../core/auth/pages/RegisterPage'
+    ),
 );
 
 const CreatePostPage: LazyComponent = lazy(
-  () => import(/* webpackChunkName: "create-post-page" */ '../composer/pages/CreatePostPage'),
+  () =>
+    import(
+      /* webpackChunkName: "create-post-page" */ '../composer/pages/CreatePostPage'
+    ),
 );
 
 const PostDetailPage: LazyComponent = lazy(
-  () => import(/* webpackChunkName: "post-detail-page" */ '../timeline/pages/PostDetailPage'),
+  () =>
+    import(
+      /* webpackChunkName: "post-detail-page" */ '../timeline/pages/PostDetailPage'
+    ),
 );
 
 const NotFoundPage: LazyComponent = lazy(
-  () => import(/* webpackChunkName: "not-found-page" */ '../core/pages/NotFoundPage'),
+  () =>
+    import(
+      /* webpackChunkName: "not-found-page" */ '../core/pages/NotFoundPage'
+    ),
 );
 
-const RootLayout = () => (
-  <Outlet />
-);
+const RootLayout = () => <Outlet />;
 
 export const AppRoutes = () => (
   <Suspense fallback={<PageLoader />}>

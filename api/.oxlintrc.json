@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["import"],
+  "plugins": ["import", "node", "typescript", "vitest"],
   "rules": {
     "import/no-cycle": "error"
   }

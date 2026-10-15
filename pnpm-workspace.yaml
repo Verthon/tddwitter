@@ -1,3 +1,10 @@
 packages:
   - 'web'
   - 'api'
+
+onlyBuiltDependencies:
+  - '@tailwindcss/oxide'
+  - bcrypt
+  - core-js
+  - esbuild
+  - msw

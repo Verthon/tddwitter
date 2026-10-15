@@ -10,9 +10,5 @@ export const QueryProvider = ({ children }: QueryProviderProps) => {
   // Ensure a stable QueryClient instance across hot reloads
   const [client] = useState(() => queryClient);
 
-  return (
-    <QueryClientProvider client={client}>
-      {children}
-    </QueryClientProvider>
-  );
+  return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 };

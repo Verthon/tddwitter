@@ -1,4 +1,8 @@
-export type AuthorizationStatus = 'pending' | 'error' | 'authenticated' | 'unauthenticated';
+export type AuthorizationStatus =
+  | 'pending'
+  | 'error'
+  | 'authenticated'
+  | 'unauthenticated';
 
 export interface User {
   userName: string;

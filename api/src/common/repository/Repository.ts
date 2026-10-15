@@ -9,5 +9,3 @@ export type Save<Entity> = {
 export type FindById<Entity, Id> = {
   findById(id: Id): Promise<Entity | null>;
 };
-
-export type RepositoryType = "sql" | "inMemory";

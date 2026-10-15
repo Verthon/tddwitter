@@ -1,12 +1,15 @@
-import { userEvent, page } from "vitest/browser";
-import { describe, it } from "vitest";
-import { render } from "vitest-browser-react";
+import {
+  TestI18nProvider,
+  TestQueryProvider,
+  TestRouterProvider,
+} from 'src/test/testProvider';
+import { describe, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
+import { render } from 'vitest-browser-react';
+import { ShellNav } from './ShellNav';
 
-import { ShellNav } from "./ShellNav";
-import { TestI18nProvider, TestQueryProvider, TestRouterProvider } from "src/test/testProvider";
-
-describe("ShellNav - header for application shell", () => {
-  it("should open the sidebar menu upon clicking on the hamburger menu", async () => {
+describe('ShellNav - header for application shell', () => {
+  it('should open the sidebar menu upon clicking on the hamburger menu', async () => {
     render(
       <TestQueryProvider>
         <TestRouterProvider>
@@ -14,9 +17,9 @@ describe("ShellNav - header for application shell", () => {
             <ShellNav />
           </TestI18nProvider>
         </TestRouterProvider>
-      </TestQueryProvider>
+      </TestQueryProvider>,
     );
-    const hamburger = await page.getByRole("button", { name: "Toggle menu" });
+    const hamburger = await page.getByRole('button', { name: 'Toggle menu' });
 
     await userEvent.click(hamburger);
   });

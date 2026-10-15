@@ -1,4 +1,4 @@
-import { type MeResponse, type UserResponse } from '../types';
+import type { MeResponse, UserResponse } from '../types';
 
 export const mockMeResponse: MeResponse = {
   userId: 'user-123',
@@ -7,7 +7,8 @@ export const mockMeResponse: MeResponse = {
 export const mockUserResponse: UserResponse = {
   id: 'user-123',
   userName: 'johndoe',
-  profileDescription: 'Software engineer passionate about building great products.',
+  profileDescription:
+    'Software engineer passionate about building great products.',
   avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
 };
 

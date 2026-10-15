@@ -1,26 +1,28 @@
 import { Hono } from "hono";
 
-import sql from "@/infra/db.js";
-import { createTimelineItemRepository } from "../list/repository.js";
-import { createTimelineService } from "../list/timelineService.js";
+import type { createTimelineService } from "../list/timelineService.js";
 import { parseTimelineQuery } from "./queryValidation.js";
 
-export const timelineRoutes = new Hono();
+type CreateTimelineRoutesProps = {
+  timelineService: ReturnType<typeof createTimelineService>;
+};
 
-const timelineRepository = createTimelineItemRepository(sql);
-const timelineService = createTimelineService({
-  repository: timelineRepository,
-});
+export const createTimelineRoutes = ({
+  timelineService,
+}: CreateTimelineRoutesProps) => {
+  const timelineRoutes = new Hono();
 
-timelineRoutes.get("/", async (c) => {
-  const { limit, cursor } = c.req.query();
+  timelineRoutes.get("/", async (c) => {
+    const { limit, cursor } = c.req.query();
+    const query = parseTimelineQuery({ limit, cursor });
 
-  const { valid, data, reason } = parseTimelineQuery({ limit, cursor });
+    if (!query.valid) {
+      return c.json({ message: { en: query.reason } }, 400);
+    }
 
-  if (!valid) {
-    return c.json({ message: { en: reason }}, 400);
-  }
+    const timeline = await timelineService.getTimeline(query.data);
+    return c.json(timeline);
+  });
 
-  const timeline = await timelineService.getTimeline(data);
-  return c.json(timeline);
-});
+  return timelineRoutes;
+};

@@ -1,7 +1,7 @@
 import { useTranslation } from 'src/i18n/useTranslation';
+import { Button } from 'src/ui/Button/Button';
 import { Heading } from 'src/ui/heading/Heading';
 import { Text } from 'src/ui/text/Text';
-import { Button } from 'src/ui/Button/Button';
 
 export const DisasterRecovery = () => {
   const { t } = useTranslation();

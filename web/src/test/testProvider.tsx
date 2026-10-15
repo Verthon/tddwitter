@@ -1,8 +1,8 @@
-import { MemoryRouter } from "react-router";
-import { useMemo } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import { MemoryRouter } from 'react-router';
 
-import { I18nProvider } from "src/i18n/I18nProvider";
+import { I18nProvider } from 'src/i18n/I18nProvider';
 
 export const TestRouterProvider: React.FC<React.PropsWithChildren> = ({
   children,
@@ -21,7 +21,7 @@ export const TestQueryProvider: React.FC<React.PropsWithChildren> = ({
       new QueryClient({
         defaultOptions: { queries: { retry: false, staleTime: 0, gcTime: 0 } },
       }),
-    []
+    [],
   );
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 };

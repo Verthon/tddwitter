@@ -17,30 +17,30 @@ describe("registerService", () => {
 
     const result = await service.register({
       email: "user@example.com",
-      password: "12345678",
+      password: "correct-horse-1",
     });
 
     const account = expectSuccess(result);
     expect(account.email).toBe("user@example.com");
-    expect(account.passwordHash).toBe("hashed_12345678");
+    expect(account.passwordHash).toBe("hashed_correct-horse-1");
     expect(account.id).toBe(1);
   });
 
-  it("returns EMAIL_ALREADY_EXISTS when email is taken", async () => {
+  it("returns DUPLICATE_EMAIL when email is taken", async () => {
     const { service } = setup();
 
     await service.register({
       email: "user@example.com",
-      password: "12345678",
+      password: "correct-horse-1",
     });
 
     const result = await service.register({
       email: "user@example.com",
-      password: "different1",
+      password: "correct-horse-2",
     });
 
     const error = expectFailure(result);
-    expect(error.type).toBe("EMAIL_ALREADY_EXISTS");
+    expect(error.type).toBe("DUPLICATE_EMAIL");
   });
 
   it("returns VALIDATION_ERROR for invalid email", async () => {
@@ -48,7 +48,7 @@ describe("registerService", () => {
 
     const result = await service.register({
       email: "bad",
-      password: "12345678",
+      password: "correct-horse-1",
     });
 
     const error = expectFailure(result);

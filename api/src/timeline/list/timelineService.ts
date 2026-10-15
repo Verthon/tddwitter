@@ -1,19 +1,10 @@
-import sql from "@/infra/db.js";
 import { createTimelineModel } from "../model/createTimelineModel.js";
 import type { TimelineQueryParams } from "../route/timelineQueryParams.js";
 import { decodeCursorParts } from "./decodeCursorParts.js";
-import type { createTimelineItemRepository } from "./repository.js";
-
-type TimelineItemRepository = ReturnType<typeof createTimelineItemRepository>;
+import type { TimelineCursorParams, TimelineItemRepository } from "./repository.js";
 
 type CreateTimelineServiceParams = {
   repository: TimelineItemRepository;
-};
-
-export type GetTimelineReturn = {
-  createdAt: number | undefined;
-  publicId: string | undefined;
-  limit: number;
 };
 
 export const createTimelineService = ({
@@ -21,14 +12,13 @@ export const createTimelineService = ({
 }: CreateTimelineServiceParams) => {
   return {
     getTimeline: async (queryParams: TimelineQueryParams) => {
-      const sqlRepository = repository(sql)
       const { createdAt, publicId } = decodeCursorParts(queryParams.cursor);
       const currentLimit = queryParams.limit ?? 20;
-      const timelineData = await sqlRepository.findAllCursorBased({
+      const timelineData = await repository.findAllCursorBased({
         createdAt,
         publicId,
         limit: currentLimit + 1,
-      } satisfies GetTimelineReturn);
+      } satisfies TimelineCursorParams);
 
       const result = createTimelineModel({
         currentLimit: currentLimit,

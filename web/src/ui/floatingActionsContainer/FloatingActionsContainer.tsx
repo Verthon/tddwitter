@@ -1,10 +1,12 @@
-import { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 type FloatingActionsContainerProps = {
   children: ReactNode;
 };
 
-const FloatingActionsContainer = ({ children }: FloatingActionsContainerProps) => {
+const FloatingActionsContainer = ({
+  children,
+}: FloatingActionsContainerProps) => {
   return (
     <div className="fixed inset-0 pointer-events-none z-50">
       <div className="relative h-full w-full">{children}</div>
@@ -31,7 +33,11 @@ const offsetClasses = {
   lg: 'p-8',
 } as const;
 
-const FloatingAction = ({ children, position = 'bottom-right', offset = 'md' }: FloatingActionProps) => {
+const FloatingAction = ({
+  children,
+  position = 'bottom-right',
+  offset = 'md',
+}: FloatingActionProps) => {
   const actionClasses = `absolute ${positionClasses[position]} ${offsetClasses[offset]} flex flex-col gap-3 pointer-events-auto md:hidden`;
 
   return <div className={actionClasses}>{children}</div>;

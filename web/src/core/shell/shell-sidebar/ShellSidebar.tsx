@@ -1,10 +1,10 @@
-import { SignedIn } from "src/core/auth/components/SignedIn";
-import { SignedOut } from "src/core/auth/components/SignedOut";
-import { useTranslation } from "src/i18n/useTranslation";
-import { Avatar } from "src/ui/avatar/Avatar";
-import { Text } from "src/ui/text/Text";
+import { SignedIn } from 'src/core/auth/components/SignedIn';
+import { SignedOut } from 'src/core/auth/components/SignedOut';
+import { useTranslation } from 'src/i18n/useTranslation';
+import { Avatar } from 'src/ui/avatar/Avatar';
+import { Text } from 'src/ui/text/Text';
 
-import { SidebarLink } from "./SidebarLink";
+import { SidebarLink } from './SidebarLink';
 
 export const ShellSidebar = () => {
   const { t } = useTranslation();
@@ -21,20 +21,15 @@ export const ShellSidebar = () => {
         </SignedIn>
         <SignedOut>
           <Text weight="bold" size="xl">
-            {t("core.title")}
+            {t('core.title')}
           </Text>
         </SignedOut>
       </header>
-      <nav
-        aria-label="Primary"
-        className="flex flex-col gap-2"
-      >
-        <SidebarLink route="home">
-          {t("core.nav.home")}
-        </SidebarLink>
+      <nav aria-label="Primary" className="flex flex-col gap-2">
+        <SidebarLink route="home">{t('core.nav.home')}</SidebarLink>
         <SignedIn>
           <SidebarLink route="createPost">
-            {t("core.nav.createPost")}
+            {t('core.nav.createPost')}
           </SidebarLink>
         </SignedIn>
       </nav>
@@ -42,10 +37,10 @@ export const ShellSidebar = () => {
       <SignedOut>
         <div className="mt-auto flex flex-col gap-3">
           <SidebarLink route="login" variant="primary">
-            {t("core.auth.sidebar.login")}
+            {t('core.auth.sidebar.login')}
           </SidebarLink>
           <SidebarLink route="signup" variant="outline">
-            {t("core.auth.sidebar.createAccount")}
+            {t('core.auth.sidebar.createAccount')}
           </SidebarLink>
         </div>
       </SignedOut>

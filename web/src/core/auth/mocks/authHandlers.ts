@@ -1,4 +1,4 @@
-import { http, HttpResponse } from 'msw';
+import { HttpResponse, http } from 'msw';
 import { mockMeResponse, mockUserResponse } from './fixtures';
 
 export const createAuthHandlers = (baseUrl: string) => {
@@ -12,7 +12,10 @@ export const createAuthHandlers = (baseUrl: string) => {
     }),
 
     http.post(`${baseUrl}/login`, async ({ request }) => {
-      const body = (await request.json()) as { email: string; password: string };
+      const body = (await request.json()) as {
+        email: string;
+        password: string;
+      };
       return HttpResponse.json({
         ...mockUserResponse,
         email: body.email,
@@ -20,7 +23,11 @@ export const createAuthHandlers = (baseUrl: string) => {
     }),
 
     http.post(`${baseUrl}/register`, async ({ request }) => {
-      const body = (await request.json()) as { username: string; email: string; password: string };
+      const body = (await request.json()) as {
+        username: string;
+        email: string;
+        password: string;
+      };
       return HttpResponse.json({
         ...mockUserResponse,
         username: body.username,

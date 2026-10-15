@@ -1,5 +1,5 @@
 import { Button as BaseButton } from '@base-ui/react/button';
-import { type ComponentPropsWithoutRef, type ElementType, type ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
 
 type FloatingButtonOwnProps<Component extends ElementType> = {
   children: ReactNode;
@@ -8,8 +8,12 @@ type FloatingButtonOwnProps<Component extends ElementType> = {
   as?: Component;
 };
 
-type FloatingButtonProps<Component extends ElementType = 'button'> = FloatingButtonOwnProps<Component> &
-  Omit<ComponentPropsWithoutRef<Component>, keyof FloatingButtonOwnProps<Component>>;
+type FloatingButtonProps<Component extends ElementType = 'button'> =
+  FloatingButtonOwnProps<Component> &
+    Omit<
+      ComponentPropsWithoutRef<Component>,
+      keyof FloatingButtonOwnProps<Component>
+    >;
 
 const baseClasses =
   'inline-flex items-center justify-center rounded-full w-14 h-14 shadow-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2';
@@ -32,7 +36,8 @@ const FloatingButton = <Component extends ElementType = 'button'>({
   ...props
 }: FloatingButtonProps<Component>) => {
   const Element = (as ?? BaseButton) as ElementType;
-  const buttonClasses = `${baseClasses} ${variantClasses[variant]} ${disabledClasses}`.trim();
+  const buttonClasses =
+    `${baseClasses} ${variantClasses[variant]} ${disabledClasses}`.trim();
 
   return (
     <Element disabled={isDisabled} className={buttonClasses} {...props}>

@@ -1,14 +1,13 @@
-import { describe, it, expect } from "vitest";
-import { render } from "vitest-browser-react";
-import { page, userEvent } from "vitest/browser";
-
 import {
   TestI18nProvider,
   TestQueryProvider,
   TestRouterProvider,
-} from "src/test/testProvider";
+} from 'src/test/testProvider';
+import { describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
+import { render } from 'vitest-browser-react';
 
-import RegisterPage from "./RegisterPage";
+import RegisterPage from './RegisterPage';
 
 describe('RegisterPage', () => {
   it('redirects to homepage after successful registration', async () => {
@@ -19,13 +18,16 @@ describe('RegisterPage', () => {
             <RegisterPage />
           </TestQueryProvider>
         </TestI18nProvider>
-      </TestRouterProvider>
+      </TestRouterProvider>,
     );
 
     await userEvent.fill(page.getByLabelText(/username/i), 'johndoe');
     await userEvent.fill(page.getByLabelText(/email/i), 'john@example.com');
     await userEvent.fill(page.getByLabelText(/^password$/i), 'password123');
-    await userEvent.fill(page.getByLabelText(/confirm password/i), 'password123');
+    await userEvent.fill(
+      page.getByLabelText(/confirm password/i),
+      'password123',
+    );
     await userEvent.click(page.getByRole('button', { name: /sign up/i }));
 
     await expect.poll(() => globalThis.location.pathname).toBe('/');
@@ -39,13 +41,16 @@ describe('RegisterPage', () => {
             <RegisterPage />
           </TestQueryProvider>
         </TestI18nProvider>
-      </TestRouterProvider>
+      </TestRouterProvider>,
     );
 
     await userEvent.fill(page.getByLabelText(/username/i), 'johndoe');
     await userEvent.fill(page.getByLabelText(/email/i), 'invalidemail');
     await userEvent.fill(page.getByLabelText(/^password$/i), 'password123');
-    await userEvent.fill(page.getByLabelText(/confirm password/i), 'password123');
+    await userEvent.fill(
+      page.getByLabelText(/confirm password/i),
+      'password123',
+    );
     await userEvent.click(page.getByRole('button', { name: /sign up/i }));
 
     await expect.element(page.getByLabelText(/email/i)).toBeInvalid();
@@ -59,7 +64,7 @@ describe('RegisterPage', () => {
             <RegisterPage />
           </TestQueryProvider>
         </TestI18nProvider>
-      </TestRouterProvider>
+      </TestRouterProvider>,
     );
 
     await userEvent.click(page.getByRole('button', { name: /sign up/i }));
@@ -68,4 +73,4 @@ describe('RegisterPage', () => {
     await expect.element(page.getByLabelText(/email/i)).toBeInvalid();
     await expect.element(page.getByLabelText(/^password$/i)).toBeInvalid();
   });
-})
+});

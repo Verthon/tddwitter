@@ -1,9 +1,23 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
+import bcrypt from 'bcrypt'
 
 import { getEnv } from './infra/env.js'
-import { authRoutes } from './auth/route/route.js'
-import { timelineRoutes } from './timeline/route/route.js'
+import sql from './infra/db.js'
+import { createSQLAccountRepository } from './auth/repository/accountRepository.js'
+import { createRegisterService } from './auth/register/registerService.js'
+import { createAuthRoutes } from './auth/route/route.js'
+import { createSQLTimelineRepository } from './timeline/list/repository.js'
+import { createTimelineService } from './timeline/list/timelineService.js'
+import { createTimelineRoutes } from './timeline/route/route.js'
+
+const registerService = createRegisterService({
+  repository: createSQLAccountRepository(sql),
+  hashPassword: (password) => bcrypt.hash(password, 10),
+})
+const timelineService = createTimelineService({
+  repository: createSQLTimelineRepository(sql),
+})
 
 const app = new Hono()
 
@@ -11,8 +25,8 @@ app.get('/api/health', (c) => {
   return c.json({ status: 'ok' })
 })
 
-app.route('/api/auth', authRoutes)
-app.route('/api/timeline', timelineRoutes)
+app.route('/api/auth', createAuthRoutes(registerService))
+app.route('/api/timeline', createTimelineRoutes({ timelineService }))
 
 const { PORT } = getEnv()
 

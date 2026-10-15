@@ -25,7 +25,7 @@ describe("POST /register", () => {
 
     const res = await post(app, {
       email: "user@example.com",
-      password: "12345678",
+      password: "correct-horse-1",
     });
 
     expect(res.status).toBe(201);
@@ -36,8 +36,8 @@ describe("POST /register", () => {
   it("returns 409 when email already exists", async () => {
     const { app } = setup();
 
-    await post(app, { email: "user@example.com", password: "12345678" });
-    const res = await post(app, { email: "user@example.com", password: "abcdefgh" });
+    await post(app, { email: "user@example.com", password: "correct-horse-1" });
+    const res = await post(app, { email: "user@example.com", password: "correct-horse-2" });
 
     expect(res.status).toBe(409);
   });

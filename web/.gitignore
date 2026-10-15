@@ -1,0 +1,4 @@
+node_modules/
+dist/
+.rspack-profile-*/
+.pnpm-store/

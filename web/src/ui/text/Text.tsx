@@ -51,7 +51,10 @@ export const Text = <E extends ElementType = 'span'>({
   const sizeClass = sizeClassMap[size];
   const colorClass = colorClassMap[color];
   return (
-    <Component className={`${weightClass} ${sizeClass} ${colorClass}`} {...props}>
+    <Component
+      className={`${weightClass} ${sizeClass} ${colorClass}`}
+      {...props}
+    >
       {children}
     </Component>
   );

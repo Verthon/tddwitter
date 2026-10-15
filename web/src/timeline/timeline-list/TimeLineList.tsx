@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'src/i18n/useTranslation';
+import { Button } from 'src/ui/Button/Button';
 import { useInfiniteTimeline } from '../hooks/useInfiniteTimeline';
 import { TimelineItem } from './TimelineItem';
-import { Button } from 'src/ui/Button/Button';
-import { useTranslation } from 'src/i18n/useTranslation';
 
 const LoadingState = () => {
   const { t } = useTranslation();
@@ -16,7 +16,10 @@ const LoadingState = () => {
 const ErrorState = ({ message }: { message?: string }) => {
   const { t } = useTranslation();
   return (
-    <div role="alert" className="flex flex-col items-center justify-center py-8 gap-3">
+    <div
+      role="alert"
+      className="flex flex-col items-center justify-center py-8 gap-3"
+    >
       <div className="text-sm text-red-600">
         {message || t('timeline.error')}
       </div>
@@ -44,7 +47,9 @@ const LoadingMoreIndicator = () => {
   const { t } = useTranslation();
   return (
     <div className="flex items-center justify-center py-4">
-      <output aria-live="polite" className="text-sm text-gray-500">{t('timeline.loadingMore')}</output>
+      <output aria-live="polite" className="text-sm text-gray-500">
+        {t('timeline.loadingMore')}
+      </output>
     </div>
   );
 };
@@ -53,11 +58,7 @@ const LoadMoreButton = ({ onClick }: { onClick: () => void }) => {
   const { t } = useTranslation();
   return (
     <div className="flex items-center justify-center py-4">
-      <Button
-        onClick={onClick}
-        variant="outline"
-        size="sm"
-      >
+      <Button onClick={onClick} variant="outline" size="sm">
         {t('timeline.loadMore')}
       </Button>
     </div>
@@ -68,7 +69,9 @@ const EndOfTimelineIndicator = () => {
   const { t } = useTranslation();
   return (
     <div className="flex items-center justify-center py-8">
-      <output className="text-sm text-gray-500">{t('timeline.endOfTimeline')}</output>
+      <output className="text-sm text-gray-500">
+        {t('timeline.endOfTimeline')}
+      </output>
     </div>
   );
 };
@@ -95,7 +98,7 @@ export const TimelineList = () => {
           fetchNextPage();
         }
       },
-      { threshold: 1 }
+      { threshold: 1 },
     );
 
     if (observerRef.current) {
@@ -113,7 +116,7 @@ export const TimelineList = () => {
     return <ErrorState message={error?.message} />;
   }
 
-  const allItems = data?.pages?.flatMap(page => page.items) || [];
+  const allItems = data?.pages?.flatMap((page) => page.items) || [];
 
   if (allItems.length === 0) {
     return <EmptyState />;

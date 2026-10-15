@@ -1,17 +1,19 @@
-import { useState } from "react";
-import { Field } from "@base-ui/react/field";
-import { Form } from "@base-ui/react/form";
-import { useTranslation } from "src/i18n/useTranslation";
-import { Button } from "../../ui/Button/Button";
-import { Heading } from "../../ui/heading/Heading";
-import { Box } from "../../ui/box/Box";
-import { useCreatePost } from "../hooks/useCreatePost";
+import { Field } from '@base-ui/react/field';
+import { Form } from '@base-ui/react/form';
+import { useId, useState } from 'react';
+import { useTranslation } from 'src/i18n/useTranslation';
+import { Button } from '../../ui/Button/Button';
+import { Box } from '../../ui/box/Box';
+import { Heading } from '../../ui/heading/Heading';
+import { useCreatePost } from '../hooks/useCreatePost';
 
 const MAX_CHARS = 300;
 
 export const CreatePostForm = () => {
   const { t } = useTranslation();
-  const [content, setContent] = useState("");
+  const headingId = useId();
+  const charCountId = useId();
+  const [content, setContent] = useState('');
   const { mutate, isPending } = useCreatePost();
 
   const remainingChars = MAX_CHARS - content.length;
@@ -30,14 +32,14 @@ export const CreatePostForm = () => {
       <Form
         onSubmit={handleSubmit}
         className="flex w-full max-w-2xl flex-col gap-4"
-        aria-labelledby="create-post-heading"
+        aria-labelledby={headingId}
       >
-        <Heading as="h1" id="create-post-heading">
-          {t("composer.createPost.heading")}
+        <Heading as="h1" id={headingId}>
+          {t('composer.createPost.heading')}
         </Heading>
         <Field.Root name="content" className="flex flex-col items-start gap-2">
           <Field.Label className="sr-only">
-            {t("composer.form.label")}
+            {t('composer.form.label')}
           </Field.Label>
           <Field.Control
             render={(props) => (
@@ -50,10 +52,10 @@ export const CreatePostForm = () => {
                     props.onChange(e);
                   }
                 }}
-                placeholder={t("composer.placeholder")}
+                placeholder={t('composer.placeholder')}
                 rows={4}
-                aria-describedby="message-limit"
-                aria-controls="message-limit"
+                aria-describedby={charCountId}
+                aria-controls={charCountId}
                 disabled={isPending}
                 className="w-full resize-none rounded-md border border-gray-200 p-3.5 text-base text-gray-900 placeholder-gray-500 focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
               />
@@ -62,12 +64,12 @@ export const CreatePostForm = () => {
           <div className="flex w-full items-center justify-between">
             <Field.Error className="text-sm text-red-800" />
             <output
-              id="char-count"
+              id={charCountId}
               className={`text-sm ${
-                isOverLimit ? "font-semibold text-red-800" : "text-gray-600"
+                isOverLimit ? 'font-semibold text-red-800' : 'text-gray-600'
               }`}
             >
-              {t("composer.form.charCount", {
+              {t('composer.form.charCount', {
                 remaining: remainingChars,
                 max: MAX_CHARS,
               })}
@@ -80,7 +82,7 @@ export const CreatePostForm = () => {
           variant="primary"
           size="lg"
         >
-          {t("composer.button.tweet")}
+          {t('composer.button.tweet')}
         </Button>
       </Form>
     </Box>

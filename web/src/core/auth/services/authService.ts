@@ -1,4 +1,9 @@
-import { type MeResponse, type UserResponse, type LoginPayload, type RegisterPayload } from '../types';
+import type {
+  LoginPayload,
+  MeResponse,
+  RegisterPayload,
+  UserResponse,
+} from '../types';
 
 const apiUrl = import.meta.env.PUBLIC_AUTH_API;
 
@@ -14,14 +19,14 @@ export const fetchMe = async (): Promise<MeResponse> => {
       'Content-Type': 'application/json',
     },
   });
-  
+
   if (!response.ok) {
     if (response.status === 401 || response.status === 403) {
       throw new Error('Unauthorized');
     }
     throw new Error(`Failed to fetch auth status: ${response.statusText}`);
   }
-  
+
   return response.json();
 };
 
@@ -41,7 +46,9 @@ export const fetchUser = async (): Promise<UserResponse> => {
   return response.json();
 };
 
-export const register = async (data: RegisterPayload): Promise<UserResponse> => {
+export const register = async (
+  data: RegisterPayload,
+): Promise<UserResponse> => {
   const response = await fetch(`${apiUrl}/register`, {
     method: 'POST',
     credentials: 'include',

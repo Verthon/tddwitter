@@ -1,25 +1,24 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
-import * as z from "zod/mini";
-import { Form } from "@base-ui/react/form";
+import { Form } from '@base-ui/react/form';
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
+import { useTranslation } from 'src/i18n/useTranslation';
+import { Button } from 'src/ui/Button/Button';
+import { Field } from 'src/ui/field/Field';
+import * as z from 'zod/mini';
+import { useLogin } from '../hooks/useLogin';
 
-import { useTranslation } from "src/i18n/useTranslation";
-import { Button } from "src/ui/Button/Button";
-import { Field } from "src/ui/field/Field";
-import { useLogin } from "../hooks/useLogin";
-
-const createSchema = (t: ReturnType<typeof useTranslation>["t"]) =>
+const createSchema = (t: ReturnType<typeof useTranslation>['t']) =>
   z.object({
     email: z
-      .email({ error: t("core.auth.login.error.emailInvalid") })
+      .email({ error: t('core.auth.login.error.emailInvalid') })
       .check(
-        z.minLength(1, { error: t("core.auth.login.error.emailRequired") })
+        z.minLength(1, { error: t('core.auth.login.error.emailRequired') }),
       ),
     password: z
       .string()
       .check(
-        z.minLength(1, t("core.auth.login.error.passwordRequired")),
-        z.minLength(6, t("core.auth.login.error.passwordMinLength"))
+        z.minLength(1, t('core.auth.login.error.passwordRequired')),
+        z.minLength(6, t('core.auth.login.error.passwordMinLength')),
       ),
   });
 
@@ -50,7 +49,7 @@ export const LoginForm = () => {
   };
 
   const handleCreateAccountClick = () => {
-    navigate("/signup");
+    navigate('/signup');
   };
 
   return (
@@ -64,14 +63,18 @@ export const LoginForm = () => {
       }}
     >
       <Field.Root name="email">
-        <Field.Label>{t("core.auth.login.emailLabel")}</Field.Label>
+        <Field.Label>{t('core.auth.login.emailLabel')}</Field.Label>
         <Field.Control type="email" autoComplete="email" required />
         <Field.Error />
       </Field.Root>
 
       <Field.Root name="password">
-        <Field.Label>{t("core.auth.login.passwordLabel")}</Field.Label>
-        <Field.Control type="password" autoComplete="current-password" required />
+        <Field.Label>{t('core.auth.login.passwordLabel')}</Field.Label>
+        <Field.Control
+          type="password"
+          autoComplete="current-password"
+          required
+        />
         <Field.Error />
       </Field.Root>
 
@@ -84,8 +87,8 @@ export const LoginForm = () => {
           isDisabled={isPending}
         >
           {isPending
-            ? t("core.auth.login.submitting")
-            : t("core.auth.login.submitButton")}
+            ? t('core.auth.login.submitting')
+            : t('core.auth.login.submitButton')}
         </Button>
 
         <Button
@@ -96,7 +99,7 @@ export const LoginForm = () => {
           isDisabled={isPending}
           fullWidth
         >
-          {t("core.auth.login.createAccount")}
+          {t('core.auth.login.createAccount')}
         </Button>
       </div>
 
@@ -106,7 +109,7 @@ export const LoginForm = () => {
           className="text-sm text-blue-600 hover:text-blue-700 focus:outline-none focus:underline"
           disabled={isPending}
         >
-          {t("core.auth.login.forgotPassword")}
+          {t('core.auth.login.forgotPassword')}
         </button>
       </div>
     </Form>

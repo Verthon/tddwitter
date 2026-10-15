@@ -1,14 +1,13 @@
-import { describe, it, expect } from "vitest";
-import { render } from "vitest-browser-react";
-import { page, userEvent } from "vitest/browser";
-
 import {
   TestI18nProvider,
   TestQueryProvider,
   TestRouterProvider,
-} from "src/test/testProvider";
+} from 'src/test/testProvider';
+import { describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
+import { render } from 'vitest-browser-react';
 
-import LoginPage from "./LoginPage";
+import LoginPage from './LoginPage';
 
 describe('LoginPage', () => {
   it('allows user to login with email and password and redirects to homepage', async () => {
@@ -19,7 +18,7 @@ describe('LoginPage', () => {
             <LoginPage />
           </TestQueryProvider>
         </TestI18nProvider>
-      </TestRouterProvider>
+      </TestRouterProvider>,
     );
 
     const emailInput = page.getByLabelText(/email/i);
@@ -32,4 +31,4 @@ describe('LoginPage', () => {
 
     await expect.poll(() => globalThis.location.pathname).toBe('/');
   });
-})
+});

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { timelineQueries } from '../queries/timelineQueries';
 import { calculateExponentialBackoff } from 'src/api/utils/retry';
+import { timelineQueries } from '../queries/timelineQueries';
 
 interface UsePostDetailOptions {
   id: string;

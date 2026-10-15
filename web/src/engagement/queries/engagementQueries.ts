@@ -1,5 +1,9 @@
-import { queryOptions, mutationOptions } from '@tanstack/react-query';
-import { fetchLikeMetadata, likePost, unlikePost } from '../services/engagementService';
+import { mutationOptions, queryOptions } from '@tanstack/react-query';
+import {
+  fetchLikeMetadata,
+  likePost,
+  unlikePost,
+} from '../services/engagementService';
 
 export const engagementKeys = {
   all: ['engagement'] as const,

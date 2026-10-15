@@ -1,10 +1,10 @@
-import { http, HttpResponse } from 'msw';
-import { type CreatePostRequest, type CreatePostResponse } from '../types';
+import { HttpResponse, http } from 'msw';
 import { dateService } from 'src/core/services/dateService';
+import type { CreatePostRequest, CreatePostResponse } from '../types';
 
 export const createComposerHandler = (baseUrl: string) => {
   return http.post(`${baseUrl}/posts`, async ({ request }) => {
-    const body = await request.json() as CreatePostRequest;
+    const body = (await request.json()) as CreatePostRequest;
 
     const response: CreatePostResponse = {
       id: crypto.randomUUID(),

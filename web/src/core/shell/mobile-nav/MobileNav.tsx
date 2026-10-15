@@ -1,7 +1,7 @@
-import { NavLink } from 'react-router';
 import { HomeIcon as HomeOutline } from '@heroicons/react/24/outline';
 import { HomeIcon as HomeSolid } from '@heroicons/react/24/solid';
-import { type ElementType } from 'react';
+import type { ElementType } from 'react';
+import { NavLink } from 'react-router';
 
 const iconSize = 24;
 
