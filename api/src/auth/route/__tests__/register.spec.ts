@@ -66,7 +66,10 @@ describe("POST /register", () => {
 
   it("returns a generic 500 without leaking details when the repository throws", async () => {
     const logError = vi.spyOn(console, "error").mockImplementation(() => {});
-    const { app } = setup({ save: rejectWith(new Error("connection refused")) });
+    const { app } = setup({
+      ...createInMemoryAccountRepository(),
+      save: rejectWith(new Error("connection refused")),
+    });
 
     const res = await post(app, { email: "user@example.com", password: "correct-horse-1" });
 

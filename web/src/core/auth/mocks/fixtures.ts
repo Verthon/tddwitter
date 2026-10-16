@@ -1,7 +1,8 @@
 import type { MeResponse, UserResponse } from '../types';
 
 export const mockMeResponse: MeResponse = {
-  userId: 'user-123',
+  id: 1,
+  email: 'johndoe@example.com',
 };
 
 export const mockUserResponse: UserResponse = {

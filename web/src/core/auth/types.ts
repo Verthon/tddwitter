@@ -11,8 +11,11 @@ export interface User {
 }
 
 export interface MeResponse {
-  userId: string;
+  id: number;
+  email: string;
 }
+
+export type LoginResponse = MeResponse;
 
 export interface UserResponse extends User {
   id: string;

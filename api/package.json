@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@hono/node-server": "1.19.6",
-    "bcrypt": "6.0.0",
     "date-fns": "4.1.0",
     "hono": "4.11.3",
     "pg": "8.17.2",
@@ -24,7 +23,6 @@
     "zod": "4.2.1"
   },
   "devDependencies": {
-    "@types/bcrypt": "6.0.0",
     "@types/node": "24.10.4",
     "node-pg-migrate": "8.0.4",
     "oxfmt": "0.26.0",

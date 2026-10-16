@@ -1,19 +1,12 @@
-import { getEnv } from "@/infra/env.js";
-
-const SECOND = 1000;
+const SECOND = 1;
 const MINUTE = 60 * SECOND;
-const DAY = 24 * MINUTE;
+const DAY = 24 * 60 * MINUTE;
 
 export const authConfig = {
-  accessToken: {
-    expiresInMs: 15 * MINUTE,
-    expiresInSeconds: () =>
-      Math.floor(authConfig.accessToken.expiresInMs / 1000),
-  },
-  refreshToken: {
-    expiresInMs: 30 * DAY,
-    expiresInSeconds: () =>
-      Math.floor(authConfig.refreshToken.expiresInMs / 1000),
-  },
-  jwtSecret: getEnv().JWT_SECRET,
+  accessTokenTtlSeconds: 15 * MINUTE,
+  refreshTokenTtlSeconds: 30 * DAY,
+  accessTokenCookie: "access_token",
+  refreshTokenCookie: "refresh_token",
+  accessTokenCookiePath: "/",
+  refreshTokenCookiePath: "/api/auth",
 } as const;

@@ -6,7 +6,7 @@ import { passwordValidationConfig } from "../config/passwordValidationConfig.js"
 export const loginMessages = {
   invalidEmail: localizedMessage({ en: "Invalid email format" }),
   emailMax: localizedMessage({ en: `Email must be at most ${emailValidationConfig.max} characters` }),
-  passwordMin: localizedMessage({ en: `Password must be at least ${passwordValidationConfig.min} characters` }),
+  passwordRequired: localizedMessage({ en: "Password is required" }),
   passwordMax: localizedMessage({ en: `Password must be at most ${passwordValidationConfig.max} characters` }),
 };
 
@@ -15,8 +15,8 @@ export const loginSchema = z.object({
     .email(loginMessages.invalidEmail.en)
     .max(emailValidationConfig.max, loginMessages.emailMax.en),
   password: z
-    .string()
-    .min(passwordValidationConfig.min, loginMessages.passwordMin.en)
+    .string(loginMessages.passwordRequired.en)
+    .min(1, loginMessages.passwordRequired.en)
     .max(passwordValidationConfig.max, loginMessages.passwordMax.en),
 });
 

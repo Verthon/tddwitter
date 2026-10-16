@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { useTranslation } from 'src/i18n/useTranslation';
 import { Button } from 'src/ui/Button/Button';
 import { Field } from 'src/ui/field/Field';
+import { Text } from 'src/ui/text/Text';
 import * as z from 'zod/mini';
 import { useLogin } from '../hooks/useLogin';
 
@@ -26,7 +27,7 @@ export const LoginForm = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
-  const { login, isPending } = useLogin();
+  const { login, isPending, errorKind } = useLogin();
 
   const submitForm = async (formValues: Form.Values) => {
     const schema = createSchema(t);
@@ -77,6 +78,14 @@ export const LoginForm = () => {
         />
         <Field.Error />
       </Field.Root>
+
+      {errorKind && (
+        <Text as="p" role="alert" size="sm" color="error">
+          {errorKind === 'invalidCredentials'
+            ? t('core.auth.login.error.invalidCredentials')
+            : t('core.auth.login.error.generic')}
+        </Text>
+      )}
 
       <div className="flex flex-col gap-3">
         <Button

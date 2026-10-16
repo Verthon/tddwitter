@@ -16,10 +16,7 @@ export const createAuthHandlers = (baseUrl: string) => {
         email: string;
         password: string;
       };
-      return HttpResponse.json({
-        ...mockUserResponse,
-        email: body.email,
-      });
+      return HttpResponse.json({ id: mockMeResponse.id, email: body.email });
     }),
 
     http.post(`${baseUrl}/register`, async ({ request }) => {

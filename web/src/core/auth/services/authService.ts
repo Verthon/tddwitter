@@ -1,6 +1,7 @@
 import { apiBase } from 'src/api/apiBase';
 import type {
   LoginPayload,
+  LoginResponse,
   MeResponse,
   RegisterPayload,
   UserResponse,
@@ -62,7 +63,9 @@ export const register = async (
   return response.json();
 };
 
-export const login = async (data: LoginPayload): Promise<UserResponse> => {
+export const INVALID_CREDENTIALS = 'InvalidCredentials';
+
+export const login = async (data: LoginPayload): Promise<LoginResponse> => {
   const response = await fetch(`${apiUrl}/login`, {
     method: 'POST',
     credentials: 'include',
@@ -73,6 +76,9 @@ export const login = async (data: LoginPayload): Promise<UserResponse> => {
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error(INVALID_CREDENTIALS);
+    }
     throw new Error(`Failed to login: ${response.statusText}`);
   }
 
