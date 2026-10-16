@@ -313,19 +313,26 @@ describe("POST /refresh", () => {
     expect(await me.json()).toStrictEqual({ id: account.id, email: EMAIL });
   });
 
-  it("AC-LOGIN-11: rejects a refresh token that was already used (rotation)", async () => {
+  it("AC-LOGIN-11: reuse of a rotated refresh token returns 401 and revokes that login's current token, but not other logins", async () => {
     const { app } = setup();
     await register(app);
-    const jar = await loginWithJar(app);
-    const usedCookie = jar.header();
-    const first = await post(app, "/refresh", usedCookie);
-    expect(first.status).toBe(204);
+    const stolenSession = await loginWithJar(app);
+    const otherSession = await loginWithJar(app);
+    const rotatedCookie = stolenSession.header();
+    const rotation = await post(app, "/refresh", rotatedCookie);
+    expect(rotation.status).toBe(204);
+    stolenSession.store(rotation);
 
-    const res = await post(app, "/refresh", usedCookie);
+    const reuse = await post(app, "/refresh", rotatedCookie);
+    const currentOfSameLogin = await post(app, "/refresh", stolenSession.header());
+    const otherLogin = await post(app, "/refresh", otherSession.header());
 
-    expect(res.status).toBe(401);
-    expect(await res.json()).toStrictEqual(UNAUTHORIZED);
-    expect(parseSetCookies(res).access_token?.value ?? "").toBe("");
+    expect(reuse.status).toBe(401);
+    expect(await reuse.json()).toStrictEqual(UNAUTHORIZED);
+    expect(parseSetCookies(reuse).access_token?.value ?? "").toBe("");
+    expect(currentOfSameLogin.status).toBe(401);
+    expect(await currentOfSameLogin.json()).toStrictEqual(UNAUTHORIZED);
+    expect(otherLogin.status).toBe(204);
   });
 
   it("AC-LOGIN-12: returns 401 without a refresh token or with an unknown one", async () => {
@@ -354,25 +361,29 @@ describe("POST /refresh", () => {
     expect(await res.json()).toStrictEqual(UNAUTHORIZED);
   });
 
-  it("AC-LOGIN-14: a new login ends the previous session of the same account", async () => {
+  it("AC-LOGIN-14: two logins of the same account refresh independently", async () => {
     const { app } = setup();
     await register(app);
     const firstSession = await loginWithJar(app);
     const secondSession = await loginWithJar(app);
 
-    const oldRefresh = await post(app, "/refresh", firstSession.header());
-    const newRefresh = await post(app, "/refresh", secondSession.header());
+    const statuses: number[] = [];
+    for (const session of [firstSession, secondSession, firstSession, secondSession]) {
+      const res = await post(app, "/refresh", session.header());
+      statuses.push(res.status);
+      session.store(res);
+    }
 
-    expect(oldRefresh.status).toBe(401);
-    expect(newRefresh.status).toBe(204);
+    expect(statuses).toStrictEqual([204, 204, 204, 204]);
   });
 });
 
 describe("POST /logout", () => {
-  it("AC-LOGIN-15: clears both cookies and revokes the refresh token", async () => {
+  it("AC-LOGIN-15: clears both cookies and revokes only this login's refresh token", async () => {
     const { app } = setup();
     await register(app);
     const jar = await loginWithJar(app);
+    const otherSession = await loginWithJar(app);
     const sessionCookie = jar.header();
 
     const res = await post(app, "/logout", sessionCookie);
@@ -388,7 +399,9 @@ describe("POST /logout", () => {
       attributes: { "max-age": "0", path: "/api/auth" },
     });
     const refresh = await post(app, "/refresh", sessionCookie);
+    const otherRefresh = await post(app, "/refresh", otherSession.header());
     expect(refresh.status).toBe(401);
+    expect(otherRefresh.status).toBe(204);
   });
 
   it("AC-LOGIN-16: succeeds and clears both cookies without a session", async () => {

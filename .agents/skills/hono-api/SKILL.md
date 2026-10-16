@@ -14,8 +14,9 @@ Every recipe here was run against the installed `hono@4.11.3` and `@hono/node-se
 | Writing | Read |
 |---|---|
 | Login, logout, `/me`, auth cookies, signing or verifying JWTs | [references/cookies-jwt.md](references/cookies-jwt.md) |
+| Refresh tokens: storing, rotating, reuse detection, cookie `Path` | [references/refresh-tokens.md](references/refresh-tokens.md) |
 | A middleware, or `c.set` / `c.get` | [references/middleware.md](references/middleware.md) |
-| Route tests with cookies, `Set-Cookie`, token expiry | [references/testing.md](references/testing.md) |
+| Route tests with cookies, `Set-Cookie`, token expiry, several sub-apps on one prefix | [references/testing.md](references/testing.md) |
 | CORS for the web app | [references/cors.md](references/cors.md) |
 | Considering `hc` / RPC types for `web/` | [references/rpc.md](references/rpc.md) |
 | Checking where a claim comes from | [references/sources.md](references/sources.md) |

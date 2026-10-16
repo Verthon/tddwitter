@@ -27,6 +27,10 @@ Checked 2026-10-15 against installed `hono@4.11.3` and `@hono/node-server@1.19.6
 - `middleware/cors/index.js`: the default `origin` is `*`, even with `credentials: true`.
 - `helper/cookie/index.js`: `path` defaults to `/`; `deleteCookie` sets `Max-Age=0`.
 
+## OAuth security BCP
+
+- Refresh token rotation with reuse detection (refresh-tokens.md): RFC 9700 §4.14.2, https://www.rfc-editor.org/rfc/rfc9700#section-4.14.2 (cited from the RFC text, not re-fetched for this skill update)
+
 ## Browser behavior (MDN)
 
 - `Set-Cookie` (`Secure` on localhost, `SameSite`, `Max-Age`): https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie

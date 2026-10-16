@@ -38,7 +38,9 @@ export const signAccessToken = (accountId: number, secret: string) =>
     "HS256",
   );
 
-const accessTokenPayloadSchema = z.object({ sub: z.string() });
+const accessTokenPayloadSchema = z.object({
+  sub: z.string().regex(/^[1-9]\d*$/).transform(Number),
+});
 
 type InvalidToken = { type: "INVALID_TOKEN" };
 
@@ -53,7 +55,7 @@ const isTokenError = (error: unknown) =>
 export const verifyAccessToken = async (
   token: string,
   secret: string,
-): Promise<Result<{ accountId: string }, InvalidToken>> => {
+): Promise<Result<{ accountId: number }, InvalidToken>> => {
   try {
     const parsed = accessTokenPayloadSchema.safeParse(
       await verify(token, secret, "HS256"),
@@ -71,7 +73,7 @@ export const verifyAccessToken = async (
 };
 ```
 
-Verified: round-trip, expired, wrong secret, `"garbage"`, `"not.a.jwt"`, and a payload without `sub` all behave as typed. `verify` returns `JWTPayload` (`Record<string, unknown>` plus `exp`/`nbf`/`iat`), hence the zod parse. `decode` from `hono/jwt` reads a token without checking the signature; never use it for auth.
+Verified: round-trip, expired, wrong secret, `"garbage"`, `"not.a.jwt"`, and a payload without `sub` all behave as typed. `verify` returns `JWTPayload` (`Record<string, unknown>` plus `exp`/`nbf`/`iat`), hence the zod parse. `Account.id` is a `number` and JWT `sub` is a string, so the schema turns `sub` back into a number; a non-numeric `sub` becomes `INVALID_TOKEN`. `decode` from `hono/jwt` reads a token without checking the signature; never use it for auth.
 
 ## Cookie options
 
@@ -148,7 +150,7 @@ export const createSessionRoutes = ({ loginService, jwtSecret }: SessionRoutesDe
 ```ts
 import { createMiddleware } from "hono/factory";
 
-type AuthEnv = { Variables: { accountId: string } };
+type AuthEnv = { Variables: { accountId: number } };
 
 export const createRequireAuth = (secret: string) =>
   createMiddleware<AuthEnv>(async (c, next) => {

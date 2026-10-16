@@ -1,4 +1,5 @@
 import { HttpResponse, http } from 'msw';
+import { apiBase } from 'src/api/apiBase';
 import enCore from 'src/core/i18n/en.json';
 import { worker } from 'src/integrations/mockServer';
 import { AppRoutes } from 'src/routing/Routes';
@@ -29,7 +30,7 @@ describe('Login page', () => {
   it('AC-LOGIN-19: sends the credentials to the same-origin /api/auth/login and goes to the home page', async () => {
     let body: unknown;
     worker.use(
-      http.post('/api/auth/login', async ({ request }) => {
+      http.post(`${apiBase}/auth/login`, async ({ request }) => {
         body = await request.json();
         return HttpResponse.json(ACCOUNT);
       }),
@@ -46,7 +47,7 @@ describe('Login page', () => {
 
   it('AC-LOGIN-20: shows the wrong-credentials alert and stays on the page when the API returns 401', async () => {
     worker.use(
-      http.post('/api/auth/login', () =>
+      http.post(`${apiBase}/auth/login`, () =>
         HttpResponse.json(
           { error: { en: 'Invalid email or password' } },
           { status: 401 },
@@ -66,7 +67,7 @@ describe('Login page', () => {
 
   it('AC-LOGIN-21: shows the generic error alert and stays on the page when the API fails with 500', async () => {
     worker.use(
-      http.post('/api/auth/login', () =>
+      http.post(`${apiBase}/auth/login`, () =>
         HttpResponse.json(
           { error: { en: 'Something went wrong' } },
           { status: 500 },
@@ -85,7 +86,7 @@ describe('Login page', () => {
   });
 
   it('AC-LOGIN-21: shows the generic error alert and stays on the page when the request fails', async () => {
-    worker.use(http.post('/api/auth/login', () => HttpResponse.error()));
+    worker.use(http.post(`${apiBase}/auth/login`, () => HttpResponse.error()));
     await renderWithProviders(<LoginPage />, { route: '/login' });
 
     await submitCredentials();
@@ -101,7 +102,7 @@ describe('Login page', () => {
     let signedIn = false;
     let meRequests = 0;
     worker.use(
-      http.get('/api/auth/me', () => {
+      http.get(`${apiBase}/auth/me`, () => {
         meRequests += 1;
         return signedIn
           ? HttpResponse.json(ACCOUNT)
@@ -110,7 +111,7 @@ describe('Login page', () => {
               { status: 401 },
             );
       }),
-      http.post('/api/auth/login', () => {
+      http.post(`${apiBase}/auth/login`, () => {
         signedIn = true;
         return HttpResponse.json(ACCOUNT);
       }),

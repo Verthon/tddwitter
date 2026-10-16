@@ -49,15 +49,20 @@ Either sign a token that is already expired:
 const token = await sign({ sub: "1", exp: nowInSeconds() - 1 }, SECRET, "HS256");
 ```
 
-or move the clock with vitest fake timers (`verify` reads `Date.now()`):
+or move the clock with vitest fake timers (`verify` reads `Date.now()`). Fake only `Date`:
 
 ```ts
-vi.useFakeTimers();
+vi.useFakeTimers({ toFake: ["Date"] });
+vi.setSystemTime(new Date("2026-01-01T12:00:00Z"));
 const token = await signAccessToken(1, SECRET);
-vi.advanceTimersByTime((ACCESS_TOKEN_TTL_SECONDS + 1) * 1000);
+vi.setSystemTime(Date.now() + (ACCESS_TOKEN_TTL_SECONDS + 1) * 1000);
 expectFailureOfType(await verifyAccessToken(token, SECRET), "INVALID_TOKEN");
 vi.useRealTimers();
 ```
+
+- Put `vi.useRealTimers()` in `afterEach`, so a failing assertion doesn't leave the clock faked for the next test.
+- Why only `Date`: plain `vi.useFakeTimers()` also fakes `setTimeout`, `setImmediate` and friends. Async `node:crypto` `argon2` still completes, because its callback comes from the libuv thread pool, not a timer. But anything that awaits a timer (a `delay` in a fake, retries with backoff) hangs until the test times out. Verified on vitest 4.0.16: `argon2` passes under both modes, `await new Promise((r) => setTimeout(r, 10))` and `setImmediate` time out under the default.
+- `vi.advanceTimersByTime(ms)` also moves the faked `Date`, but `setSystemTime` reads more plainly when only the clock matters.
 
 ## Unauthenticated requests
 
@@ -71,6 +76,22 @@ expect(missing.status).toBe(401);
 expect(await missing.json()).toStrictEqual({ error: { en: "Unauthorized" } });
 expect(bad.status).toBe(401);
 ```
+
+## Several sub-apps on one prefix
+
+When a feature has two route factories mounted under the same prefix in `index.ts` (`app.route("/api/auth", a)` and `app.route("/api/auth", b)`), test them together the same way:
+
+```ts
+const routes = new Hono()
+  .route("/", createAuthRoutes(registerService))
+  .route("/", createSessionRoutes({ sessionService, jwtSecret: SECRET }));
+const app = createTestApp(routes);
+
+await app.request("/register", { method: "POST", /* … */ });
+await app.request("/login", { method: "POST", /* … */ });
+```
+
+Both sub-apps answer on their own paths, so a test can create an account through `/register` and log in through `/login` against the same in-memory repository. Verified: the same pair mounted twice under `/api/auth` serves both paths.
 
 ## `testClient`
 
