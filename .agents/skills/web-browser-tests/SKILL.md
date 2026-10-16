@@ -176,6 +176,8 @@ For error, network failure, slow/loading, request-body capture and mutation-fail
 | `getByTestId` / CSS selectors for UI | Role + accessible name. Add a label to the component if one is missing |
 | A test with no assertion after the last click | End with an `expect.element` / `expect.poll` |
 | Assert the browser's native validation text | `toBeInvalid()`, or zod messages via input the browser accepts |
+| Assert "signed out" right after render | `SignedOut` renders while the `me` query is still pending, so the check passes before `/me` answers (and passes against the wrong URL). Count `/me` requests in the handler and `await expect.poll(() => meRequests).toBeGreaterThan(0)` first. See [references/router-and-query.md](references/router-and-query.md#auth-state-from-me) |
+| Prove a cache invalidation through navigation | An errored query refetches when a new observer mounts, whatever its `staleTime`, so a page change hides a missing `invalidateQueries`. Test the outcome, or keep the observer mounted. See [references/router-and-query.md](references/router-and-query.md#errored-queries-refetch-on-remount) |
 
 ## Prove each assertion can fail
 

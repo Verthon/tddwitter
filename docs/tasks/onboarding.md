@@ -49,9 +49,9 @@ Bring tddwitter back after 8 months idle, port gym's agent setup, and push the f
 
 1. [x] Decide the infrastructure-failure rule and update `docs/architecture/api/repository.md`
 2. [x] Write `docs/specs/login.md` (api: login, refresh, `/me`, logout; web: login page on the real API)
-3. [ ] Login acceptance tests; the user reviews them, then they're locked. Written on branch `worktree-agent-a0f0618e55ab423e1` (spec, `api/src/auth/__tests__/login.acceptance.spec.ts`, `web/src/core/auth/__tests__/login.acceptance.browser.spec.tsx`), not merged because they fail by design. Merges cleanly. Mutation-checked for api (password check, rotation, reuse revocation, family isolation). Unproven: `me` invalidation after login. Waiting for user review.
+3. [x] Login acceptance tests: locked by the user without review on 2026-10-16 ("we will change it later"). Mutation-checked for api (password check, rotation, reuse revocation, family isolation). Unproven: `me` invalidation after login.
 4. [ ] Run `implement-spec` for login; record cost and stop reasons as in gym `agy-run-*.md`
-5. [ ] Lock check: acceptance-test hashes plus no `.skip`/`.only`/`.todo` (gym P1 Next 7)
+5. [x] Lock check (`scripts/check-locks.mjs`, hashes in `docs/specs/locks.json`, runs first in `pnpm check`; re-lock with `--update <spec>` only on user approval): acceptance-test hashes plus no `.skip`/`.only`/`.todo` (gym P1 Next 7)
 6. [ ] AC-ID traceability check in `pnpm check` (gym P1 Next 6)
 7. [ ] Next MVP features (see `GOAL.md`) as specs, wired to the real API: create post, global timeline, likes
 8. [ ] Set up `pnpm e2e` (Playwright, mock mode) with the first journey: register → login

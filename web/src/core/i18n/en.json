@@ -19,6 +19,8 @@
   "core.auth.login.error.emailInvalid": "Please enter a valid email address",
   "core.auth.login.error.passwordRequired": "Password is required",
   "core.auth.login.error.passwordMinLength": "Password must be at least 6 characters",
+  "core.auth.login.error.invalidCredentials": "Wrong email or password",
+  "core.auth.login.error.generic": "Something went wrong. Please try again",
   "core.auth.register.title": "Create your account",
   "core.auth.register.subtitle": "Join TDDwitter today",
   "core.auth.register.usernameLabel": "Username",

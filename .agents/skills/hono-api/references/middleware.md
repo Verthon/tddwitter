@@ -5,11 +5,11 @@
 ```ts
 import { createMiddleware } from "hono/factory";
 
-type AuthEnv = { Variables: { accountId: string } };
+type AuthEnv = { Variables: { accountId: number } };
 
 export const createRequireAuth = (secret: string) =>
   createMiddleware<AuthEnv>(async (c, next) => {
-    c.set("accountId", "…");
+    c.set("accountId", 1);
     await next();
   });
 ```
@@ -21,7 +21,7 @@ export const createRequireAuth = (secret: string) =>
 
 ## Getting the variable typed in the handler
 
-Pass the middleware inline before the handler. Hono merges its `Env` into the handler's context, so `c.get("accountId")` is `string` with a plain `new Hono()`:
+Pass the middleware inline before the handler. Hono merges its `Env` into the handler's context, so `c.get("accountId")` is `number` with a plain `new Hono()`:
 
 ```ts
 const routes = new Hono();

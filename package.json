@@ -10,7 +10,7 @@
     "dev:api": "pnpm --filter api dev",
     "lint": "pnpm -r lint",
     "type-check": "pnpm -r type-check",
-    "check": "pnpm -r --workspace-concurrency=1 check",
+    "check": "node scripts/check-locks.mjs && pnpm -r --workspace-concurrency=1 check",
     "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath .githooks || true"
   },
   "keywords": [],
