@@ -49,4 +49,5 @@ lerna-debug.log*
 .DS_Store
 
 
-secrets.claude/worktrees/
+secrets
+.claude/worktrees/
