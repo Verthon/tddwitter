@@ -2,7 +2,7 @@
 
 Read [GOAL.md](GOAL.md) first.
 
-- Never read `.env*` files or `secrets/`.
+- `secrets/` and `.env*` hold dev-only throwaway values; agents may read and write them. Never commit them (pre-commit blocks it; only `.env.example` files and `web/.env.test` are tracked). Production secrets never live in this repo.
 - `pnpm check` (root) must be green before you call work done. It runs lint, type-check and tests for `api` and `web`.
 - `api/`: Hono + postgres.js. Rules: [docs/architecture/api/](docs/architecture/api/building-blocks.md).
 - `web/`: React + MSW. Rules: [web/AGENTS.md](web/AGENTS.md).

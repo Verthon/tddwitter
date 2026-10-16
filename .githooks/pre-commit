@@ -5,5 +5,11 @@ if ! command -v pnpm >/dev/null 2>&1; then
   echo "Fix the environment so pnpm resolves. Do NOT bypass this hook with --no-verify or by changing core.hooksPath." >&2
   exit 1
 fi
+leaked=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '(^|/)secrets/|(^|/)\.env($|\.)' | grep -vE '(^|/)\.env\.example$|^web/\.env\.test$' || true)
+if [ -n "$leaked" ]; then
+  echo "Refusing to commit secrets or env files:" >&2
+  echo "$leaked" >&2
+  exit 1
+fi
 pnpm lint
 pnpm type-check
