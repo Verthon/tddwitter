@@ -1,91 +1,83 @@
+x-db-name: &db-name tddwitter_db
+
 services:
   web:
-    container_name: frontend-container
-    image: node:24-alpine
-    working_dir: /app
-    volumes:
-      - ./web:/app
-      - /app/node_modules
+    container_name: tddwitter-web
+    build:
+      context: .
+      dockerfile: web/Dockerfile
     ports:
-      - "3000:3000"
-    command: sh -c "corepack enable && pnpm install && pnpm dev"
-    environment:
-      - NODE_ENV=development
+      - "8080:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - frontend
+
   api:
-    container_name: backend-container
-    image: node:24-alpine
-    working_dir: /app
-    volumes:
-      - ./api:/app
-      - /app/node_modules
-    ports:
-      - "4000:4000"
-    command: sh -c "
-      corepack enable && 
-      pnpm install && 
-      DATABASE_URL=postgres://$$(cat /run/secrets/postgres_user):$$(cat /run/secrets/postgres_password)@$$DB_HOST:5432/$$DB_NAME pnpm db:migrate &&
-      pnpm db:seed && 
-      pnpm dev"
+    container_name: tddwitter-api
+    build:
+      context: .
+      dockerfile: api/Dockerfile
     environment:
-      - NODE_ENV=development
-      - PORT=4000
-      - DB_HOST=db
-      - DB_NAME=tddwitter_db
-      - DB_USER_FILE=/run/secrets/postgres_user
-      - DB_PASSWORD_FILE=/run/secrets/postgres_password
+      NODE_ENV: development
+      PORT: "4000"
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: *db-name
+      DB_USER_FILE: /run/secrets/postgres_user
+      DB_PASSWORD_FILE: /run/secrets/postgres_password
+      JWT_SECRET_FILE: /run/secrets/jwt_secret
     secrets:
       - postgres_user
       - postgres_password
+      - jwt_secret
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:4000/api/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     networks:
+      - frontend
       - backend
+
   db:
-    container_name: postgres-container
+    container_name: tddwitter-db
     image: postgres:18.1-alpine
     ports:
       - "5433:5432"
-    networks:
-      - backend
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql
     environment:
       POSTGRES_USER_FILE: /run/secrets/postgres_user
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
-      POSTGRES_DB: ${DB_NAME:-tddwitter_db}
+      POSTGRES_DB: *db-name
     secrets:
       - postgres_user
       - postgres_password
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$(cat /run/secrets/postgres_user) -d $$POSTGRES_DB"]
+      test: ["CMD-SHELL", "pg_isready -U \"$$(cat /run/secrets/postgres_user)\" -d \"$$POSTGRES_DB\""]
       interval: 5s
       timeout: 5s
       retries: 5
-  pgadmin:
-    container_name: pgadmin-container
-    image: dpage/pgadmin4:9.11.0
-    ports:
-      - "5050:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@localhost.com
-      PGADMIN_DEFAULT_PASSWORD_FILE: /run/secrets/pgadmin_password
     networks:
       - backend
-    secrets:
-      - pgadmin_email
-      - pgadmin_password
+
 networks:
+  frontend:
   backend:
-    driver: bridge
+
 volumes:
   postgres-data:
+
 secrets:
   postgres_user:
     file: ./secrets/postgres_user.txt
   postgres_password:
     file: ./secrets/postgres_password.txt
-  pgadmin_email:
-    file: ./secrets/pgadmin_email.txt
-  pgadmin_password:
-    file: ./secrets/pgadmin_password.txt
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt

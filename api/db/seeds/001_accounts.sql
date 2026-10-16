@@ -101,4 +101,5 @@ INSERT INTO accounts (email, password_hash, created_at) VALUES
   ('user97@example.com', '$2b$04$qV7P8K3nXHqVkN0vZ8zP4eLhVYhZGxO5FqJxKqYvN3lKjZqNxQy8G', NOW() - INTERVAL '3 days'),
   ('user98@example.com', '$2b$04$qV7P8K3nXHqVkN0vZ8zP4eLhVYhZGxO5FqJxKqYvN3lKjZqNxQy8G', NOW() - INTERVAL '2 days'),
   ('user99@example.com', '$2b$04$qV7P8K3nXHqVkN0vZ8zP4eLhVYhZGxO5FqJxKqYvN3lKjZqNxQy8G', NOW() - INTERVAL '1 day'),
-  ('user100@example.com', '$2b$04$qV7P8K3nXHqVkN0vZ8zP4eLhVYhZGxO5FqJxKqYvN3lKjZqNxQy8G', NOW());
+  ('user100@example.com', '$2b$04$qV7P8K3nXHqVkN0vZ8zP4eLhVYhZGxO5FqJxKqYvN3lKjZqNxQy8G', NOW())
+ON CONFLICT (email) DO NOTHING;

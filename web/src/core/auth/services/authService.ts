@@ -1,3 +1,4 @@
+import { apiBase } from 'src/api/apiBase';
 import type {
   LoginPayload,
   MeResponse,
@@ -5,11 +6,7 @@ import type {
   UserResponse,
 } from '../types';
 
-const apiUrl = import.meta.env.PUBLIC_AUTH_API;
-
-if (!apiUrl) {
-  throw new Error('PUBLIC_AUTH_API environment variable is not configured');
-}
+const apiUrl = `${apiBase}/auth`;
 
 export const fetchMe = async (): Promise<MeResponse> => {
   const response = await fetch(`${apiUrl}/me`, {

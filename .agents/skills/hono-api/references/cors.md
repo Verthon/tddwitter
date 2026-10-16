@@ -1,6 +1,6 @@
 # CORS for the web app
 
-`web/` calls the api with absolute URLs (`PUBLIC_*_API`), so in the browser it's a different origin (another port) but the same site. Auth cookies then need two things: the web `fetch` sends `credentials: "include"`, and the api answers with CORS headers that allow credentials.
+`web/` calls the api on relative `/api` paths behind a same-origin proxy (rsbuild dev proxy, nginx in compose; onboarding decision 7), so the app needs no CORS. Use this only if the api must serve a different origin: then the web `fetch` sends `credentials: "include"`, and the api answers with CORS headers that allow credentials.
 
 ```ts
 import { cors } from "hono/cors";

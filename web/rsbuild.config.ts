@@ -9,4 +9,9 @@ export default defineConfig({
   dev: {
     lazyCompilation: false,
   },
+  server: {
+    proxy: {
+      '/api': process.env.API_PROXY_TARGET ?? 'http://localhost:4000',
+    },
+  },
 });

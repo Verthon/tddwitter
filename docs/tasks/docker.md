@@ -1,7 +1,7 @@
 # Docker: local stack and real Postgres for agents
 
 Created: 2026-10-15
-Status: not started, R1–R5 accepted (2026-10-16), resume with "Next"
+Status: in progress, compose fixed but not yet run (2026-10-16), resume with "Next"
 
 ## Goal
 
@@ -83,10 +83,20 @@ Benefit for the coding agent: the login spec says where the secret comes from, s
 3. Drop pgadmin and its secrets. psql in the container is enough.
 4. Add `DB_PORT` to `env.ts` and `db.ts`. The usual dev loop is the api on the host (watch mode) against the compose db; compose runs the full stack for e2e real mode.
 
+## Done
+
+- `JWT_SECRET_FILE` replaces `JWT_SECRET` in `api/src/infra/env.ts` (secret read from the file, still 32+ chars); compose mounts `secrets/jwt_secret.txt`.
+- `DB_PORT` in `env.ts` (default 5432) and `db.ts`.
+- Per-service images built from the repo root: `api/Dockerfile` (`pnpm fetch` + `pnpm deploy --filter api`, multi-stage, runs on `tsx` because of the `@/` path aliases), `web/Dockerfile` (build + nginx). `injectWorkspacePackages: true` in `pnpm-workspace.yaml`, which pnpm 10 `deploy` requires. Root `.dockerignore` keeps `secrets/` and `.env*` out of the build context. `api/pnpm-lock.yaml` deleted.
+- `api/load-secrets.sh` (hardcoded 5432, `DATABASE_URL` with unencoded credentials) replaced by `api/docker-entrypoint.sh`: exports `PG*` vars from the secret files, runs migrations and seeds, then starts the api.
+- `api/db/seeds/001_accounts.sql` is idempotent (`ON CONFLICT (email) DO NOTHING`), so restarting the api container no longer fails the seed.
+- pgadmin and its secrets dropped. `DB_NAME` comes from one YAML anchor for db and api. Postgres 18 volume mounted at `/var/lib/postgresql` (the 18 image layout).
+- `README.md` lists every secret file and how to start the stack.
+
 ## Next
 
 1. [x] Decide R1–R5
-2. [ ] Fix compose: `JWT_SECRET` secret (R5), root-lockfile images, drop pgadmin, `DB_NAME` single source, `DB_PORT`
-3. [ ] Verify `docker compose up` from a clean clone; update `README.md` with every required secret file
+2. [x] Fix compose: `JWT_SECRET` secret (R5), root-lockfile images, drop pgadmin, `DB_NAME` single source, `DB_PORT`
+3. [ ] Verify `docker compose up` from a clean clone (README part done; never run: Docker was not running and `secrets/jwt_secret.txt` did not exist)
 4. [ ] Test database and `pnpm test:db` (R2, R3), blocking in CI
 5. [ ] Hand off to `agent-skills.md` Next 6 (`postgres` skill), which documents R1–R3 as recipes

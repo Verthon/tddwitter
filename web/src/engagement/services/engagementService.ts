@@ -1,17 +1,13 @@
+import { apiBase } from 'src/api/apiBase';
 import type { LikeMetadata } from '../types';
-
-const apiUrl = import.meta.env.PUBLIC_ENGAGEMENT_API;
-
-if (!apiUrl) {
-  throw new Error(
-    'PUBLIC_ENGAGEMENT_API environment variable is not configured',
-  );
-}
 
 export const fetchLikeMetadata = async (
   postId: string,
 ): Promise<LikeMetadata> => {
-  const url = new URL(`${apiUrl}/posts/${postId}/like`);
+  const url = new URL(
+    `${apiBase}/posts/${postId}/like`,
+    window.location.origin,
+  );
 
   const response = await fetch(url.toString(), {
     method: 'GET',
@@ -28,7 +24,10 @@ export const fetchLikeMetadata = async (
 };
 
 export const likePost = async (postId: string): Promise<LikeMetadata> => {
-  const url = new URL(`${apiUrl}/posts/${postId}/like`);
+  const url = new URL(
+    `${apiBase}/posts/${postId}/like`,
+    window.location.origin,
+  );
 
   const response = await fetch(url.toString(), {
     method: 'POST',
@@ -45,7 +44,10 @@ export const likePost = async (postId: string): Promise<LikeMetadata> => {
 };
 
 export const unlikePost = async (postId: string): Promise<LikeMetadata> => {
-  const url = new URL(`${apiUrl}/posts/${postId}/like`);
+  const url = new URL(
+    `${apiBase}/posts/${postId}/like`,
+    window.location.origin,
+  );
 
   const response = await fetch(url.toString(), {
     method: 'DELETE',

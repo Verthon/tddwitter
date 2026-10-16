@@ -15,7 +15,7 @@ Bring tddwitter back after 8 months idle, port gym's agent setup, and push the f
 4. First feature: login + JWT in httpOnly cookies (`arch/adr/auth.md`, `arch/adr/jwt.md`).
 5. Repository infrastructure failures are thrown and mapped to a generic 500. Expected outcomes are `Result` failures, handled exhaustively (`assertNever`). Register migrated; test helpers `expectFailureOfType`, `createTestApp`, `rejectWith`.
 6. E2E: one Playwright suite run by a separate `pnpm e2e` (not in `pnpm check`), blocking in CI. Backend switch: mock (MSW) now, real api + docker Postgres later; same tests. Journeys only, no page-level duplicates.
-7. Same-origin web + api via a reverse proxy (nginx or similar; rsbuild dev proxy for local dev) so httpOnly cookies work without CORS and `arch/adr/jwt.md` stays true. Not done yet; web still calls absolute `PUBLIC_*_API` URLs on another port (cross-origin, same-site). Do it before login is wired in web.
+7. Same-origin web + api via a reverse proxy (nginx or similar; rsbuild dev proxy for local dev) so httpOnly cookies work without CORS and `arch/adr/jwt.md` stays true. Done in code (Next 9): web calls relative `/api` paths; not yet run in compose.
 8. Acceptance-test seam: the public boundary, as in `docs/specs/README.md`. api: the HTTP route via `app.request` (`createTestApp`), in-memory repositories. web: the page in a browser test (`renderWithProviders`). Not the use-case service (gym's choice): cookies, status codes and error bodies are only visible at HTTP, and boundary tests survive refactors below the seam. Services get their own unit tests.
 9. Password hashing: Argon2id via built-in `node:crypto` `argon2` (Node ≥ 24.7), OWASP parameters m=19456 KiB, t=2, p=1, 16-byte random salt, stored as a PHC string (`$argon2id$v=19$m=19456,t=2,p=1$<salt>$<hash>`), verified with `timingSafeEqual`. One `passwordHasher` used by register and login. Drop the `bcrypt` dependency. The 72-byte cap existed only because of bcrypt; keep a maximum length to bound hashing cost (the login spec sets the value). No migration: no production data yet. Source: OWASP Password Storage Cheat Sheet.
 10. `JWT_SECRET` comes from a Docker secret via `JWT_SECRET_FILE`, as with the DB credentials (`docker.md` R5). The login spec states this.
@@ -32,6 +32,7 @@ Bring tddwitter back after 8 months idle, port gym's agent setup, and push the f
 
 - Timeline model invariant violation throws (was a `Failure` that the service turned into a 200 with the string `"Invariant violation"`).
 - MVP scope recorded in `GOAL.md`.
+- Same-origin reverse proxy (decision 7): `web/src/api/apiBase.ts` (`/api`) used by every service and MSW handler instead of `PUBLIC_*_API`; rsbuild `server.proxy` sends `/api` to `http://localhost:4000` (`API_PROXY_TARGET` overrides); nginx in the compose `web` service serves the build and proxies `/api` to `api:4000` (`web/nginx/default.conf`).
 
 ## Open questions
 
@@ -50,4 +51,4 @@ Bring tddwitter back after 8 months idle, port gym's agent setup, and push the f
 6. [ ] AC-ID traceability check in `pnpm check` (gym P1 Next 6)
 7. [ ] Next MVP features (see `GOAL.md`) as specs, wired to the real API: create post, global timeline, likes
 8. [ ] Set up `pnpm e2e` (Playwright, mock mode) with the first journey: register → login
-9. [ ] Reverse proxy for same origin (decision 7): rsbuild dev proxy for `/api`, nginx (or similar) in `docker-compose.yml`, web services on relative `/api` paths
+9. [x] Reverse proxy for same origin (decision 7): rsbuild dev proxy for `/api`, nginx (or similar) in `docker-compose.yml`, web services on relative `/api` paths (compose run pending, see `docker.md` Next 3)

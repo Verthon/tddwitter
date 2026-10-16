@@ -1,7 +1,7 @@
 # Twitter clone
 
 The application should look similar and behave similarly to the regular twitter.
-Services call the API from `PUBLIC_*_API` env vars. MSW mocks back the tests and `pnpm dev:mock`.
+Services call the API on relative same-origin paths under `apiBase` (`/api`, `src/api/apiBase.ts`); rsbuild dev proxies `/api` to the api, nginx does it in docker compose. MSW mocks back the tests and `pnpm dev:mock`.
 
 ## Stack
 

@@ -1,15 +1,16 @@
 # MSW per-test overrides (msw 2.12.4, browser worker)
 
-The worker comes from `src/integrations/mockServer.ts`. `setup.browser.ts` resets runtime handlers after each test, so put `worker.use` at the top of a test, before you render. Build URLs from the same env var the service uses (`import.meta.env.PUBLIC_<FEATURE>_API`).
+The worker comes from `src/integrations/mockServer.ts`. `setup.browser.ts` resets runtime handlers after each test, so put `worker.use` at the top of a test, before you render. Build URLs from the same base the service uses: `apiBase` (`/api`) from `src/api/apiBase.ts`; auth lives under `${apiBase}/auth`.
 
 ```tsx
 import { delay, HttpResponse, http } from 'msw';
+import { apiBase } from 'src/api/apiBase';
 import { worker } from 'src/integrations/mockServer';
 import enTimeline from 'src/timeline/i18n/en.json';
 
-const timelineApi = import.meta.env.PUBLIC_TIMELINE_API;
-const authApi = import.meta.env.PUBLIC_AUTH_API;
-const engagementApi = import.meta.env.PUBLIC_ENGAGEMENT_API;
+const timelineApi = apiBase;
+const authApi = `${apiBase}/auth`;
+const engagementApi = apiBase;
 ```
 
 ## Success with custom data (query and mutation)

@@ -151,11 +151,10 @@ Override per test with `worker.use(...)` from `src/integrations/mockServer`. The
 
 ```tsx
 import { HttpResponse, http } from 'msw';
+import { apiBase } from 'src/api/apiBase';
 import { worker } from 'src/integrations/mockServer';
 
-const timelineApi = import.meta.env.PUBLIC_TIMELINE_API;
-
-worker.use(http.get(`${timelineApi}/timeline`, () => HttpResponse.json({ items: [], nextCursor: null, hasMore: false })));
+worker.use(http.get(`${apiBase}/timeline`, () => HttpResponse.json({ items: [], nextCursor: null, hasMore: false })));
 ```
 
 For error, network failure, slow/loading, request-body capture and mutation-failure recipes, see [references/msw.md](references/msw.md).

@@ -1,15 +1,10 @@
+import { apiBase } from 'src/api/apiBase';
 import type { CreatePostRequest, CreatePostResponse } from '../types';
-
-const apiUrl = import.meta.env.PUBLIC_COMPOSER_API;
-
-if (!apiUrl) {
-  throw new Error('PUBLIC_COMPOSER_API environment variable is not configured');
-}
 
 export const createPost = async (
   data: CreatePostRequest,
 ): Promise<CreatePostResponse> => {
-  const url = new URL(`${apiUrl}/posts`);
+  const url = new URL(`${apiBase}/posts`, window.location.origin);
 
   const response = await fetch(url.toString(), {
     method: 'POST',
