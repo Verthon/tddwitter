@@ -17,6 +17,8 @@ Bring tddwitter back after 8 months idle, port gym's agent setup, and push the f
 6. E2E: one Playwright suite run by a separate `pnpm e2e` (not in `pnpm check`), blocking in CI. Backend switch: mock (MSW) now, real api + docker Postgres later; same tests. Journeys only, no page-level duplicates.
 7. Same-origin web + api via a reverse proxy (nginx or similar; rsbuild dev proxy for local dev) so httpOnly cookies work without CORS and `arch/adr/jwt.md` stays true. Not done yet; web still calls absolute `PUBLIC_*_API` URLs on another port (cross-origin, same-site). Do it before login is wired in web.
 8. Acceptance-test seam: the public boundary, as in `docs/specs/README.md`. api: the HTTP route via `app.request` (`createTestApp`), in-memory repositories. web: the page in a browser test (`renderWithProviders`). Not the use-case service (gym's choice): cookies, status codes and error bodies are only visible at HTTP, and boundary tests survive refactors below the seam. Services get their own unit tests.
+9. Password hashing: Argon2id via built-in `node:crypto` `argon2` (Node ≥ 24.7), OWASP parameters m=19456 KiB, t=2, p=1, 16-byte random salt, stored as a PHC string (`$argon2id$v=19$m=19456,t=2,p=1$<salt>$<hash>`), verified with `timingSafeEqual`. One `passwordHasher` used by register and login. Drop the `bcrypt` dependency. The 72-byte cap existed only because of bcrypt; keep a maximum length to bound hashing cost (the login spec sets the value). No migration: no production data yet. Source: OWASP Password Storage Cheat Sheet.
+10. `JWT_SECRET` comes from a Docker secret via `JWT_SECRET_FILE`, as with the DB credentials (`docker.md` R5). The login spec states this.
 
 ## Done
 
@@ -35,7 +37,6 @@ Bring tddwitter back after 8 months idle, port gym's agent setup, and push the f
 
 - Branch `wip/login`: delete it once the login spec is done, or earlier.
 - The hook-bypass guard blocks any command that contains `core.hooksPath`, commit messages included.
-- Register hashes with bcrypt cost 10 in `api/src/index.ts`. `wip/login`'s `passwordHasher` uses 12. Pick one hasher for both.
 - Web browser tests log a lot of noise (MSW warnings, `response.errors {}` in RegisterPage).
 - Unused types `Save` and `FindById` in `api/src/common/repository/Repository.ts`. No dead-code scan (gym uses knip).
 
