@@ -36,6 +36,10 @@ Bring tddwitter back after 8 months idle, port gym's agent setup, and push the f
 
 ## Open questions
 
+- api image runs on `tsx` because `tsc` output keeps `@/` aliases. Works, but slower start and a compiler in production. Candidate: bundle (tsup/esbuild) or rewrite aliases at build.
+- An agent bypassed the rtk git rewrite guard by calling `/usr/bin/git` directly (repo pre-commit hook still ran). Decide whether the guard should cover direct binary paths.
+- User to-dos before the compose run: create `secrets/jwt_secret.txt` (32+ chars); in `api/.env*` replace `JWT_SECRET` with `JWT_SECRET_FILE`, add `DB_PORT=5433`; drop `PUBLIC_*_API` from `web/.env*`, keep `PUBLIC_MOCK`; `docker compose down -v` (volume path changed) then `docker compose up --build`.
+
 - Branch `wip/login`: delete it once the login spec is done, or earlier.
 - The hook-bypass guard blocks any command that contains `core.hooksPath`, commit messages included.
 - Web browser tests log a lot of noise (MSW warnings, `response.errors {}` in RegisterPage).
@@ -44,8 +48,8 @@ Bring tddwitter back after 8 months idle, port gym's agent setup, and push the f
 ## Next
 
 1. [x] Decide the infrastructure-failure rule and update `docs/architecture/api/repository.md`
-2. [ ] Write `docs/specs/login.md` (api: login, refresh, `/me`, logout; web: login page on the real API)
-3. [ ] Login acceptance tests; the user reviews them, then they're locked
+2. [x] Write `docs/specs/login.md` (api: login, refresh, `/me`, logout; web: login page on the real API)
+3. [ ] Login acceptance tests; the user reviews them, then they're locked. Written on branch `worktree-agent-a0f0618e55ab423e1` (spec, `api/src/auth/__tests__/login.acceptance.spec.ts`, `web/src/core/auth/__tests__/login.acceptance.browser.spec.tsx`), not merged because they fail by design. Merges cleanly. Mutation-checked for api (password check, rotation, reuse revocation, family isolation). Unproven: `me` invalidation after login. Waiting for user review.
 4. [ ] Run `implement-spec` for login; record cost and stop reasons as in gym `agy-run-*.md`
 5. [ ] Lock check: acceptance-test hashes plus no `.skip`/`.only`/`.todo` (gym P1 Next 7)
 6. [ ] AC-ID traceability check in `pnpm check` (gym P1 Next 6)
