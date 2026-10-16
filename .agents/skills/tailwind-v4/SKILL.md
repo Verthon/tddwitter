@@ -34,7 +34,7 @@ const variantClasses = {
 
 Map every prop value to a full literal, responsive prefixes included (`'md:p-6'`, not `` `md:p-${x}` ``). An interpolated class can look fine only because some other file happens to contain the same literal; delete that file and it breaks. Verified: adding `'lg:p-12'` in an unrelated spec made the broken `Box` padding "work".
 
-**Known bug:** `src/ui/box/Box.tsx` builds `p-${…}`/`md:p-${…}`/`lg:p-${…}`. At 1280 px `<Box padding={[4, 6, 12]}>` (used by `CreatePostForm`) gets 16 px, not 48 px. Fix it with a literal map when you touch `Box`.
+`src/ui/box/Box.tsx` shows the pattern for responsive props: one literal map per breakpoint (`paddingMap`, `mdPaddingMap`, `lgPaddingMap`); `Box.browser.spec.tsx` checks computed padding per viewport.
 
 ## v4 differences that bite (verified)
 
@@ -77,7 +77,7 @@ Add design tokens in `App.css` `@theme`. A variable in a known namespace creates
 }
 ```
 
-Verified: `bg-brand` and `text-brand/50` work after adding it. Namespaces, `--z-*` and the existing `--z-floating`: [references/theme.md](references/theme.md).
+Verified: `bg-brand` and `text-brand/50` work after adding it. Namespaces and z-index: [references/theme.md](references/theme.md).
 
 ## Pitfalls
 
@@ -85,7 +85,7 @@ Verified: `bg-brand` and `text-brand/50` work after adding it. Namespaces, `--z-
 |---|---|
 | `` `text-${color}-600` ``, `` `p-${n}` `` | A map of complete literals |
 | A `className` prop on our components to let callers restyle | A variant/size prop mapped to literals (rule in `web/AGENTS.md`) |
-| `z-floating` for `--z-floating` | There is no z-index namespace; `z-floating` does nothing. `z-(--z-floating)` works |
+| `z-foo` for a `--z-foo` token | There is no z-index namespace; `z-foo` does nothing. `z-(--z-foo)` works |
 | `tailwind.config.js`, `@tailwind base`, `theme()` in new CSS | `@theme`, `@import "tailwindcss"`, `var(--color-…)` |
 | Hard-coded hex in `className` (`bg-[#1d9bf0]`) for a brand color used twice | A `@theme` token |
 | Assume a class works because the page looks right | In a browser spec, `getComputedStyle(locator.element())` on the property |

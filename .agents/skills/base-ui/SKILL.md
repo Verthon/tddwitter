@@ -97,7 +97,7 @@ Verified: `getByLabelText` resolves to the `<textarea>`. A custom component pass
 | `import … from '@base-ui-components/react'` | `@base-ui/react/<component>` |
 | Copy a prop from base-ui.com without checking | Docs are ahead of 1.0.0; check the installed `.d.ts`. Example: `toastManager.close(id)` requires the id in 1.0.0 |
 | Leave a `Dialog.Popup` unpositioned | Give it `fixed …`. A static popup sits under Base UI's inert overlay and clicks on it fail ("data-base-ui-inert intercepts pointer events") |
-| Portalled popups (Dialog, Menu, Toast) next to page `z-10`/`z-50` layers | The app root needs `isolation: isolate` (Tailwind `isolate`); without it a `z-10` page layer covers the popup (verified). `#root` doesn't have it yet |
+| Portalled popups (Dialog, Menu, Toast) next to page `z-10`/`z-50` layers | The app root needs `isolation: isolate` (Tailwind `isolate`); without it a `z-10` page layer covers the popup (verified). `App` wraps the routes in `<div className="isolate">`; `src/App.browser.spec.tsx` covers it |
 | Hard-coded strings in wrappers | Labels come from the feature's `i18n/en.json` (rule in `web/AGENTS.md`) |
 | Treat "Vite unexpectedly reloaded a test" + `Cannot read properties of null (reading 'useContext')` as an app bug | It happens the first time a spec imports a Base UI subpath Vite hasn't pre-bundled. Re-run the spec |
 

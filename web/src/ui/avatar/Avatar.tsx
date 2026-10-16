@@ -1,20 +1,13 @@
-import { Avatar as BaseAvatar } from '@base-ui/react';
+import { Avatar as BaseAvatar } from '@base-ui/react/avatar';
 
 type AvatarProps = {
   src?: string;
   alt: string;
   size?: number;
-  className?: string;
   fallback?: string;
 };
 
-export const Avatar = ({
-  src,
-  alt,
-  size = 32,
-  className,
-  fallback,
-}: AvatarProps) => {
+export const Avatar = ({ src, alt, size = 32, fallback }: AvatarProps) => {
   const initials = (fallback ?? alt)
     .split(' ')
     .map((p) => p[0])
@@ -24,9 +17,7 @@ export const Avatar = ({
 
   return (
     <BaseAvatar.Root
-      className={`inline-flex items-center justify-center rounded-full bg-neutral-200 text-neutral-700 ${
-        className ?? ''
-      }`}
+      className="inline-flex items-center justify-center rounded-full bg-neutral-200 text-neutral-700"
       style={{ width: size, height: size }}
     >
       <BaseAvatar.Image

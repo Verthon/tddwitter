@@ -50,3 +50,4 @@ Basically we will wrap the `@base-ui/react` in our component wrappers with the t
 - limit the amount of the props to max 10 to keep API clean (use compound components or simply composition instead)
 - for any icons always use the heroicons https://heroicons.com/ we have already their package installed `@heroicons/react`
 - **CRUCIAL** do not add className prop to any component
+- Map props to complete Tailwind class literals; never interpolate class names.

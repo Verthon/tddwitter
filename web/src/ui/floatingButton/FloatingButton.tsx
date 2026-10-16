@@ -12,7 +12,7 @@ type FloatingButtonProps<Component extends ElementType = 'button'> =
   FloatingButtonOwnProps<Component> &
     Omit<
       ComponentPropsWithoutRef<Component>,
-      keyof FloatingButtonOwnProps<Component>
+      keyof FloatingButtonOwnProps<Component> | 'className'
     >;
 
 const baseClasses =
@@ -40,7 +40,7 @@ const FloatingButton = <Component extends ElementType = 'button'>({
     `${baseClasses} ${variantClasses[variant]} ${disabledClasses}`.trim();
 
   return (
-    <Element disabled={isDisabled} className={buttonClasses} {...props}>
+    <Element disabled={isDisabled} {...props} className={buttonClasses}>
       {children}
     </Element>
   );

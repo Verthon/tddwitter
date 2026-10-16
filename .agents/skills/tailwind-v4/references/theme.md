@@ -30,7 +30,7 @@ Verified: `bg-brand`, `text-brand/50` work. The token is also a CSS variable: `v
 | `--aspect-*` | `aspect-*` |
 | `--ease-*`, `--animate-*` | transitions, `animate-*` |
 
-There is **no z-index namespace**. `App.css` defines `--z-floating: 50`, but nothing uses it and `z-floating` generates nothing (verified: `z-index: auto`). Use `z-(--z-floating)` (verified: `50`) or plain `z-50`.
+There is **no z-index namespace**. A `--z-floating: 50` token generates no `z-floating` utility (verified: `z-index: auto`). Use `z-(--z-floating)` (verified: `50`) or plain `z-50`.
 
 ## Other options
 

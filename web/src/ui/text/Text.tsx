@@ -36,7 +36,7 @@ type TextOwnProps<E extends ElementType = ElementType> = {
 };
 
 type TextProps<E extends ElementType> = TextOwnProps<E> &
-  Omit<ComponentPropsWithoutRef<E>, keyof TextOwnProps>;
+  Omit<ComponentPropsWithoutRef<E>, keyof TextOwnProps | 'className'>;
 
 export const Text = <E extends ElementType = 'span'>({
   children,
@@ -52,8 +52,8 @@ export const Text = <E extends ElementType = 'span'>({
   const colorClass = colorClassMap[color];
   return (
     <Component
-      className={`${weightClass} ${sizeClass} ${colorClass}`}
       {...props}
+      className={`${weightClass} ${sizeClass} ${colorClass}`}
     >
       {children}
     </Component>
