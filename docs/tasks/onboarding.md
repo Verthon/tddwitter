@@ -36,6 +36,10 @@ Bring tddwitter back after 8 months idle, port gym's agent setup, and push the f
 
 ## Open questions
 
+- After a merge that adds a new `@base-ui/react/*` subpath import, the first web browser run fails 14 files (Vite re-optimizes deps mid-run, `<AvatarRoot>` errors); a re-run passes. A clean `node_modules/.vite` does not reproduce it, so CI is unaffected. Candidate fix: `optimizeDeps.include` for the subpaths in `web/vitest.config.ts`, once reproducible.
+- Web login form still enforces a 6-char client-side minimum; spec says login accepts 1–128. `LoginPage.browser.spec.tsx` overlaps AC-LOGIN-19.
+- Agents in worktrees call `/usr/bin/git` because the rtk rewrite trips the worktree guard (seen in three runs).
+
 - api image runs on `tsx` because `tsc` output keeps `@/` aliases. Works, but slower start and a compiler in production. Candidate: bundle (tsup/esbuild) or rewrite aliases at build.
 - An agent bypassed the rtk git rewrite guard by calling `/usr/bin/git` directly (repo pre-commit hook still ran). Decide whether the guard should cover direct binary paths.
 - User to-dos before the compose run: create `secrets/jwt_secret.txt` (32+ chars); in `api/.env*` replace `JWT_SECRET` with `JWT_SECRET_FILE`, add `DB_PORT=5433`; drop `PUBLIC_*_API` from `web/.env*`, keep `PUBLIC_MOCK`; `docker compose down -v` (volume path changed) then `docker compose up --build`.
@@ -50,7 +54,7 @@ Bring tddwitter back after 8 months idle, port gym's agent setup, and push the f
 1. [x] Decide the infrastructure-failure rule and update `docs/architecture/api/repository.md`
 2. [x] Write `docs/specs/login.md` (api: login, refresh, `/me`, logout; web: login page on the real API)
 3. [x] Login acceptance tests: locked by the user without review on 2026-10-16 ("we will change it later"). Mutation-checked for api (password check, rotation, reuse revocation, family isolation). Unproven: `me` invalidation after login.
-4. [ ] Run `implement-spec` for login; record cost and stop reasons as in gym `agy-run-*.md`
+4. [x] Run `implement-spec` for login; record cost and stop reasons as in gym `agy-run-*.md`. Run 2026-10-16: one pass, no stops, ~4 api check iterations + 2 full `pnpm check`, ~133k subagent tokens, ~8 min. Failures on the way: a test fake missing new port methods; an `assertNever` error from a `sed` that hit three switches.
 5. [x] Lock check (`scripts/check-locks.mjs`, hashes in `docs/specs/locks.json`, runs first in `pnpm check`; re-lock with `--update <spec>` only on user approval): acceptance-test hashes plus no `.skip`/`.only`/`.todo` (gym P1 Next 7)
 6. [ ] AC-ID traceability check in `pnpm check` (gym P1 Next 6)
 7. [ ] Next MVP features (see `GOAL.md`) as specs, wired to the real API: create post, global timeline, likes
