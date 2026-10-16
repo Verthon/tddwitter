@@ -44,7 +44,7 @@ Bring tddwitter back after 8 months idle, port gym's agent setup, and push the f
 ## Next
 
 1. [x] Decide the infrastructure-failure rule and update `docs/architecture/api/repository.md`
-2. [ ] Write `docs/specs/login.md` (api: login, refresh, `/me`, logout; web: login page on the real API)
+2. [x] Write `docs/specs/login.md` (api: login, refresh, `/me`, logout; web: login page on the real API)
 3. [ ] Login acceptance tests; the user reviews them, then they're locked
 4. [ ] Run `implement-spec` for login; record cost and stop reasons as in gym `agy-run-*.md`
 5. [ ] Lock check: acceptance-test hashes plus no `.skip`/`.only`/`.todo` (gym P1 Next 7)
