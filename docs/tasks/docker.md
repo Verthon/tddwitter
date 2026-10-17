@@ -92,11 +92,14 @@ Benefit for the coding agent: the login spec says where the secret comes from, s
 - `api/db/seeds/001_accounts.sql` is idempotent (`ON CONFLICT (email) DO NOTHING`), so restarting the api container no longer fails the seed.
 - pgadmin and its secrets dropped. `DB_NAME` comes from one YAML anchor for db and api. Postgres 18 volume mounted at `/var/lib/postgresql` (the 18 image layout).
 - `README.md` lists every secret file and how to start the stack.
+- `api/docker-entrypoint.sh` committed as executable (`100755`); it was `100644` and the api container failed with `exec: "./docker-entrypoint.sh": permission denied`.
+- Seed accounts re-hashed with Argon2id (`password123`, `passwordHasher` params); the bcrypt hashes failed `passwordHasher.verify` after login moved to Argon2id.
+- Host loop: `docker compose run --rm api true` migrates and seeds the compose db without anyone reading `secrets/`.
 
 ## Next
 
 1. [x] Decide R1–R5
 2. [x] Fix compose: `JWT_SECRET` secret (R5), root-lockfile images, drop pgadmin, `DB_NAME` single source, `DB_PORT`
-3. [ ] Verify `docker compose up` from a clean clone (README part done; never run: Docker was not running and `secrets/jwt_secret.txt` did not exist)
-4. [ ] Test database and `pnpm test:db` (R2, R3), blocking in CI
+3. [ ] Verify `docker compose up` from a clean clone (db start, migrations and seeds verified 2026-10-17 via `docker compose run --rm api true`; full stack and a real login not yet run)
+4. [ ] Test database and `pnpm test:db` (R2, R3), blocking in CI (also F2 in `test-architecture.md`)
 5. [ ] Hand off to `agent-skills.md` Next 6 (`postgres` skill), which documents R1–R3 as recipes
