@@ -2,11 +2,11 @@ packages:
   - 'web'
   - 'api'
 
-onlyBuiltDependencies:
-  - '@tailwindcss/oxide'
-  - bcrypt
-  - core-js
-  - esbuild
-  - msw
+allowBuilds:
+  '@tailwindcss/oxide': true
+  bcrypt: true
+  core-js: true
+  esbuild: true
+  msw: true
 
 injectWorkspacePackages: true
