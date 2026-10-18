@@ -10,8 +10,9 @@ Every snippet here was run green on chromium and webkit with vitest 4.0.16, vite
 ## Setup facts
 
 - File name `**/*.browser.spec.tsx`; anything else is not picked up. Each spec runs in **chromium and webkit**.
-- Run one file: `cd web && CI=true pnpm vitest run --project browser <path>`. Add `--silent=true` to hide MSW request logs.
+- Run one file: `cd web && CI=true pnpm vitest run --project browser <path>`.
 - `src/test/setup.browser.ts`: starts the MSW worker in `beforeAll`, calls `worker.resetHandlers()` in `afterEach`. Default handlers live in `src/integrations/mockServer.ts` (feature `mocks/*Handlers.ts`).
+- The test worker is `quiet` (no request logs) and answers dicebear avatar URLs with a blank SVG. Any other unhandled non-asset request logs `[MSW] Error` and gets a 500: add a handler, never a real network call.
 - `vitest-browser-react` cleans up the previous render **before** each test. No manual `cleanup`.
 - Locator text matching (`getByText`, `getByLabelText`, `name:`) is case-insensitive substring by default; pass `{ exact: true }` or a regex to tighten.
 - `expect.element` retries until the test timeout runs out (minus 100 ms) unless you pass `{ timeout }`.
