@@ -15,7 +15,7 @@ Every snippet here was run green on chromium and webkit with vitest 4.0.16, vite
 - `vitest-browser-react` cleans up the previous render **before** each test. No manual `cleanup`.
 - Locator text matching (`getByText`, `getByLabelText`, `name:`) is case-insensitive substring by default; pass `{ exact: true }` or a regex to tighten.
 - `expect.element` retries until the test timeout runs out (minus 100 ms) unless you pass `{ timeout }`.
-- `expect.poll` gives up after **1 s** by default (`interval` 50 ms). Pass `{ timeout }` when the value depends on slow work (retries, delays).
+- `expect.poll` gives up after **1 s** by default (`interval` 50 ms). Pass `{ timeout }` when the value depends on slow work (retries, delays, a fetch triggered by scroll). On a loaded CI runner webkit took over 1 s to render page 2 of the timeline.
 - `userEvent`, `locator.click()` and similar must be awaited. An un-awaited call never starts.
 
 ## Rendering
@@ -99,7 +99,7 @@ await page.viewport(414, 896);
 await renderWithProviders(<Timeline />);
 await expect.poll(() => feed.getByRole('listitem').length).toBe(10);
 window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' });
-await expect.poll(() => feed.getByRole('listitem').length).toBe(timelineMockItems.length);
+await expect.poll(() => feed.getByRole('listitem').length, { timeout: 10_000 }).toBe(timelineMockItems.length);
 await expect.element(page.getByText(enTimeline['timeline.endOfTimeline'])).toBeVisible();
 ```
 
