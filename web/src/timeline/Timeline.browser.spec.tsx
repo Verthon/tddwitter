@@ -27,7 +27,7 @@ describe('Timeline', () => {
     });
 
     await expect
-      .poll(() => feed().getByRole('listitem').length, { timeout: 10_000 })
+      .poll(() => feed().getByRole('listitem').length)
       .toBe(timelineMockItems.length);
 
     const lastItem = timelineMockItems[timelineMockItems.length - 1];

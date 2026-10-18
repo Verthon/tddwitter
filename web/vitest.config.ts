@@ -36,10 +36,14 @@ export default defineConfig({
           ],
           include: ['**/*.browser.spec.{ts,tsx}'],
           name: 'browser',
+          expect: { poll: { timeout: 5_000 } },
           browser: {
             enabled: true,
             provider: playwright(),
-            instances: [{ browser: 'chromium' }, { browser: 'webkit' }],
+            instances: [
+              { browser: 'chromium', sequence: { groupOrder: 1 } },
+              { browser: 'webkit', sequence: { groupOrder: 2 } },
+            ],
           },
           setupFiles: ['src/test/setup.browser.ts'],
         },

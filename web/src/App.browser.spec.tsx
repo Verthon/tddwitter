@@ -47,9 +47,7 @@ describe('App', () => {
       )
       .toBeVisible();
 
-    await userEvent.click(page.getByRole('button', { name: 'Click me' }), {
-      timeout: 2000,
-    });
+    await userEvent.click(page.getByRole('button', { name: 'Click me' }));
 
     await expect
       .element(page.getByRole('button', { name: 'Clicked' }))

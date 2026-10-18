@@ -15,7 +15,9 @@ Every snippet here was run green on chromium and webkit with vitest 4.0.16, vite
 - `vitest-browser-react` cleans up the previous render **before** each test. No manual `cleanup`.
 - Locator text matching (`getByText`, `getByLabelText`, `name:`) is case-insensitive substring by default; pass `{ exact: true }` or a regex to tighten.
 - `expect.element` retries until the test timeout runs out (minus 100 ms) unless you pass `{ timeout }`.
-- `expect.poll` gives up after **1 s** by default (`interval` 50 ms). Pass `{ timeout }` when the value depends on slow work (retries, delays, a fetch triggered by scroll). On a loaded CI runner webkit took over 1 s to render page 2 of the timeline.
+- `expect.poll` gives up after **5 s** in this repo (`expect.poll.timeout` in `web/vitest.config.ts`; Vitest's own default is 1 s), `interval` 50 ms. Don't pass a per-call `{ timeout }` to make a flaky poll pass. Only pass one when the app itself is slow by design (`retry: 3` backoff, a `delay(...)` handler).
+- Chromium and webkit run one after the other (`sequence.groupOrder` per instance), not in parallel. Running them at the same time starved the CPU: frames came every 100 ms or less often, IntersectionObserver callbacks were seconds late, and Playwright clicks (which wait for animation frames) timed out. Keep them sequential.
+- Don't shorten action timeouts (`click(..., { timeout: 2000 })`) to make a failing test fail sooner. Under load a click alone took over 2 s. A click that is really intercepted still fails at the test timeout.
 - `userEvent`, `locator.click()` and similar must be awaited. An un-awaited call never starts.
 
 ## Rendering
@@ -99,7 +101,7 @@ await page.viewport(414, 896);
 await renderWithProviders(<Timeline />);
 await expect.poll(() => feed.getByRole('listitem').length).toBe(10);
 window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' });
-await expect.poll(() => feed.getByRole('listitem').length, { timeout: 10_000 }).toBe(timelineMockItems.length);
+await expect.poll(() => feed.getByRole('listitem').length).toBe(timelineMockItems.length);
 await expect.element(page.getByText(enTimeline['timeline.endOfTimeline'])).toBeVisible();
 ```
 

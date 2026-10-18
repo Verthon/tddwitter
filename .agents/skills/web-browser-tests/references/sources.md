@@ -18,7 +18,7 @@ Official:
 Verified from installed sources (`node_modules`), where the web docs had already moved to newer majors:
 - `vitest-browser-react@2.0.2`: `render` returns a Promise; auto-cleanup runs in `beforeEach`.
 - `@vitest/browser@4.0.16`: locator `exact` defaults to `false`; `expect.element` timeout defaults to the remaining test time; interactions that aren't awaited never start.
-- `vitest@4.0.16`: `expect.poll` defaults to `timeout: 1000`, `interval: 50` (`createExpectPoll`).
+- `vitest@4.0.16`: `expect.poll` defaults to `timeout: 1000`, `interval: 50` (`createExpectPoll`); overridable with `test.expect.poll`. `expect.element` passes its own timeout (remaining test time − 100 ms) on playwright, so `expect.poll.timeout` does not change it (`processTimeoutOptions` in `@vitest/browser`).
 - `msw@2.12.4`: the option is `onUnhandledRequest`. Current MSW docs show `onUnhandledFrame`, which belongs to a newer major.
 
 Repo-observed (run on chromium and webkit):
