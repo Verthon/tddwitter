@@ -1,4 +1,4 @@
-FROM node:24-alpine AS base
+FROM node:24.22.1-alpine AS base
 RUN corepack enable
 WORKDIR /repo
 
@@ -9,7 +9,7 @@ COPY api ./api
 RUN pnpm install --offline --frozen-lockfile --filter api
 RUN pnpm deploy --offline --filter api /out
 
-FROM node:24-alpine AS runtime
+FROM node:24.22.1-alpine AS runtime
 WORKDIR /app
 ENV PATH=/app/node_modules/.bin:$PATH
 COPY --from=build /out ./
