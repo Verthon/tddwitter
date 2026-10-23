@@ -30,5 +30,5 @@ Steps 1–3 are independent and can run as parallel agents (one per skill or per
    - `references/outdated-apis.md:18`: currently says to ignore Vitest 5 docs; flip it, add a v4 → v5 row (`toHaveTextContent(RegExp)` → `toMatchTextContent`).
    - `references/sources.md`: v4 doc links; re-check lines 20–21 (locator `exact` default, `expect.poll` / `expect.element` timeouts) against 5.0.5. Known change: `expect.poll` now rejects on timeout.
 2. [ ] `hono-api` skill: `references/testing.md:64` and `references/refresh-tokens.md:60` say "Verified on vitest 4.0.16". Re-run the fake-timer checks on 5.0.5 (v5 also fakes `Temporal` when faking `Date` by default; we pass `toFake: ["Date"]`) and bump the notes.
-3. [ ] Drop `vite-tsconfig-paths` from `web/vitest.config.ts` and `api/vitest.config.mts`: Vite 8 warns it's redundant, use `resolve.tsconfigPaths: true`. Check that the `web` browser project's `src` alias and `tsconfig.vitest.json` still resolve.
+3. [x] `vite-tsconfig-paths` removed from `web` and `api`; both configs use `resolve.tsconfigPaths: true`. The `web` browser project's manual `src` alias and `tsconfig.vitest.json` were redundant (`web/tsconfig.json` already maps `src/*`) and are gone. Checked that turning `tsconfigPaths` off breaks `src/...` imports.
 4. [ ] `pnpm check` green, commit, push, CI green.
