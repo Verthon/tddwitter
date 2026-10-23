@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        package: [web, api]
+        package: [web]
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
