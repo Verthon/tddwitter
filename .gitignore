@@ -16,6 +16,7 @@ dist/
 .idea
 
 # Integration tests
+__screenshots__
 .vitest/
 
 # dev
