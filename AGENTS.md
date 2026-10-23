@@ -8,6 +8,6 @@ Read [GOAL.md](GOAL.md) first.
 - `web/`: React + MSW. Rules: [web/AGENTS.md](web/AGENTS.md).
 - Features are spec-first: [docs/specs/README.md](docs/specs/README.md). To implement a spec, use the `implement-spec` skill.
 - Rules vs know-how: rules in `docs/architecture/`, how-tos in on-demand skills. See [docs/architecture/agent-context.md](docs/architecture/agent-context.md).
-- Ongoing work and its next steps: `docs/tasks/`.
+- Ongoing work and its next steps: `docs/tasks/`. Delete a task file once all its steps are done; git history keeps the details.
 - Trunk-based: commit to `main`, no feature or `wip` branches. Worktree branches merge back the same day and are deleted. Commit messages explain why. See [docs/adr/0001](docs/adr/0001-trunk-based-development.md).
 - After a push to `main`, wait for the `Check` run and report its result: `gh run list --workflow Check --branch main --limit 1` for the run id, then `gh run watch <id> --exit-status`. If red, `gh run view <id> --log-failed` and fix it before new work.
