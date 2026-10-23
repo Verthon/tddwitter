@@ -22,11 +22,11 @@ await expect.element(page.getByText('johndoe')).toBeVisible();
 
 ## Assert navigation
 
-After navigating away from `path`, the page unmounts and the probe shows the pathname. Anchor the regex, because `toHaveTextContent` with a string is a substring match.
+After navigating away from `path`, the page unmounts and the probe shows the pathname. `toHaveTextContent` with a string is an exact match, so `'/'` does not pass on `/post/1`.
 
 ```tsx
 await userEvent.click(page.getByRole('button', { name: 'Go back' }));
-await expect.element(page.getByTestId('location')).toHaveTextContent(/^\/$/);
+await expect.element(page.getByTestId('location')).toHaveTextContent('/');
 ```
 
 Mount the UI on its real route (`{ route: '/create-post' }`, `{ route: '/signup' }`). With the default `route: '/'`, a redirect to `/` lands on the UI's own route and the probe never appears.
@@ -65,7 +65,7 @@ worker.use(
 );
 await renderWithProviders(<AppRoutes />, { route: '/login', path: '/*' });
 await expect.poll(() => meRequests).toBeGreaterThan(0);
-await expect.poll(() => page.getByRole('link', { name: enCore['core.auth.sidebar.login'], exact: true }).length).toBeGreaterThan(0);
+await expect.poll(() => page.getByRole('link', { name: enCore['core.auth.sidebar.login'] }).length).toBeGreaterThan(0);
 ```
 
 Verified: with `/me` held by `delay('infinite')`, the sidebar's Log in link is visible.

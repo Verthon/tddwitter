@@ -24,7 +24,6 @@ describe('LikeButton', () => {
 
     const button = page.getByRole('button', {
       name: enEngagement['engagement.like.ariaLabel'],
-      exact: true,
     });
     await expect.element(button).toBeVisible();
   });
@@ -46,7 +45,6 @@ describe('LikeButton', () => {
 
     const button = page.getByRole('button', {
       name: enEngagement['engagement.unlike.ariaLabel'],
-      exact: true,
     });
     await expect.element(button).toBeVisible();
   });
@@ -80,7 +78,6 @@ describe('LikeButton', () => {
 
     const button = page.getByRole('button', {
       name: enEngagement['engagement.like.ariaLabel'],
-      exact: true,
     });
     await expect.element(button).toBeVisible();
 
@@ -88,7 +85,6 @@ describe('LikeButton', () => {
 
     const unlikeButton = page.getByRole('button', {
       name: enEngagement['engagement.unlike.ariaLabel'],
-      exact: true,
     });
     await expect.element(unlikeButton).toBeVisible();
   });

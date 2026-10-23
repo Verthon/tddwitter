@@ -1,6 +1,6 @@
 # Outdated APIs: never use
 
-| Outdated (Vitest 3 / other libs) | Use in this repo (Vitest 4) |
+| Outdated (Vitest 3–4 / other libs) | Use in this repo (Vitest 5) |
 |---|---|
 | `import { page, userEvent } from '@vitest/browser/context'` | `import { page, userEvent } from 'vitest/browser'` |
 | `import ... from '@vitest/browser/utils'` | `vitest/browser` |
@@ -14,5 +14,8 @@
 | `rest.get(...)`, `res(ctx.json(...))` (MSW 1.x) | `http.get(...)`, `HttpResponse.json(...)` |
 | `getByPlaceholderText` | `getByPlaceholder` |
 | Non-awaited `render(...)` | `await render(...)` (2.x returns a Promise) |
+| `toHaveTextContent(/regex/)` (Vitest 4) | `toMatchTextContent(/regex/)`; `toHaveTextContent('text')` is exact |
+| `exact: true` on locators (Vitest 4 default was substring) | Nothing. Exact is the default |
+| `v4.vitest.dev` docs | `vitest.dev` (v5) |
 
-Not applicable to these versions: Vitest 5 changes (exact-by-default locators, `toMatchTextContent`, the async `render` in vue/svelte). If you read vitest.dev and it shows v5, use v4.vitest.dev instead.
+This repo is on Vitest 5. Pages on v4.vitest.dev and blog posts from before Vitest 5 describe substring locators and RegExp `toHaveTextContent`; don't follow them.

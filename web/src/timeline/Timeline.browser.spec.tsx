@@ -53,7 +53,6 @@ describe('Timeline', () => {
       .element(
         page.getByRole('heading', {
           name: enTimeline['postDetail.title'],
-          exact: true,
         }),
       )
       .toBeVisible();
@@ -70,7 +69,6 @@ describe('Timeline', () => {
     await userEvent.click(
       firstItem.getByRole('button', {
         name: enEngagement['engagement.like.ariaLabel'],
-        exact: true,
       }),
     );
 
@@ -78,7 +76,6 @@ describe('Timeline', () => {
       .element(
         firstItem.getByRole('button', {
           name: enEngagement['engagement.unlike.ariaLabel'],
-          exact: true,
         }),
       )
       .toBeVisible();

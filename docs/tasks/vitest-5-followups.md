@@ -1,7 +1,7 @@
 # Vitest 5 follow-ups
 
 Created: 2026-10-23
-Status: in progress, resume with "Next"
+Status: done
 
 ## Goal
 
@@ -23,12 +23,7 @@ Vitest 5 migration guide: https://vitest.dev/guide/migration
 
 Steps 1–3 are independent and can run as parallel agents (one per skill or per config). Each agent verifies every changed snippet on chromium + webkit before editing a skill (the skill's own rule), and must not touch locked acceptance tests or `docs/specs/locks.json`.
 
-1. [ ] `web-browser-tests` skill (`.agents/skills/web-browser-tests/`):
-   - `SKILL.md:169,171`, `references/router-and-query.md:25,29`, `references/msw.md:102`: path assertions now use `toHaveTextContent('/')` (exact in v5); regex only via `toMatchTextContent`.
-   - `SKILL.md:17,50`: locator matching. Migration guide says `browser.locators.exact` defaults to `true` (exact, case-sensitive). Verify in the repo first, then rewrite the `exact: true` advice and the `/like/i` warning. 10 `exact: true` calls in `web/src` may become redundant.
-   - Version pins: description, `SKILL.md:8` (4.0.16, vitest-browser-react 2.0.2), `:189` ("Vitest 4 paths").
-   - `references/outdated-apis.md:18`: currently says to ignore Vitest 5 docs; flip it, add a v4 → v5 row (`toHaveTextContent(RegExp)` → `toMatchTextContent`).
-   - `references/sources.md`: v4 doc links; re-check lines 20–21 (locator `exact` default, `expect.poll` / `expect.element` timeouts) against 5.0.5. Known change: `expect.poll` now rejects on timeout.
+1. [x] `web-browser-tests` skill updated to Vitest 5.0.5. A temporary spec on chromium + webkit showed: locators exact and case-sensitive by default (`exact: false`/regex loosen them); `toHaveTextContent('x')` is exact with whitespace normalized; `toHaveTextContent(RegExp)` never matches (so `.not` with a regex passes vacuously), use `toMatchTextContent`; `expect.poll` rejects at the 5 s repo timeout; `expect.element` still waits for the remaining test time. Path-assertion snippets, the `exact: true`/`/like/i` advice, version pins, `outdated-apis.md` and `sources.md` rewritten. The redundant `exact: true` dropped from 4 specs; the locked login acceptance test keeps its one.
 2. [x] `hono-api` skill: re-ran the fake-timer claims in `references/testing.md` on 5.0.5 with a temporary spec (token expiry via `setSystemTime`, `argon2` under both modes, `setTimeout`/`setImmediate` hang only under the default). All held; bumped the note. `refresh-tokens.md` only pins hono, so nothing to change there. Node 24.22.1 has no `Temporal`, so v5 faking it alongside `Date` is a no-op here.
 3. [x] `vite-tsconfig-paths` removed from `web` and `api`; both configs use `resolve.tsconfigPaths: true`. The `web` browser project's manual `src` alias and `tsconfig.vitest.json` were redundant (`web/tsconfig.json` already maps `src/*`) and are gone. Checked that turning `tsconfigPaths` off breaks `src/...` imports.
-4. [ ] `pnpm check` green, commit, push, CI green.
+4. [x] `pnpm check` green, commit, push, CI green.

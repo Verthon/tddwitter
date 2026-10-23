@@ -10,9 +10,7 @@ const usernameField = () =>
 const emailField = () =>
   page.getByLabelText(enCore['core.auth.register.emailLabel']);
 const passwordField = () =>
-  page.getByLabelText(enCore['core.auth.register.passwordLabel'], {
-    exact: true,
-  });
+  page.getByLabelText(enCore['core.auth.register.passwordLabel']);
 const confirmPasswordField = () =>
   page.getByLabelText(enCore['core.auth.register.confirmPasswordLabel']);
 const submitButton = () =>

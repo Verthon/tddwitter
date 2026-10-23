@@ -99,7 +99,7 @@ worker.use(
   }),
 );
 await renderWithProviders(<LoginPage />, { route: '/login' });
-await expect.element(page.getByTestId('location')).toHaveTextContent(/^\/$/);
+await expect.element(page.getByTestId('location')).toHaveTextContent('/');
 expect(body).toEqual({ email: 'user@example.com', password: 'password123' });
 ```
 

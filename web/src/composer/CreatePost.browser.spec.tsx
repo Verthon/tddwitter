@@ -33,7 +33,6 @@ describe('CreatePost', () => {
 
     const submitButton = page.getByRole('button', {
       name: enComposer['composer.button.tweet'],
-      exact: true,
     });
     await expect.element(submitButton).toBeEnabled();
 

@@ -1,11 +1,11 @@
 ---
 name: web-browser-tests
-description: Recipes and pitfalls for writing, fixing or reviewing web component and page tests (`web/**/*.browser.spec.tsx`) on Vitest 4 browser mode with vitest-browser-react, MSW overrides, React Router and React Query. Use before touching any `*.browser.spec.tsx`.
+description: Recipes and pitfalls for writing, fixing or reviewing web component and page tests (`web/**/*.browser.spec.tsx`) on Vitest 5 browser mode with vitest-browser-react, MSW overrides, React Router and React Query. Use before touching any `*.browser.spec.tsx`.
 ---
 
 # Web browser tests
 
-Every snippet here was run green on chromium and webkit with vitest 4.0.16, vitest-browser-react 2.0.2 and msw 2.12.4.
+Every snippet here was run green on chromium and webkit with vitest 5.0.5, vitest-browser-react 2.3.0, playwright 1.64.1 and msw 2.12.4.
 
 ## Setup facts
 
@@ -14,7 +14,7 @@ Every snippet here was run green on chromium and webkit with vitest 4.0.16, vite
 - `src/test/setup.browser.ts`: starts the MSW worker in `beforeAll`, calls `worker.resetHandlers()` in `afterEach`. Default handlers live in `src/integrations/mockServer.ts` (feature `mocks/*Handlers.ts`).
 - The test worker is `quiet` (no request logs) and answers dicebear avatar URLs with a blank SVG. Any other unhandled non-asset request logs `[MSW] Error` and gets a 500: add a handler, never a real network call.
 - `vitest-browser-react` cleans up the previous render **before** each test. No manual `cleanup`.
-- Locator text matching (`getByText`, `getByLabelText`, `name:`) is case-insensitive substring by default; pass `{ exact: true }` or a regex to tighten.
+- Locator text matching (`getByText`, `getByLabelText`, `name:`) is exact and case-sensitive by default (whitespace is normalized). `{ exact: false }` or a regex loosens it to substring matching.
 - `expect.element` retries until the test timeout runs out (minus 100 ms) unless you pass `{ timeout }`.
 - `expect.poll` gives up after **5 s** in this repo (`expect.poll.timeout` in `web/vitest.config.ts`; Vitest's own default is 1 s), `interval` 50 ms. Don't pass a per-call `{ timeout }` to make a flaky poll pass. Only pass one when the app itself is slow by design (`retry: 3` backoff, a `delay(...)` handler).
 - Chromium and webkit run one after the other (`sequence.groupOrder` per instance), not in parallel. Running them at the same time starved the CPU: frames came every 100 ms or less often, IntersectionObserver callbacks were seconds late, and Playwright clicks (which wait for animation frames) timed out. Keep them sequential.
@@ -43,11 +43,11 @@ await renderWithProviders(<PostDetailPage />, { route: '/post/1', path: '/post/:
 import enCore from 'src/core/i18n/en.json';
 
 page.getByRole('button', { name: enCore['core.auth.login.submitButton'] });
-page.getByLabelText(enCore['core.auth.register.passwordLabel'], { exact: true });
-page.getByRole('button', { name: enEngagement['engagement.like.ariaLabel'], exact: true });
+page.getByLabelText(enCore['core.auth.register.passwordLabel']);
+page.getByRole('button', { name: enEngagement['engagement.like.ariaLabel'] });
 ```
 
-Matching is substring, so add `exact: true` whenever one translation is contained in another on the page: `Password` vs `Confirm Password`, `Like` vs `Unlike`, `Post` vs `View post by …`. A loose `/like/i` also matches `Unlike` and makes the test pass whatever state is rendered.
+Matching is exact, so `Password` doesn't match `Confirm Password` and `Like` doesn't match `Unlike`. `exact: true` is the default, so don't add it. Don't loosen with `exact: false` or a regex either: `/like/i` also matches `Unlike` and makes the test pass whatever state is rendered.
 
 Keys with simple `{placeholder}` values: fill them in the test.
 
@@ -166,9 +166,9 @@ For error, network failure, slow/loading, request-body capture and mutation-fail
 
 | Don't | Do |
 |---|---|
-| `expect.poll(() => globalThis.location.pathname).toBe('/')` | Under `MemoryRouter` the pathname is always `/`, so the check passes vacuously. Assert `getByTestId('location')` with `toHaveTextContent(/^\/$/)` |
+| `expect.poll(() => globalThis.location.pathname).toBe('/')` | Under `MemoryRouter` the pathname is always `/`, so the check passes vacuously. Assert `getByTestId('location')` with `toHaveTextContent('/')` |
 | `render(...)` without `await` | `await renderWithProviders(...)` |
-| `toHaveTextContent('/')` for a path | It matches as a substring. Anchor with a regex: `/^\/$/` |
+| `toHaveTextContent(/regex/)` | A RegExp is compared as content and never matches, so `.not.toHaveTextContent(/x/)` always passes. `toHaveTextContent('text')` is already exact (case-sensitive, whitespace normalized). For a pattern use `toMatchTextContent(/regex/)` |
 | Shared `QueryClient` across tests | One client per render (the helper does this) |
 | Rely on `retry: false` for error tests | Query-level `retry` wins. `useInfiniteTimeline` sets `retry: 3`, so error tests take about 7 s. Expect that, or fix the hook |
 | `{ once: true }` in a file that also uses `delay('infinite')` | We saw the next test's `once` handler get consumed (order-dependent failure). Prefer plain overrides |
@@ -186,4 +186,4 @@ For error, network failure, slow/loading, request-body capture and mutation-fail
 
 After writing or fixing an assertion, break the app behaviour it covers (drop a `navigate`, make `onClick` a no-op, skip `fetchNextPage`), run the one spec, see it fail on both browsers, restore. When two layers enforce the same rule (native `type="email"` and zod), break both or the test stays green.
 
-Imports must come from Vitest 4 paths. For the list of APIs never to use, see [references/outdated-apis.md](references/outdated-apis.md). Sources are in [references/sources.md](references/sources.md).
+Imports must come from Vitest 5 paths (`vitest/browser`, as in Vitest 4). For the list of APIs never to use, see [references/outdated-apis.md](references/outdated-apis.md). Sources are in [references/sources.md](references/sources.md).
