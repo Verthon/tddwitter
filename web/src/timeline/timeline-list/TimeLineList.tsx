@@ -93,8 +93,8 @@ export const TimelineList = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        const target = entries[0];
-        if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        const latest = entries.at(-1);
+        if (latest?.isIntersecting && hasNextPage && !isFetchingNextPage) {
           fetchNextPage();
         }
       },

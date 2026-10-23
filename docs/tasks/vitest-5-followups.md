@@ -19,7 +19,7 @@ Vitest 5 migration guide: https://vitest.dev/guide/migration
 
 ## Next
 
-0. [ ] Flake, fix first (ADR 0001): `web/src/timeline/Timeline.browser.spec.tsx` "loads timeline items automatically on scroll in mobile viewport" failed on chromium in CI run 39955291254 (`expected 10 to be 15`, poll timed out after 5 s) on a docs-only commit; the rerun was green. It's the third flake fix attempt for this test (`58454d38`, `622fb4e2`). Suspect the one-shot `window.scrollTo` firing before the load-more sentinel is observed; scrolling inside the poll, or scrolling the sentinel into view until page 2 loads, would remove the race. Reproduce with `--repeat` under CPU throttling before changing it.
+0. [x] Timeline scroll flake (CI run 39955291254): app bug, not a test race. `TimeLineList` read only `entries[0]`; under load chromium delivered the late initial `observe()` notification (not intersecting) and the post-scroll one (intersecting) in one batch, so `fetchNextPage` never ran. Now reads the last entry. Reproduced with the full chromium suite under CPU load plus `Emulation.setCPUThrottlingRate` 20 on the spec: 2 failures in ~15 runs before, 0 in 20 after.
 
 Steps 1–3 are independent and can run as parallel agents (one per skill or per config). Each agent verifies every changed snippet on chromium + webkit before editing a skill (the skill's own rule), and must not touch locked acceptance tests or `docs/specs/locks.json`.
 
