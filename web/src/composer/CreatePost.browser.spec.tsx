@@ -39,8 +39,6 @@ describe('CreatePost', () => {
 
     await userEvent.click(submitButton);
 
-    await expect
-      .element(page.getByTestId('location'))
-      .toHaveTextContent(/^\/$/);
+    await expect.element(page.getByTestId('location')).toHaveTextContent('/');
   });
 });

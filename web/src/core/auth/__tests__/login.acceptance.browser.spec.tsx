@@ -40,9 +40,7 @@ describe('Login page', () => {
     await submitCredentials();
 
     await expect.poll(() => body).toEqual({ email: EMAIL, password: PASSWORD });
-    await expect
-      .element(page.getByTestId('location'))
-      .toHaveTextContent(/^\/$/);
+    await expect.element(page.getByTestId('location')).toHaveTextContent('/');
   });
 
   it('AC-LOGIN-20: shows the wrong-credentials alert and stays on the page when the API returns 401', async () => {

@@ -28,9 +28,7 @@ describe('RegisterPage', () => {
     await userEvent.fill(confirmPasswordField(), 'password123');
     await userEvent.click(submitButton());
 
-    await expect
-      .element(page.getByTestId('location'))
-      .toHaveTextContent(/^\/$/);
+    await expect.element(page.getByTestId('location')).toHaveTextContent('/');
   });
 
   it('displays validation error for invalid email', async () => {

@@ -1,6 +1,6 @@
 {
   "docs/specs/login.md": {
     "api/src/auth/__tests__/login.acceptance.spec.ts": "2aebdfa35368a432c941254ce9a689c948105179a33b0e5310265277efb63ed7",
-    "web/src/core/auth/__tests__/login.acceptance.browser.spec.tsx": "655047d3ce2b25efeab7ff11e83dfa00f8648474caaa64cc3a72c913b5bc91b5"
+    "web/src/core/auth/__tests__/login.acceptance.browser.spec.tsx": "64c835b5e4623996bbdb8f8a33bc5b03e7ca9e35f09215c7fc0f554720589c12"
   }
 }

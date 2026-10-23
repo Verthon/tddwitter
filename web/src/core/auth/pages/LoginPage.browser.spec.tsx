@@ -23,8 +23,6 @@ describe('LoginPage', () => {
       }),
     );
 
-    await expect
-      .element(page.getByTestId('location'))
-      .toHaveTextContent(/^\/$/);
+    await expect.element(page.getByTestId('location')).toHaveTextContent('/');
   });
 });
