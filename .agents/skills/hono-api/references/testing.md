@@ -61,7 +61,7 @@ vi.useRealTimers();
 ```
 
 - Put `vi.useRealTimers()` in `afterEach`, so a failing assertion doesn't leave the clock faked for the next test.
-- Why only `Date`: plain `vi.useFakeTimers()` also fakes `setTimeout`, `setImmediate` and friends. Async `node:crypto` `argon2` still completes, because its callback comes from the libuv thread pool, not a timer. But anything that awaits a timer (a `delay` in a fake, retries with backoff) hangs until the test times out. Verified on vitest 4.0.16: `argon2` passes under both modes, `await new Promise((r) => setTimeout(r, 10))` and `setImmediate` time out under the default.
+- Why only `Date`: plain `vi.useFakeTimers()` also fakes `setTimeout`, `setImmediate` and friends. Async `node:crypto` `argon2` still completes, because its callback comes from the libuv thread pool, not a timer. But anything that awaits a timer (a `delay` in a fake, retries with backoff) hangs until the test times out. Verified on vitest 5.0.5: `argon2` passes under both modes, `await new Promise((r) => setTimeout(r, 10))` and `setImmediate` time out under the default. Vitest 5 also fakes `Temporal` when it fakes `Date`; Node 24.22.1 has no `Temporal`, so that changes nothing here yet.
 - `vi.advanceTimersByTime(ms)` also moves the faked `Date`, but `setSystemTime` reads more plainly when only the clock matters.
 
 ## Unauthenticated requests
