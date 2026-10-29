@@ -4,7 +4,7 @@ Base pattern (setup, `createTestApp`, `rejectWith`): [SKILL.md](../SKILL.md#rout
 
 ## Read `Set-Cookie`
 
-`res.headers.getSetCookie()` returns one string per cookie (Node 24 `Headers`). Don't use `res.headers.get("set-cookie")`: it joins several cookies with `, `.
+`res.headers.getSetCookie()` returns one string per cookie (Node `Headers`). Don't use `res.headers.get("set-cookie")`: it joins several cookies with `, `.
 
 ```ts
 const res = await postJson(app, "/login", { email: "a@b.c", password: "correct-horse-1" });
@@ -61,7 +61,7 @@ vi.useRealTimers();
 ```
 
 - Put `vi.useRealTimers()` in `afterEach`, so a failing assertion doesn't leave the clock faked for the next test.
-- Why only `Date`: plain `vi.useFakeTimers()` also fakes `setTimeout`, `setImmediate` and friends. Async `node:crypto` `argon2` still completes, because its callback comes from the libuv thread pool, not a timer. But anything that awaits a timer (a `delay` in a fake, retries with backoff) hangs until the test times out. Verified on vitest 5.0.5: `argon2` passes under both modes, `await new Promise((r) => setTimeout(r, 10))` and `setImmediate` time out under the default. Vitest 5 also fakes `Temporal` when it fakes `Date`; Node 24.22.1 has no `Temporal`, so that changes nothing here yet.
+- Why only `Date`: plain `vi.useFakeTimers()` also fakes `setTimeout`, `setImmediate` and friends. Async `node:crypto` `argon2` still completes, because its callback comes from the libuv thread pool, not a timer. But anything that awaits a timer (a `delay` in a fake, retries with backoff) hangs until the test times out. Verified on vitest 5.0.5: `argon2` passes under both modes, `await new Promise((r) => setTimeout(r, 10))` and `setImmediate` time out under the default. Node 26 ships `Temporal`. Verified on vitest 5.0.5 / Node 26.12.1: `Temporal.Now` follows the fake clock under the default `vi.useFakeTimers()`, but not under `toFake: ["Date"]`, where it returns real time.
 - `vi.advanceTimersByTime(ms)` also moves the faked `Date`, but `setSystemTime` reads more plainly when only the clock matters.
 
 ## Unauthenticated requests

@@ -22,7 +22,7 @@
     "zod": "4.2.1"
   },
   "devDependencies": {
-    "@types/node": "24.10.4",
+    "@types/node": "26.6.4",
     "node-pg-migrate": "8.0.4",
     "oxfmt": "0.26.0",
     "oxlint": "1.41.0",

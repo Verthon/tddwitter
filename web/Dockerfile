@@ -1,5 +1,6 @@
-FROM node:24.22.1-alpine AS base
-RUN corepack enable
+FROM node:26.12.1-alpine AS base
+COPY --from=ghcr.io/pnpm/pnpm:12.16.1-alpine /opt/pnpm /opt/pnpm
+RUN for bin in pnpm pn pnpx pnx; do ln -s "/opt/pnpm/$bin" "/usr/local/bin/$bin"; done
 WORKDIR /repo
 
 FROM base AS build
