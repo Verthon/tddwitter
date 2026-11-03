@@ -47,7 +47,7 @@ Every change goes to `main` through a short-lived branch and a pull request:
 
 - A branch starts from `main` and holds one slice of work that merges on the same day.
 - A spec or task that takes more than one day is split into several branches.
-- Branch protection on `main` requires the `Check` run to pass before merge. No direct pushes to `main`.
+- The `protect-main` ruleset requires the `check` and `install_build (web)` jobs to pass before merge. No direct pushes to `main`.
 - An automated PR reviewer comments on each pull request. Its findings are advisory and do not block the merge.
 - The branch is deleted after the merge.
 
