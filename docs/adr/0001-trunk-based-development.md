@@ -25,7 +25,7 @@ Direct commits to `main` fixed the integration frequency, but two problems staye
 
 - Team knowledge: one developer. AI agents write most of the code, some of it in git worktrees.
 - Budget and infrastructure: the automated PR reviewer must work on a free tier. The team has not chosen the tool yet.
-- Current architecture: `.github/workflows/check.yml` runs `pnpm check` and a build on push to `main` and on pull requests. The tests stop at boundaries: api tests use in-memory repositories, web tests use MSW, and no end-to-end suite exists (`docs/tasks/test-architecture.md`).
+- Current architecture: `.github/workflows/check.yml` runs `pnpm check` and `.github/workflows/install-and-build.yml` builds web, both on push to `main` and on pull requests. The tests stop at boundaries: api tests use in-memory repositories, web tests use MSW, and no end-to-end suite exists (`docs/tasks/test-architecture.md`).
 
 ## 2. Intention
 

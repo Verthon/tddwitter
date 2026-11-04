@@ -12,5 +12,4 @@ Done on 2026-11-03:
 
 1. Merge PR #1: `gh pr merge 1 --squash --delete-branch`. The auto-mode classifier denied this for the agent, so the user merges, then the agent pulls `main` and watches the `Check` run.
 2. Decide who merges: allow `gh pr merge` for the agent in permissions, or change the `AGENTS.md` line so the user merges.
-3. Open a PR for the CodeRabbit finding on `docs/tasks/onboarding.md:13`: it says Node 24 / pnpm 10 and Node 26.12.1 / pnpm 12.16.1 in the same item.
-4. Ignore the CodeRabbit MD038 finding on `.agents/skills/hono-api/references/testing.md:7`. The `, ` code span is intentional.
+3. Ignore the CodeRabbit MD038 finding on `.agents/skills/hono-api/references/testing.md:7`. The `, ` code span is intentional.
