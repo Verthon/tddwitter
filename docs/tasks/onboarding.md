@@ -10,7 +10,7 @@ Bring tddwitter back after 8 months idle, port gym's agent setup, and push the f
 ## Decisions
 
 1. Claude only for now: Claude writes specs and acceptance tests, and `implement-spec` runs in a Claude session or subagent. gym's agy/Gemini split comes later, if at all.
-2. Toolchain unchanged (node 24, pnpm 10, TS 5.x, oxlint in api, biome in web). Only the harness was added. Upgrading to gym's toolchain is a separate task.
+2. Toolchain not changed by this task: only the harness was added. Upgrading to gym's toolchain is a separate task. Node and pnpm versions are set by `devEngines` in `package.json`.
 3. Login WIP parked on branch `wip/login` (949b752a). It skips the password check, so it's reference material only. Login gets rebuilt from `docs/specs/login.md`.
 4. First feature: login + JWT in httpOnly cookies (`arch/adr/auth.md`, `arch/adr/jwt.md`).
 5. Repository infrastructure failures are thrown and mapped to a generic 500. Expected outcomes are `Result` failures, handled exhaustively (`assertNever`). Register migrated; test helpers `expectFailureOfType`, `createTestApp`, `rejectWith`.
