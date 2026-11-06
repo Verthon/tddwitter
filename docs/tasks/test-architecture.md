@@ -37,16 +37,21 @@ Assumptions confirmed by the user: Postgres is managed (api-only); api and web a
 Notes:
 
 - Faking the managed DB hides the SQL behaviour that matters: unique violation → `DUPLICATE_EMAIL`, atomic `markRotated` (`rotated_at IS NULL`), row-value cursor comparison.
-- Untested, possible pagination drift: the in-memory timeline repository sorts with `localeCompare` but filters with `<`; Postgres compares `public_id` by collation. Cursors carry milliseconds while `timestamptz` stores microseconds. Not proven to be a bug.
+- Untested, possible pagination drift: the in-memory timeline repository sorts with `localeCompare` but filters with `<`; Postgres compares `public_id` by collation. Not proven to be a bug.
+- Cursors carried milliseconds while `timestamptz` stored microseconds. This lost posts between pages, shown by a test and fixed in `docs/decision-log.md` D-008.
 - Keep `sessionService.spec:46` (asserts the `verifyPassword` stub got `DUMMY_PASSWORD_HASH`). Asserting on a stub is normally overspecification, but here it is the anti-enumeration property itself, with no other observable output.
 
 ## Fixes, in order
 
 ### F1. Shared api↔web contract
 
-One schema per endpoint in a workspace package that both api and web import. Api route specs validate responses against it; web types and MSW fixtures derive from it. Drift then fails `pnpm check` at type-check.
+Decided in `docs/decision-log.md` D-005 and D-006.
 
-Fixing the timeline drift is part of this: decide the response shape (spec), align api and web to it.
+One schema per endpoint in a workspace package that both api and web import, plus a list of each endpoint's method and path. Api route specs parse real responses through the schema; web types and MSW fixtures derive from it, so `tsc` fails on a mismatch. An api spec fails if a listed endpoint is not mounted, and web services take their paths from the list. All of this runs in `pnpm check`, with no new CI job.
+
+Coverage starts with the auth endpoints. The timeline, `/posts`, `/posts/:postId/like` and `/timeline/:id` go on the list marked mock-first, and each loses the mark when its spec ships. Fixing the timeline drift belongs to the timeline spec (`GOAL.md` MVP item 4), not to this fix.
+
+Both Dockerfiles copy only their own folder, so they must also copy the new package. Run `docs/tasks/deploy-ready.md` step 1 again afterwards.
 
 The MSW auth mocks are also looser than the real api, so mock mode cannot show a signed-out or expired session:
 
@@ -64,8 +69,8 @@ The Playwright suite from onboarding decision 6 (one suite, MSW mode first, real
 
 ## Next
 
-1. [ ] F1: spec the shared contract and the timeline response shape (`docs/specs/`)
-2. [ ] F1: implement it, fix the timeline drift
-3. [ ] Decide the MSW-only endpoints (`/posts`, likes, `/timeline/:id`): spec them for the api or mark them mock-first in the contract
+1. [ ] F1: spec the shared contract, the endpoint list and the mock-first mark (`docs/specs/`)
+2. [ ] F1: implement it for the auth endpoints, and update both Dockerfiles
+3. [ ] F1: list the timeline and the MSW-only endpoints (`/posts`, likes, `/timeline/:id`) as mock-first
 4. [ ] F2: `pnpm test:db` and SQL adapter tests (tracked in `docker.md` Next 4)
 5. [ ] F3: `pnpm e2e` mock mode (`onboarding.md` Next 8), then real mode in CI (closes `docker.md` Next 3)
