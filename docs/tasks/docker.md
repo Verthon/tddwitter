@@ -101,5 +101,5 @@ Benefit for the coding agent: the login spec says where the secret comes from, s
 1. [x] Decide R1–R5
 2. [x] Fix compose: `JWT_SECRET` secret (R5), root-lockfile images, drop pgadmin, `DB_NAME` single source, `DB_PORT`
 3. [x] Verify `docker compose up` from a clean clone (full stack and a real login passed on 2026-11-06 at `d5b7697e`, see `deploy-ready.md`)
-4. [ ] Test database and `pnpm test:db` (R2, R3), blocking in CI (also F2 in `test-architecture.md`)
+4. [x] Test database and `pnpm test:db` (R2, R3), blocking in CI (also F2 in `test-architecture.md`)
 5. [ ] Hand off to `agent-skills.md` Next 6 (`postgres` skill), which documents R1–R3 as recipes

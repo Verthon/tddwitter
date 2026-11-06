@@ -72,5 +72,6 @@ The Playwright suite from onboarding decision 6 (one suite, MSW mode first, real
 1. [ ] F1: spec the shared contract, the endpoint list and the mock-first mark (`docs/specs/`)
 2. [ ] F1: implement it for the auth endpoints, and update both Dockerfiles
 3. [ ] F1: list the timeline and the MSW-only endpoints (`/posts`, likes, `/timeline/:id`) as mock-first
-4. [ ] F2: `pnpm test:db` and SQL adapter tests (tracked in `docker.md` Next 4)
+4. [x] F2: `pnpm test:db` and SQL adapter tests (tracked in `docker.md` Next 4)
+   - [ ] F2, still open: run the acceptance suites against real repositories. `api/src/auth/__tests__/login.acceptance.spec.ts` is locked by the login spec.
 5. [ ] F3: `pnpm e2e` mock mode (`onboarding.md` Next 8), then real mode in CI (closes `docker.md` Next 3)

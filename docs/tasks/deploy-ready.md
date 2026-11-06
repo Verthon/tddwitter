@@ -15,7 +15,7 @@ Features are out of scope. Add a decision log entry for each real backend choice
 ## Next
 
 1. [x] Prove the stack: `docker compose up` from a clean clone, then a real login. This is `docs/tasks/docker.md` Next 3.
-2. [ ] Test the real database code in CI: SQL adapters and migrations against real Postgres (finding 14). This is `docs/tasks/docker.md` Next 4 and F2 in `docs/tasks/test-architecture.md`.
+2. [x] Test the real database code in CI: SQL adapters and migrations against real Postgres (finding 14). This is `docs/tasks/docker.md` Next 4 and F2 in `docs/tasks/test-architecture.md`.
 3. [ ] Take seeding out of `api/docker-entrypoint.sh` (finding 1). `api/package.json` already has `db:seed`. The host loop in `docs/tasks/docker.md` uses `docker compose run --rm api true`, so it needs the explicit command.
 4. [ ] Add rate limiting on login and register (finding 3): a failure count per account with exponential delay, plus a coarse per-IP limit in nginx with `limit_req_status 429`.
    - Trap: behind a hosting proxy, `$remote_addr` may be the proxy, so one per-IP limit would apply to all users together. Check the client IP during the rehearsal.
