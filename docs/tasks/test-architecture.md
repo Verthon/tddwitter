@@ -38,7 +38,7 @@ Notes:
 
 - Faking the managed DB hides the SQL behaviour that matters: unique violation → `DUPLICATE_EMAIL`, atomic `markRotated` (`rotated_at IS NULL`), row-value cursor comparison.
 - Untested, possible pagination drift: the in-memory timeline repository sorts with `localeCompare` but filters with `<`; Postgres compares `public_id` by collation. Not proven to be a bug.
-- Cursors carried milliseconds while `timestamptz` stored microseconds. This lost posts between pages, shown by a test and fixed in `docs/decision-log.md` D-008.
+- Known bug, not fixed: cursors carry milliseconds while `timestamptz` stores microseconds, which loses posts between pages. See `docs/tasks/timeline-pagination.md` and `docs/decision-log.md` D-009.
 - Keep `sessionService.spec:46` (asserts the `verifyPassword` stub got `DUMMY_PASSWORD_HASH`). Asserting on a stub is normally overspecification, but here it is the anti-enumeration property itself, with no other observable output.
 
 ## Fixes, in order

@@ -71,14 +71,4 @@ describe("createSQLTimelineRepository", () => {
 
     await expect(readAllPages(1)).resolves.toEqual(["c", "b", "a"]);
   });
-
-  it("pages through posts that differ only in microseconds without losing or repeating any", async () => {
-    await insertPost("first", "2026-01-01T00:00:00.123900Z");
-    await insertPost("second", "2026-01-01T00:00:00.123700Z");
-    await insertPost("third", "2026-01-01T00:00:00.123600Z");
-
-    const seen = await readAllPages(1);
-
-    expect(seen.toSorted()).toEqual(["first", "second", "third"]);
-  });
 });

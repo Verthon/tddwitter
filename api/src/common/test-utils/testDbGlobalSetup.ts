@@ -21,12 +21,8 @@ export const setup = async (): Promise<void> => {
       cwd: API_ROOT,
       stdio: "pipe",
       env: {
-        ...process.env,
-        PGHOST: TEST_DB.host,
-        PGPORT: String(TEST_DB.port),
-        PGDATABASE: TEST_DB.database,
-        PGUSER: TEST_DB.username,
-        PGPASSWORD: TEST_DB.password,
+        PATH: process.env.PATH,
+        DATABASE_URL: `postgres://${TEST_DB.username}:${TEST_DB.password}@${TEST_DB.host}:${TEST_DB.port}/${TEST_DB.database}`,
       },
     },
   );

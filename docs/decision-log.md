@@ -107,3 +107,14 @@ Leave out `Not verified` and `Supersedes` when empty.
 - Overturn if: Something needs ordering finer than one millisecond. Posts in the same millisecond now sort by `public_id`, not by the true order they were created.
 - Learn: A cursor must have the same precision as the column it pages over. Fakes hide this, because the in-memory repository holds JavaScript numbers. postgres.js also passes a `timestamptz` parameter through `Date`, which cuts it to milliseconds, so a test must cast through text to create microseconds.
 - Not verified: The migration has not run on Supabase, or on a database with real rows.
+
+## D-009. Take the pagination fix out of the database test work
+- Date: 2026-11-07
+- Decided by: maintainer, choosing the agent's recommendation.
+- What: PR #2 drops the `TIMESTAMPTZ(3)` migration and the microsecond test. `posts.created_at` stays in microseconds, so the known pagination bug stays until the timeline spec ships. The bugs are listed in `docs/tasks/timeline-pagination.md`. The migration step in `pnpm test:db` now gets a clean environment with one complete `DATABASE_URL`.
+- Why: The PR is about test setup, and the ordering choice is a separate decision: `ORDER BY id DESC` with an opaque cursor may remove the problem without a migration. Nothing is deployed and only seed data exists, and create post does not exist yet, so the bug has no real data to lose. The clean environment corrects D-007, which said the hardcoded address meant the tests cannot reach dev data. That was true for the client but not for the migration step: it kept `process.env`, and node-pg-migrate reads `DATABASE_URL` before `PG*`, so an inherited value could have migrated another database. CodeRabbit found this.
+- Rejected: Fixing pagination in PR #2, because the PR would grow and the ordering decision would be made under a test setup change. A `SELECT current_database()` check, because the client connects to a hardcoded database name, so the check could only ever return that name.
+- Overturn if: Create post ships before the timeline spec. The bug can then lose real posts, and changing the column has to handle existing rows.
+- Learn: D-008's reason for rejecting `date_trunc` was wrong and came from memory: only the 2-argument form is not immutable, and `date_trunc('milliseconds', created_at, 'UTC')` can be indexed. Passing `...process.env` to a child process also passes every variable you did not think about, and tools disagree on which variable wins.
+- Not verified: The `date_trunc` form comes from research that was not run or reviewed (`~/Projects/advisors/databases/research/overview.md`).
+- Supersedes: D-008. Corrects the reason in D-007.
