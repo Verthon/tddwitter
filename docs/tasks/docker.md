@@ -94,7 +94,7 @@ Benefit for the coding agent: the login spec says where the secret comes from, s
 - `README.md` lists every secret file and how to start the stack.
 - `api/docker-entrypoint.sh` committed as executable (`100755`); it was `100644` and the api container failed with `exec: "./docker-entrypoint.sh": permission denied`.
 - Seed accounts re-hashed with Argon2id (`password123`, `passwordHasher` params); the bcrypt hashes failed `passwordHasher.verify` after login moved to Argon2id.
-- Host loop: `docker compose run --rm api true` migrates and seeds the compose db without anyone reading `secrets/`.
+- Host loop: `docker compose run --rm api tsx db/seed.ts` migrates and seeds the compose db without anyone reading `secrets/`. Seeding is explicit since `deploy-ready.md` step 3; the entrypoint only migrates, so `docker compose run --rm api true` migrates without seeding.
 
 ## Next
 

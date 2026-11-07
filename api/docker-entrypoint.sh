@@ -9,7 +9,6 @@ PGDATABASE=$DB_NAME
 export PGUSER PGPASSWORD PGHOST PGPORT PGDATABASE
 
 node-pg-migrate up --migrations-dir db/migrations
-tsx db/seed.ts
 
 unset PGUSER PGPASSWORD
 exec "$@"

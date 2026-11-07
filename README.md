@@ -33,7 +33,13 @@ docker compose up --build
 - Health: http://localhost:8080/api/health
 - Postgres: `localhost:5433`, database `tddwitter_db`.
 
-The api container runs migrations and seeds on start. To reset the database: `docker compose down -v`.
+The api container runs migrations on start. It never seeds. To load the sample accounts (`user1@example.com` to `user100@example.com`, password `password123`) and posts:
+
+```bash
+docker compose run --rm api tsx db/seed.ts
+```
+
+To reset the database: `docker compose down -v`.
 
 ## Run locally
 
