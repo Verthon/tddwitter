@@ -11,6 +11,7 @@
     "format": "oxfmt",
     "test:unit": "vitest run",
     "test:watch": "vitest",
+    "test:db": "vitest run --config vitest.db.config.mts",
     "check": "pnpm lint && pnpm type-check && pnpm test:unit"
   },
   "dependencies": {

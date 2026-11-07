@@ -11,6 +11,7 @@
     "lint": "pnpm -r lint",
     "type-check": "pnpm -r type-check",
     "check": "node scripts/check-locks.mjs && pnpm -r --workspace-concurrency=1 check",
+    "test:db": "docker compose --profile test up -d --wait db-test && pnpm --filter api test:db",
     "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath .githooks || true"
   },
   "keywords": [],
